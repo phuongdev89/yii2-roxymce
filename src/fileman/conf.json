@@ -29,7 +29,7 @@
 "ALLOWED_UPLOADS":     "",
 "FILEPERMISSIONS":     "0644",
 "DIRPERMISSIONS":      "0755",
-"LANG":                "vi",
+"LANG":                "fr",
 "DATEFORMAT":          "dd/MM/yyyy HH:mm",
 "OPEN_LAST_DIR":       "yes"
 }

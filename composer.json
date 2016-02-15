@@ -23,8 +23,9 @@
 		"ext-gd" : "*",
 		"ext-mbstring" : "*",
 		"ext-zip" : "*",
-		"tinymce/tinymce" : "^4.3",
-		"components/jquery": "^2.2"
+		"yiisoft/yii2": "^2.0.5",
+		"yiisoft/yii2-bootstrap": "*",
+		"tinymce/tinymce" : "^4.3"
 	},
 	"autoload" : {
 		"psr-4" : {

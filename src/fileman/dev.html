@@ -59,7 +59,7 @@
    <input type="hidden" id="hdViewType" value="list">
    <input type="hidden" id="hdOrder" value="asc">
     <div class="actions">
-      <input type="button" id="btnAddFile" title="Upload files" onclick="addFileClick()" data-lang-v="AddFile" data-lang-t="T_AddFile" />
+      <input type="button" id="btnAddFile" value="Add file" title="Upload files" onclick="addFileClick()" data-lang-v="AddFile" data-lang-t="T_AddFile" />
       <input type="button" id="btnPreviewFile" value="Preview" title="Preview selected file" onclick="previewFile()" data-lang-v="Preview" data-lang-t="T_Preview" />
       <input type="button" id="btnRenameFile" value="Rename" title="Rename selected file" onclick="renameFile()" data-lang-v="RenameFile" data-lang-t="T_RenameFile" />
       <input type="button" id="btnDownloadFile" value="Download" title="Download selected file" onclick="downloadFile()" data-lang-v="DownloadFile" data-lang-t="T_DownloadFile" />
@@ -68,7 +68,7 @@
       <br>
       <span data-lang="OrderBy">Order by</span>:
       <select id="ddlOrder" onchange="sortFiles()">
-        <option value="name" data-lang="Name_asc"></option>
+        <option value="name" data-lang="Name_asc">&uarr;&nbsp;&nbsp;Name</option>
         <option value="size" data-lang="Size_asc">&uarr;&nbsp;&nbsp;Size</option>
         <option value="time" data-lang="Date_asc">&uarr;&nbsp;&nbsp;Date</option>
         <option value="name_desc" data-lang="Name_desc">&darr;&nbsp;&nbsp;Name</option>
