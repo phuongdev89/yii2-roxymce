@@ -1,6 +1,23 @@
 {
 	"name" : "navatech/yii2-roxymce",
 	"description" : "Integrate tinymce + roxy manager to yii2",
+	"keywords" : [
+		"yii2",
+		"tinymce",
+		"file manager"
+	],
+	"type" : "yii2-extension",
+	"license" : "BSD-3-Clause",
+	"minimum-stability" : "dev",
+	"support" : {
+		"source" : "https://github.com/navatech/yii2-roxymce"
+	},
+	"authors" : [
+		{
+			"name" : "Le Phuong",
+			"email" : "phuong17889@gmail.com"
+		}
+	],
 	"require" : {
 		"php" : ">=5.2.0",
 		"ext-gd" : "*",
@@ -8,5 +25,10 @@
 		"ext-zip" : "*",
 		"tinymce/tinymce" : "^4.3",
 		"components/jquery": "^2.2"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"navatech\\roxymce\\" : "src"
+		}
 	}
 }
