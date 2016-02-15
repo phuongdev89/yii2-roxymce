@@ -11,6 +11,7 @@
 ?>
 <script>
 	var roxyMceAsset = '<?=$roxyMceAsset?>';
+	var roxyMceUrl = '<?=Yii::$app->homeUrl . 'roxymce/'?>';
 </script>
 <link href="<?= $roxyMceAsset ?>/css/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?= $roxyMceAsset ?>/css/main.css" rel="stylesheet" type="text/css"/>

@@ -81,7 +81,7 @@ class RoxyMceWidget extends Widget {
 			];
 		}
 		if ($this->action === null) {
-			$this->action = Yii::$app->homeUrl . 'site/roxymce';
+			$this->action = Yii::$app->homeUrl . 'roxymce/default';
 		}
 	}
 
