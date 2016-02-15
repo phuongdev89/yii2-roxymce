@@ -1,6 +1,6 @@
 {
-	"name" : "your-vendor-name/package-name",
-	"description" : "A short description of what your package does",
+	"name" : "navatech/yii2-roxymce",
+	"description" : "Integrate tinymce + roxy manager to yii2",
 	"require" : {
 		"php" : ">=5.2.0",
 		"ext-gd" : "*",
