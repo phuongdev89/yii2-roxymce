@@ -57,6 +57,7 @@ class Module extends ModuleBase {
 	 * @throws InvalidParamException
 	 */
 	public function init() {
+		//TODO die if mod_rewrite not enable
 		parent::init();
 		$config = [
 			'FILES_ROOT'           => 'uploads/image',
