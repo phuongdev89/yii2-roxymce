@@ -212,7 +212,7 @@ function Directory(fullPath, numDirs, numFiles) {
 		var dir = this;
 		$.ajax({
 			url     : dirListURL,
-			type    : 'GET',
+			type    : 'POST',
 			dataType: 'json',
 			async   : false,
 			cache   : false,
@@ -261,7 +261,7 @@ function Directory(fullPath, numDirs, numFiles) {
 		var ret  = false;
 		$.ajax({
 			url     : url,
-			type    : 'GET',
+			type    : 'POST',
 			data    : {
 				d: this.fullPath,
 				n: newName
@@ -294,7 +294,7 @@ function Directory(fullPath, numDirs, numFiles) {
 		var ret  = false;
 		$.ajax({
 			url     : url,
-			type    : 'GET',
+			type    : 'POST',
 			data    : {d: this.fullPath},
 			dataType: 'json',
 			async   : false,
@@ -331,7 +331,7 @@ function Directory(fullPath, numDirs, numFiles) {
 		var ret  = false;
 		$.ajax({
 			url     : url,
-			type    : 'GET',
+			type    : 'POST',
 			data    : {
 				d: this.fullPath,
 				n: newName
@@ -367,7 +367,7 @@ function Directory(fullPath, numDirs, numFiles) {
 		var ret  = false;
 		$.ajax({
 			url     : url,
-			type    : 'GET',
+			type    : 'POST',
 			data    : {
 				d: this.fullPath,
 				n: newPath
@@ -406,7 +406,7 @@ function Directory(fullPath, numDirs, numFiles) {
 		var ret  = false;
 		$.ajax({
 			url     : url,
-			type    : 'GET',
+			type    : 'POST',
 			data    : {
 				d: this.fullPath,
 				n: newPath
@@ -470,7 +470,7 @@ function Directory(fullPath, numDirs, numFiles) {
 
 			$.ajax({
 				url     : fileURL,
-				type    : 'GET',
+				type    : 'POST',
 				data    : {
 					d   : this.fullPath,
 					type: RoxyUtils.GetUrlParam('type')

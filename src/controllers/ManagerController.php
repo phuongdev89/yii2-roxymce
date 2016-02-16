@@ -25,6 +25,11 @@ use yii\web\Controller;
  */
 class ManagerController extends Controller {
 
+	public function beforeAction($action) {
+		$this->enableCsrfValidation = false;
+		return parent::beforeAction($action);
+	}
+
 	/**
 	 * @param $type
 	 *
@@ -218,61 +223,64 @@ class ManagerController extends Controller {
 	}
 
 	/**
-	 * @param string $method
-	 * @param null   $d
-	 *
 	 * @throws InvalidParamException
 	 */
-	public function actionUpload($method = 'normal', $d = null) {
-		$isAjax = ($method === 'ajax');
-		$errors = $errorsExt = array();
-		if ($d === null) {
-			RoxyBase::getFilesPath();
-		}
-		RoxyBase::verifyPath($d);
-		if (is_dir(RoxyBase::fixPath($d))) {
-			if (!empty($_FILES['files']) && is_array($_FILES['files']['tmp_name'])) {
-				foreach ($_FILES['files']['tmp_name'] as $k => $v) {
-					$filename   = $_FILES['files']['name'][$k];
-					$filename   = RoxyFile::MakeUniqueFilename(RoxyBase::fixPath($d), $filename);
-					$filePath   = RoxyBase::fixPath($d) . '/' . $filename;
-					$isUploaded = true;
-					if (!RoxyFile::CanUploadFile($filename)) {
-						$errorsExt[] = $filename;
-						$isUploaded  = false;
-					} elseif (!move_uploaded_file($v, $filePath)) {
-						$errors[]   = $filename;
-						$isUploaded = false;
+	public function actionUpload() {
+		if (array_key_exists('method', $_POST) && array_key_exists('d', $_POST)) {
+			$method = $_POST['method'];
+			$d      = $_POST['d'];
+			$isAjax = ($method === 'ajax');
+			$errors = $errorsExt = array();
+			if ($d === null) {
+				RoxyBase::getFilesPath();
+			}
+			RoxyBase::verifyPath($d);
+			if (is_dir(RoxyBase::fixPath($d))) {
+				if (!empty($_FILES['files']) && is_array($_FILES['files']['tmp_name'])) {
+					foreach ($_FILES['files']['tmp_name'] as $k => $v) {
+						$filename   = $_FILES['files']['name'][$k];
+						$filename   = RoxyFile::MakeUniqueFilename(RoxyBase::fixPath($d), $filename);
+						$filePath   = RoxyBase::fixPath($d) . '/' . $filename;
+						$isUploaded = true;
+						if (!RoxyFile::CanUploadFile($filename)) {
+							$errorsExt[] = $filename;
+							$isUploaded  = false;
+						} elseif (!move_uploaded_file($v, $filePath)) {
+							$errors[]   = $filename;
+							$isUploaded = false;
+						}
+						if (is_file($filePath)) {
+							@chmod($filePath, octdec(FILEPERMISSIONS));
+						}
+						if (((int) MAX_IMAGE_WIDTH > 0 || (int) MAX_IMAGE_HEIGHT > 0) && $isUploaded && RoxyFile::IsImage($filename)) {
+							RoxyImage::Resize($filePath, $filePath, (int) MAX_IMAGE_WIDTH, (int) MAX_IMAGE_HEIGHT);
+						}
 					}
-					if (is_file($filePath)) {
-						@chmod($filePath, octdec(FILEPERMISSIONS));
+					if ($errors && $errorsExt) {
+						$res = RoxyBase::getSuccessRes(RoxyBase::t('E_UploadNotAll') . ' ' . RoxyBase::t('E_FileExtensionForbidden')) . '4';
+					} elseif ($errorsExt) {
+						$res = RoxyBase::getSuccessRes(RoxyBase::t('E_FileExtensionForbidden')) . '5';
+					} elseif ($errors) {
+						$res = RoxyBase::getSuccessRes(RoxyBase::t('E_UploadNotAll')) . '6';
+					} else {
+						$res = RoxyBase::getSuccessRes() . '7';
 					}
-					if (((int) MAX_IMAGE_WIDTH > 0 || (int) MAX_IMAGE_HEIGHT > 0) && $isUploaded && RoxyFile::IsImage($filename)) {
-						RoxyImage::Resize($filePath, $filePath, (int) MAX_IMAGE_WIDTH, (int) MAX_IMAGE_HEIGHT);
-					}
-				}
-				if ($errors && $errorsExt) {
-					$res = RoxyBase::getSuccessRes(RoxyBase::t('E_UploadNotAll') . ' ' . RoxyBase::t('E_FileExtensionForbidden'));
-				} elseif ($errorsExt) {
-					$res = RoxyBase::getSuccessRes(RoxyBase::t('E_FileExtensionForbidden'));
-				} elseif ($errors) {
-					$res = RoxyBase::getSuccessRes(RoxyBase::t('E_UploadNotAll'));
 				} else {
-					$res = RoxyBase::getSuccessRes();
+					$res = RoxyBase::getErrorRes(RoxyBase::t('E_UploadNoFiles')) . '1';
 				}
 			} else {
-				$res = RoxyBase::getErrorRes(RoxyBase::t('E_UploadNoFiles'));
+				$res = RoxyBase::getErrorRes(RoxyBase::t('E_UploadInvalidPath')) . '2';
+			}
+			if ($isAjax) {
+				if ($errors || $errorsExt) {
+					$res = RoxyBase::getErrorRes(RoxyBase::t('E_UploadNotAll')) . '3';
+				}
+				echo $res;
+			} else {
+				echo '<script>parent.fileUploaded("' . $res . '");</script>';
 			}
 		} else {
-			$res = RoxyBase::getErrorRes(RoxyBase::t('E_UploadInvalidPath'));
-		}
-		if ($isAjax) {
-			if ($errors || $errorsExt) {
-				$res = RoxyBase::getErrorRes(RoxyBase::t('E_UploadNotAll'));
-			}
-			echo $res;
-		} else {
-			echo '<script>parent.fileUploaded("' . $res . '");</script>';
+			RoxyBase::verifyPath('');
 		}
 	}
 

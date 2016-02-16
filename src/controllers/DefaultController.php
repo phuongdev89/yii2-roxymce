@@ -19,10 +19,9 @@ use yii\web\View;
 
 class DefaultController extends Controller {
 
-	public function filter() {
-		return [
-			'access',
-		];
+	public function beforeAction($action) {
+		$this->enableCsrfValidation = false;
+		return parent::beforeAction($action);
 	}
 
 	/**
