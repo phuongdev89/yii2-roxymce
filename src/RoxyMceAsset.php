@@ -16,16 +16,14 @@ class RoxyMceAsset extends AssetBundle {
 
 	public function init() {
 		parent::init();
-		$this->depends    = [
-			'yii\web\YiiAsset',
-			'yii\bootstrap\BootstrapAsset',
-			'yii\bootstrap\BootstrapPluginAsset',
-		];
-		$this->sourcePath = '@vendor/navatech/yii2-roxymce/src/fileman';
+		$this->sourcePath = '@vendor/navatech/yii2-roxymce/src/assets';
 		$this->css        = [
+			'css/jquery-ui-1.10.4.custom.min.css',
 			'css/main.css',
 		];
 		$this->js         = [
+			'js/jquery-1.11.1.min.js',
+			'js/jquery-ui-1.10.4.custom.min.js',
 			'js/filetypes.js',
 			'js/custom.js',
 			'js/main.js',
@@ -34,6 +32,6 @@ class RoxyMceAsset extends AssetBundle {
 			'js/directory.js',
 			'js/jquery-dateFormat.min.js',
 		];
-		$this->jsOptions  = ['position' => View::POS_LOAD];
+		$this->jsOptions  = ['position' => View::POS_HEAD];
 	}
 }

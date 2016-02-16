@@ -81,7 +81,11 @@ class RoxyMceWidget extends Widget {
 			];
 		}
 		if ($this->action === null) {
-			$this->action = Yii::$app->homeUrl . 'roxymce/default';
+			if (class_exists('navatech\localeurls\UrlManager')) {
+				$this->action = Yii::$app->homeUrl . Yii::$app->language . '/roxymce/default';
+			} else {
+				$this->action = Yii::$app->homeUrl . 'roxymce/default';
+			}
 		}
 	}
 
@@ -108,7 +112,7 @@ class RoxyMceWidget extends Widget {
 			}
 			tinyMCE.activeEditor.windowManager.open({
 				file          : roxyFileman,
-				title         : "RoxyMce",
+				title         : "' . (array_key_exists('title', $this->options) ? $this->options['title'] : 'RoxyMce') . '",
 				width         : 850,
 				height        : 650,
 				resizable     : "yes",

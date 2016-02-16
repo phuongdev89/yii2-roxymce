@@ -8,7 +8,7 @@
 "PREVIEW_THUMB_HEIGHT":"100",
 "MAX_IMAGE_WIDTH":     "1000",
 "MAX_IMAGE_HEIGHT":    "1000",
-"INTEGRATION":         "tinymce4",
+"INTEGRATION":         "custom",
 "DIRLIST":             "php/dirtree.php",
 "CREATEDIR":           "php/createdir.php",
 "DELETEDIR":           "php/deletedir.php",
@@ -29,7 +29,7 @@
 "ALLOWED_UPLOADS":     "",
 "FILEPERMISSIONS":     "0644",
 "DIRPERMISSIONS":      "0755",
-"LANG":                "fr",
+"LANG":                "auto",
 "DATEFORMAT":          "dd/MM/yyyy HH:mm",
 "OPEN_LAST_DIR":       "yes"
 }

@@ -6,24 +6,10 @@
  * @email   phuong17889[at]gmail.com
  * @date    15/02/2016
  * @time    2:56 CH
- * @var $roxyMceAsset string
+ * @var \navatech\roxymce\RoxyMceAsset $roxyMceAsset
+ * //TODO should use yii2-multi-language if yes
  */
 ?>
-<script>
-	var roxyMceAsset = '<?=$roxyMceAsset?>';
-	var roxyMceUrl = '<?=Yii::$app->homeUrl . 'roxymce/'?>';
-</script>
-<link href="<?= $roxyMceAsset ?>/css/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" type="text/css"/>
-<link href="<?= $roxyMceAsset ?>/css/main.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script type="text/javascript" src="<?= $roxyMceAsset ?>/js/jquery-ui-1.10.4.custom.min.js"></script>
-<script type="text/javascript" src="<?= $roxyMceAsset ?>/js/filetypes.js"></script>
-<script type="text/javascript" src="<?= $roxyMceAsset ?>/js/custom.js"></script>
-<script type="text/javascript" src="<?= $roxyMceAsset ?>/js/main.js"></script>
-<script type="text/javascript" src="<?= $roxyMceAsset ?>/js/utils.js"></script>
-<script type="text/javascript" src="<?= $roxyMceAsset ?>/js/file.js"></script>
-<script type="text/javascript" src="<?= $roxyMceAsset ?>/js/directory.js"></script>
-<script type="text/javascript" src="<?= $roxyMceAsset ?>/js/jquery-dateFormat.min.js"></script>
 <table cellpadding="0" cellspacing="0" id="wraper">
 	<tr>
 		<td valign="top" class="pnlDirs" id="dirActions">
@@ -34,7 +20,7 @@
 			</div>
 			<div id="pnlLoadingDirs">
 				<span>Loading directories...</span><br>
-				<img src="<?= $roxyMceAsset ?>/images/loading.gif" title="Loading directory tree, please wait...">
+				<img src="<?= $roxyMceAsset->baseUrl ?>/images/loading.gif" title="Loading directory tree, please wait...">
 			</div>
 			<div class="scrollPane">
 				<ul id="pnlDirList"></ul>
@@ -68,7 +54,7 @@
 				<div class="scrollPane">
 					<div id="pnlLoading">
 						<span data-lang="LoadingFiles">Loading files...</span><br>
-						<img src="<?= $roxyMceAsset ?>/images/loading.gif" title="Loading files, please wait...">
+						<img src="<?= $roxyMceAsset->baseUrl ?>/images/loading.gif" title="Loading files, please wait...">
 					</div>
 					<div id="pnlEmptyDir" data-lang="DirIsEmpty">
 						This folder is empty
@@ -147,3 +133,5 @@
 	<span class="name"></span><br>
 	<input type="text" id="txtDirName">
 </div>
+<?php //$this->endBody(); ?>
+<?php //$this->endPage(); ?>
