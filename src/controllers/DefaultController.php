@@ -13,6 +13,7 @@ use navatech\roxymce\RoxyMceAsset;
 use Yii;
 use yii\base\Exception;
 use yii\base\InvalidParamException;
+use yii\jui\JuiAsset;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\web\View;

@@ -7,8 +7,10 @@
  * @date    15/02/2016
  * @time    2:56 CH
  * @var \navatech\roxymce\RoxyMceAsset $roxyMceAsset
- * //TODO should use yii2-multi-language if yes
  */
+\yii\jui\JuiAsset::register($this);
+\navatech\roxymce\JqueryDateFormatAsset::register($this);
+\navatech\roxymce\FontAwesomeAsset::register($this);
 ?>
 <table cellpadding="0" cellspacing="0" id="wraper">
 	<tr>

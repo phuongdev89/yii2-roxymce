@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ca19f1c5dfc79544dba8c7657e0c054b",
-    "content-hash": "57d9246121f479dee4f44b9c1711d667",
+    "hash": "4822d47ed1059248c770903cd93bdeff",
+    "content-hash": "bf64e7238c3d77c82cd5443dfec85068",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -57,6 +57,43 @@
             ]
         },
         {
+            "name": "bower-asset/fontawesome",
+            "version": "v4.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FortAwesome/Font-Awesome.git",
+                "reference": "fddd2c240452e6c8990c4ef75e0265b455aa7968"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FortAwesome/Font-Awesome/zipball/fddd2c240452e6c8990c4ef75e0265b455aa7968",
+                "reference": "fddd2c240452e6c8990c4ef75e0265b455aa7968",
+                "shasum": ""
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": [
+                    "less/font-awesome.less",
+                    "scss/font-awesome.scss"
+                ],
+                "bower-asset-ignore": [
+                    "*/.*",
+                    "*.json",
+                    "src",
+                    "*.yml",
+                    "Gemfile",
+                    "Gemfile.lock",
+                    "*.md"
+                ]
+            },
+            "license": [
+                "OFL-1.1",
+                "MIT",
+                "CC-BY-3.0"
+            ],
+            "description": "Font Awesome"
+        },
+        {
             "name": "bower-asset/jquery",
             "version": "2.2.0",
             "source": {
@@ -86,6 +123,64 @@
                 "jquery",
                 "library"
             ]
+        },
+        {
+            "name": "bower-asset/jquery-dateFormat",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phstc/jquery-dateFormat.git",
+                "reference": "1d1f4a23776cb73fde44b6febbeec68386c78435"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phstc/jquery-dateFormat/zipball/1d1f4a23776cb73fde44b6febbeec68386c78435",
+                "reference": "1d1f4a23776cb73fde44b6febbeec68386c78435",
+                "shasum": ""
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": "./dist/jquery-dateFormat.js",
+                "bower-asset-ignore": [
+                    "src",
+                    "test",
+                    "coverage",
+                    ".bowerrc",
+                    ".gitignore",
+                    ".jshintignore",
+                    ".jshintrc",
+                    "composer.json",
+                    "bower.json",
+                    "Gruntfile.js",
+                    "package.json",
+                    "README.md"
+                ]
+            }
+        },
+        {
+            "name": "bower-asset/jquery-ui",
+            "version": "1.11.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/components/jqueryui.git",
+                "reference": "c34f8dbf3ba57b3784b93f26119f436c0e8288e1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/jqueryui/zipball/c34f8dbf3ba57b3784b93f26119f436c0e8288e1",
+                "reference": "c34f8dbf3ba57b3784b93f26119f436c0e8288e1",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.6"
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": [
+                    "jquery-ui.js"
+                ],
+                "bower-asset-ignore": []
+            }
         },
         {
             "name": "bower-asset/jquery.inputmask",
@@ -160,6 +255,43 @@
                     "package.json"
                 ]
             }
+        },
+        {
+            "name": "bower-asset/tinymce-dist",
+            "version": "4.3.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tinymce/tinymce-dist.git",
+                "reference": "4db115aff381c7e881193eede8cb8d8172d01963"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/4db115aff381c7e881193eede8cb8d8172d01963",
+                "reference": "4db115aff381c7e881193eede8cb8d8172d01963",
+                "shasum": ""
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-ignore": [
+                    "readme.md",
+                    "composer.json",
+                    "package.json",
+                    ".npmignore",
+                    "changelog.txt"
+                ]
+            },
+            "license": [
+                "LGPL-2.1"
+            ],
+            "description": "Web based JavaScript HTML WYSIWYG editor control.",
+            "keywords": [
+                "editor",
+                "html",
+                "javascript",
+                "richtext",
+                "tinymce",
+                "wysiwyg"
+            ]
         },
         {
             "name": "bower-asset/yii2-pjax",
@@ -299,50 +431,53 @@
             "time": "2013-11-30 08:25:19"
         },
         {
-            "name": "tinymce/tinymce",
-            "version": "4.3.4",
+            "name": "navatech/yii2-roxymce",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "4db115aff381c7e881193eede8cb8d8172d01963"
+                "url": "https://github.com/navatech/yii2-roxymce.git",
+                "reference": "a12599df47d458719131d99b7d9e6175702913dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/4db115aff381c7e881193eede8cb8d8172d01963",
-                "reference": "4db115aff381c7e881193eede8cb8d8172d01963",
+                "url": "https://api.github.com/repos/navatech/yii2-roxymce/zipball/a12599df47d458719131d99b7d9e6175702913dd",
+                "reference": "a12599df47d458719131d99b7d9e6175702913dd",
                 "shasum": ""
             },
-            "type": "component",
-            "extra": {
-                "component": {
-                    "scripts": [
-                        "tinymce.js",
-                        "plugins/*/plugin.js",
-                        "themes/*/theme.js"
-                    ],
-                    "files": [
-                        "tinymce.min.js",
-                        "plugins/*/plugin.min.js",
-                        "themes/*/theme.min.js",
-                        "skins/**"
-                    ]
+            "require": {
+                "bower-asset/fontawesome": "^4.0",
+                "bower-asset/jquery-dateformat": "^1.0",
+                "bower-asset/tinymce-dist": "^4.3",
+                "ext-gd": "*",
+                "ext-mbstring": "*",
+                "ext-zip": "*",
+                "php": ">=5.2.0",
+                "yiisoft/yii2": "^2.0.5",
+                "yiisoft/yii2-jui": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "navatech\\roxymce\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL-2.1"
+                "BSD-3-Clause"
             ],
-            "description": "Web based JavaScript HTML WYSIWYG editor control.",
-            "homepage": "http://www.tinymce.com",
+            "authors": [
+                {
+                    "name": "Le Phuong",
+                    "email": "phuong17889@gmail.com"
+                }
+            ],
+            "description": "Integrate tinymce + roxy manager to yii2",
             "keywords": [
-                "editor",
-                "html",
-                "javascript",
-                "richtext",
+                "file manager",
                 "tinymce",
-                "wysiwyg"
+                "yii2"
             ],
-            "time": "2016-02-11 08:05:42"
+            "time": "2016-02-17 04:53:06"
         },
         {
             "name": "yiisoft/yii2",
@@ -350,12 +485,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "91891865054fa60982c85cb3926414fd84c60f50"
+                "reference": "f8301c3e976ad85856e8bfae0f487ba3dbf39e0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/91891865054fa60982c85cb3926414fd84c60f50",
-                "reference": "91891865054fa60982c85cb3926414fd84c60f50",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/f8301c3e976ad85856e8bfae0f487ba3dbf39e0c",
+                "reference": "f8301c3e976ad85856e8bfae0f487ba3dbf39e0c",
                 "shasum": ""
             },
             "require": {
@@ -436,7 +571,7 @@
                 "framework",
                 "yii2"
             ],
-            "time": "2016-02-14 14:51:30"
+            "time": "2016-02-16 11:35:15"
         },
         {
             "name": "yiisoft/yii2-bootstrap",
@@ -534,19 +669,68 @@
                 "yii2"
             ],
             "time": "2016-02-06 01:03:32"
+        },
+        {
+            "name": "yiisoft/yii2-jui",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii2-jui.git",
+                "reference": "1425ab29929dd195f468d3c4eb340ab509f28b83"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiisoft/yii2-jui/zipball/1425ab29929dd195f468d3c4eb340ab509f28b83",
+                "reference": "1425ab29929dd195f468d3c4eb340ab509f28b83",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery-ui": "1.11.*@stable",
+                "yiisoft/yii2": ">=2.0.4"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                },
+                "asset-installer-paths": {
+                    "npm-asset-library": "vendor/npm",
+                    "bower-asset-library": "vendor/bower"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "yii\\jui\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Qiang Xue",
+                    "email": "qiang.xue@gmail.com"
+                }
+            ],
+            "description": "The Jquery UI extension for the Yii framework",
+            "keywords": [
+                "jQuery UI",
+                "yii2"
+            ],
+            "time": "2015-12-24 06:23:53"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "navatech/yii2-roxymce": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.2.0",
-        "ext-gd": "*",
-        "ext-mbstring": "*",
-        "ext-zip": "*"
+        "php": ">=5.4.0"
     },
     "platform-dev": []
 }
