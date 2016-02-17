@@ -18,11 +18,9 @@ class TinyMceAsset extends AssetBundle {
 		parent::init();
 		$this->depends    = [
 			'yii\web\YiiAsset',
-			'yii\bootstrap\BootstrapAsset',
-			'yii\bootstrap\BootstrapPluginAsset',
 		];
-		$this->sourcePath = '@vendor/tinymce/tinymce';
-		$this->js         = ['tinymce.js'];
+		$this->sourcePath = '@bower/tinymce-dist';
+		$this->js         = ['tinymce.min.js'];
 		$this->jsOptions  = ['position' => View::POS_HEAD];
 	}
 }
