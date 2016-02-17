@@ -265,8 +265,9 @@ RoxyUtils.Translate   = function() {
 		$(this).prop('title', t(key));
 	});
 	$('[data-lang-v]').each(function() {
-		var key = $(this).attr('data-lang-v');
-		$(this).prop('value', t(key));
+		var key  = $(this).attr('data-lang-v');
+		var html = $(this).html();
+		$(this).html(html + ' ' + t(key));
 	});
 	$('[data-lang]').each(function() {
 		var key = $(this).attr('data-lang');

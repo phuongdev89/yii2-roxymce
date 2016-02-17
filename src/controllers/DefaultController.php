@@ -9,11 +9,9 @@
  */
 namespace navatech\roxymce\controllers;
 
-use navatech\roxymce\RoxyMceAsset;
 use Yii;
 use yii\base\Exception;
 use yii\base\InvalidParamException;
-use yii\jui\JuiAsset;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\web\View;
@@ -35,10 +33,7 @@ class DefaultController extends Controller {
 		} else {
 			$roxyMceUrl = Yii::$app->homeUrl . 'roxymce/';
 		}
-		$roxyMceAsset = RoxyMceAsset::register($this->getView());
-		$this->view->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyMceUrl = "' . $roxyMceUrl . '";', View::POS_HEAD);
-		//TODO should make another version of bootstrap
-		return $this->renderAjax('index', ['roxyMceAsset' => $roxyMceAsset]);
+		return $this->renderAjax('index', ['roxyMceUrl' => $roxyMceUrl]);
 	}
 
 	/**
