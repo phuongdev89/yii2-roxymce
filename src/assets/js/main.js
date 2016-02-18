@@ -25,7 +25,7 @@ function selectFile(item) {
 	$('#pnlFileList li').removeClass('selected');
 	$(item).prop('class', 'selected');
 	var html = RoxyUtils.GetFilename($(item).attr('data-path'));
-	html += ' (' + t('Size') + ': ' + RoxyUtils.FormatFileSize($(item).attr('data-size'));
+	html += '\n(' + t('Size') + ': ' + RoxyUtils.FormatFileSize($(item).attr('data-size'));
 	if($(item).attr('data-w') > 0) {
 		html += ', ' + t('Dimensions') + ':' + $(item).attr('data-w') + 'x' + $(item).attr('data-h');
 	}
@@ -561,7 +561,7 @@ function switchView(t) {
 		$('#pnlFileList').addClass('thumbView');
 		if($('#dynStyle').length == 0) {
 			$('head').append('<style id="dynStyle" />');
-			var rules = 'ul#pnlFileList.thumbView li{width:' + RoxyFilemanConf.THUMBS_VIEW_WIDTH + 'px;}';
+			var rules = 'ul#pnlFileList.thumbView li{width:' + (parseInt(RoxyFilemanConf.THUMBS_VIEW_WIDTH) + 20) + 'px;}';
 			rules += 'ul#pnlFileList.thumbView li{height:' + (parseInt(RoxyFilemanConf.THUMBS_VIEW_HEIGHT) + 20) + 'px;}';
 			rules += 'ul#pnlFileList.thumbView .icon{width:' + RoxyFilemanConf.THUMBS_VIEW_WIDTH + 'px;}';
 			rules += 'ul#pnlFileList.thumbView .icon{height:' + RoxyFilemanConf.THUMBS_VIEW_HEIGHT + 'px;}';
@@ -682,8 +682,8 @@ function setClipboard(a, obj) {
 	}
 }
 function ResizeLists() {
-	var tmp = $(window).innerHeight() - $('#fileActions .actions').outerHeight() - $('.bottomLine').outerHeight();
-	$('.scrollPane').css('height', tmp);
+	var tmp = $(window).innerHeight() - $('#fileActions .actions').outerHeight() - $('.bottomLine').outerHeight() - 14;
+	$('.scrollPane:first').css('height', tmp);
 }
 function removeDisabledActions() {
 	if(RoxyFilemanConf.CREATEDIR == '') {

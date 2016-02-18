@@ -27,6 +27,7 @@ body {
     background: #FFF;
     height: 100%;
     width: 100%;
+    overflow: hidden;
 }
 
 a {
@@ -40,23 +41,22 @@ ul {
     padding: 0;
 }
 
-#wraper {
+#wrapper {
     width: 100%;
     height: 100%;
-}
-
-#wraper, #dlgNewDir, #dlgFileProp, #dlgAddFile, #menuDir,
-#menuFile, #pnlRenameFile, #pnlLoadingDirs,
-#pnlDirName, #pnlLoading, #pnlEmptyDir,
-#pnlSearchNoFiles, #pnlFileProp, #pnlDirList ul {
-    display: none;
 }
 
 .contextMenu a:hover,
 #pnlFileList .selected, #pnlFileList .selected:hover,
 #menuFile a:hover {
-    background-color: #000099 !important;
-    color: #FFF;
+    background-color: #9EDBFF !important;
+    color: #2b7dbc;
+}
+
+#pnlFileList li span.name {
+    width: 250px;
+    display: inline-block;
+    word-wrap: break-word;
 }
 
 #pnlDirList .selected, #pnlDirList div.selected:hover {
@@ -85,13 +85,18 @@ ul {
 }
 
 .scrollPane {
-    height: 400px;
+    height: 500px;
     overflow: auto;
 }
 
 .bottomLine {
     background: #DDD;
     border-top: 1px solid #CCC;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    max-height: 50px;
+    min-height: 50px;
 }
 
 .pale {
@@ -176,6 +181,7 @@ input[type=text]::-ms-clear {
     clear: both;
     width: 98%;
     cursor: pointer;
+    /*color: #ffffff;*/
 }
 
 #pnlFileList li:hover, #pnlDirList li div:hover {
@@ -227,133 +233,25 @@ hr {
 
 /* Buttons */
 .actions {
-    padding: 3px 0 10px 5px;
+    padding: 2px;
+    margin: 5px 0;
 }
 
 /*.actions input {*/
-    /*background-repeat: no-repeat;*/
-    /*background-position: 3px center;*/
-    /*padding: 0 3px 0 18px;*/
-    /*height: 22px;*/
-    /*font-size: 11px;*/
-    /*border: 1px solid #CCC;*/
-    /*background-color: #EEE;*/
-    /*border-radius: 3px;*/
-    /*margin-bottom: 3px;*/
+/*background-repeat: no-repeat;*/
+/*background-position: 3px center;*/
+/*padding: 0 3px 0 18px;*/
+/*height: 22px;*/
+/*font-size: 11px;*/
+/*border: 1px solid #CCC;*/
+/*background-color: #EEE;*/
+/*border-radius: 3px;*/
+/*margin-bottom: 3px;*/
 /*}*/
 
 .actions input[type=button]:hover, .actions input.selected {
     background-color: #DFD;
     cursor: pointer;
-}
-
-#btnAddDir {
-    background-image: url(../images/sprite.png);
-    background-position: 4px -213px;
-}
-
-#mnuCreateDir {
-    background-image: url(../images/sprite.png);
-    background-position: 4px -210px;
-}
-
-#mnuDownloadDir {
-    background-image: url(../images/sprite.png);
-    background-position: 4px 7px;
-}
-
-#btnDeleteDir {
-    background-image: url(../images/sprite.png);
-    background-position: 4px -237px;
-}
-
-#mnuDeleteDir {
-    background-image: url(../images/sprite.png);
-    background-position: 4px -235px;
-}
-
-#btnAddFile {
-    background-image: url(../images/sprite.png);
-    background-position: 4px -81px;
-}
-
-#btnDeleteFile {
-    background-image: url(../images/sprite.png);
-    background-position: 4px -104px;
-}
-
-#mnuDeleteFile {
-    background-image: url(../images/sprite.png);
-    background-position: 4px -102px;
-}
-
-#btnDeleteFile {
-    margin-right: 15px;
-}
-
-#btnDownloadFile {
-    background-image: url(../images/sprite.png);
-    background-position: 4px -128px;
-}
-
-#mnuDownload {
-    background-image: url(../images/sprite.png);
-    background-position: 4px -126px;
-}
-
-#btnPreviewFile {
-    background-image: url(../images/sprite.png);
-    background-position: 4px -285px;
-}
-
-#mnuPreview {
-    background-image: url(../images/sprite.png);
-    background-position: 4px -283px;
-}
-
-#btnSelectFile {
-    background-image: url(../images/sprite.png);
-    background-position: 4px -399px;
-}
-
-#mnuSelectFile {
-    background-image: url(../images/sprite.png);
-    background-position: 4px -397px;
-}
-
-#btnThumbView {
-    background-image: url(../images/sprite.png);
-    background-position: center -447px;
-}
-
-#btnListView {
-    background-image: url(../images/sprite.png);
-    background-position: center -483px;
-}
-
-#btnRenameFile, #btnRenameDir {
-    background-image: url(../images/sprite.png);
-    background-position: 4px 4px;
-}
-
-#mnuRenameDir, #mnuRenameFile {
-    background-image: url(../images/sprite.png);
-    background-position: 4px 7px;
-}
-
-#mnuDirCut, #mnuFileCut {
-    background-image: url(../images/sprite.png);
-    background-position: 4px -47px;
-}
-
-#mnuDirCopy, #mnuFileCopy {
-    background-image: url(../images/sprite.png);
-    background-position: 4px -20px;
-}
-
-#mnuDirPaste, #mnuFilePaste {
-    background-image: url(../images/sprite.png);
-    background-position: 4px -370px;
 }
 
 /* END OF Buttons */
@@ -394,12 +292,22 @@ ul#pnlFileList.thumbView .icon {
     */
 }
 
+ul#pnlFileList.thumbView li.selected .size, ul#pnlFileList.thumbView li.selected:hover .size {
+    background: #9EDBFF;
+}
+
+ul#pnlFileList.thumbView li:hover .size {
+    background: #FFFFCC;
+}
+
 ul#pnlFileList.thumbView .size {
     display: block !important;
     width: 95% !important;
     position: absolute;
     bottom: 5px;
     margin: 0;
+    background: #EEEEEE;
+    color: #000;
 }
 
 /* END OF File list views */
@@ -513,6 +421,18 @@ div.ui-tooltip {
     height: 100%;
     width: 20px;
     cursor: pointer;
+}
+
+.pull-right {
+    padding: 7px;
+}
+
+.contextMenu .dropdown-menu {
+    display: block;
+}
+
+.contextMenu .dropdown-menu > li > a {
+    text-align: left;
 }
 
 /* END OF Upload dialog */

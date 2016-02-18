@@ -26,9 +26,10 @@ $this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyM
 				<button type="button" class="btn btn-sm btn-danger" onclick="deleteDir()" data-lang-t="T_DeleteDir" data-lang-v="DeleteDir">
 					<i class="fa fa-trash"></i></button>
 			</div>
-			<div id="pnlLoadingDirs">
-				<span>Loading directories...</span><br>
-				<img src="<?= $roxyMceAsset->baseUrl ?>/images/loading.gif" title="Loading directory tree, please wait...">
+			<div id="pnlLoadingDirs" class="progress">
+				<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+					<span data-lang="LoadingDirectories"></span><br>
+				</div>
 			</div>
 			<div class="scrollPane">
 				<ul id="pnlDirList"></ul>
@@ -51,19 +52,19 @@ $this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyM
 							<i class="fa fa-download"></i></button>
 						<button type="button" class="btn btn-sm btn-danger" onclick="deleteFile()" data-lang-v="DeleteFile" data-lang-t="T_DeleteFile">
 							<i class="fa fa-trash"></i></button>
-						<button type="button" class="btn btn-sm btn-success" onclick="setFile()" data-lang-v="SelectFile" data-lang-t="T_SelectFile">
-							<i class="fa fa-check"></i></button>
 					</div>
 				</div>
+			</div>
+			<div class="actions">
 				<div class="row">
 					<div class="col-sm-3">
 						<select onchange="sortFiles()" class="form-control input-sm">
-							<option value="name" data-lang="Name_asc">&uarr;&nbsp;&nbsp;Name</option>
-							<option value="size" data-lang="Size_asc">&uarr;&nbsp;&nbsp;Size</option>
-							<option value="time" data-lang="Date_asc">&uarr;&nbsp;&nbsp;Date</option>
-							<option value="name_desc" data-lang="Name_desc">&darr;&nbsp;&nbsp;Name</option>
-							<option value="size_desc" data-lang="Size_desc">&darr;&nbsp;&nbsp;Size</option>
-							<option value="time_desc" data-lang="Date_desc">&darr;&nbsp;&nbsp;Date</option>
+							<option value="name" data-lang="Name_asc"></option>
+							<option value="size" data-lang="Size_asc"></option>
+							<option value="time" data-lang="Date_asc"></option>
+							<option value="name_desc" data-lang="Name_desc"></option>
+							<option value="size_desc" data-lang="Size_desc"></option>
+							<option value="time_desc" data-lang="Date_desc"></option>
 						</select>
 					</div>
 					<div class="col-sm-3">
@@ -73,7 +74,7 @@ $this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyM
 							<i class="fa fa-picture-o"></i></button>
 					</div>
 					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-						<div class="form-group form-inline">
+						<div class="form-inline">
 							<div class="input-group input-group-sm">
 								<input type="text" class="form-control" placeholder="Search for..." onkeyup="filterFiles()" onchange="filterFiles()">
 									<span class="input-group-btn">
@@ -87,28 +88,27 @@ $this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyM
 			</div>
 			<div class="pnlFiles">
 				<div class="scrollPane">
-					<div id="pnlLoading">
-						<span data-lang="LoadingFiles">Loading files...</span><br>
-						<img src="<?= $roxyMceAsset->baseUrl ?>/images/loading.gif" title="Loading files, please wait...">
+					<div id="pnlLoading" class="progress">
+						<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+							<span data-lang="LoadingFiles"></span><br>
+						</div>
 					</div>
-					<div id="pnlEmptyDir" data-lang="DirIsEmpty">
-						This folder is empty
-					</div>
-					<div id="pnlSearchNoFiles" data-lang="NoFilesFound">
-						No files found
-					</div>
+					<div id="pnlEmptyDir" data-lang="DirIsEmpty"></div>
+					<div id="pnlSearchNoFiles" data-lang="NoFilesFound"></div>
 					<ul id="pnlFileList"></ul>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="row bottomLine">
-		<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-			&nbsp;&nbsp;&nbsp;<a href="http://www.roxyfileman.com" target="_blank">&copy; 2013 -
-				<span id="copyYear"></span> RoxyFileman</a>
-		</div>
-		<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+		<div class="col-sm-9">
 			<div id="pnlStatus">Status bar</div>
+		</div>
+		<div class="col-sm-3 pull-right">
+			<button type="button" class="btn btn-success" onclick="setFile()" data-lang-v="SelectFile" data-lang-t="T_SelectFile">
+				<i class="fa fa-check"></i></button>
+			<button type="button" class="btn btn-default" data-lang-v="Close" data-lang-t="T_Close" onclick="closeWindow()">
+				<i class="fa fa-ban"></i></button>
 		</div>
 	</div>
 </div>
@@ -128,37 +128,57 @@ $this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyM
 	</form>
 </div>
 <div id="menuFile" class="contextMenu">
-	<a href="#" onclick="setFile()" data-lang="SelectFile" id="mnuSelectFile">Select</a>
-	<hr>
-	<a href="#" onclick="previewFile()" data-lang="Preview" id="mnuPreview">Preview</a>
-	<hr>
-	<a href="#" onclick="downloadFile()" data-lang="DownloadFile" id="mnuDownload">Download</a>
-	<hr>
-	<a href="#" onclick="return pasteToFiles(event, this)" data-lang="Paste" class="paste pale" id="mnuFilePaste">Paste</a>
-	<hr>
-	<a href="#" onclick="cutFile()" data-lang="Cut" id="mnuFileCut">Cut</a>
-	<hr>
-	<a href="#" onclick="copyFile()" data-lang="Copy" id="mnuFileCopy">Copy</a>
-	<hr>
-	<a href="#" onclick="renameFile()" data-lang="RenameFile" id="mnuRenameFile">Rename</a>
-	<hr>
-	<a href="#" onclick="deleteFile()" data-lang="DeleteFile" id="mnuDeleteFile">Delete</a><!-- hr>
-  <a href="#" onclick="fileProperties()" id="mnuProp">Properties</a -->
+	<ul class="dropdown-menu">
+		<li>
+			<a href="#" onclick="setFile()" data-lang="SelectFile" id="mnuSelectFile"><i class="fa fa-check"></i></a>
+		</li>
+		<li>
+			<a href="#" onclick="previewFile()" data-lang="Preview" id="mnuPreview"><i class="fa fa-search"></i></a>
+		</li>
+		<li>
+			<a href="#" onclick="downloadFile()" data-lang="DownloadFile" id="mnuDownload"><i class="fa fa-download"></i></a>
+		</li>
+		<li>
+			<a href="#" onclick="return pasteToFiles(event, this)" data-lang="Paste" class="paste pale" id="mnuFilePaste"><i class="fa fa-clipboard"></i></a>
+		</li>
+		<li>
+			<a href="#" onclick="cutFile()" data-lang="Cut" id="mnuFileCut"><i class="fa fa-scissors"></i></a>
+		</li>
+		<li>
+			<a href="#" onclick="copyFile()" data-lang="Copy" id="mnuFileCopy"><i class="fa fa-files-o"></i></a>
+		</li>
+		<li>
+			<a href="#" onclick="renameFile()" data-lang="RenameFile" id="mnuRenameFile"><i class="fa fa-pencil"></i></a>
+		</li>
+		<li>
+			<a href="#" onclick="deleteFile()" data-lang="DeleteFile" id="mnuDeleteFile"><i class="fa fa-trash"></i></a>
+		</li>
+	</ul>
 </div>
 <div id="menuDir" class="contextMenu">
-	<a href="#" onclick="downloadDir()" data-lang="Download" id="mnuDownloadDir">Download</a>
-	<hr>
-	<a href="#" onclick="addDir()" data-lang="T_CreateDir" id="mnuCreateDir">Create new</a>
-	<hr>
-	<a href="#" onclick="return pasteToDirs(event, this)" data-lang="Paste" class="paste pale" id="mnuDirPaste">Paste</a>
-	<hr>
-	<a href="#" onclick="cutDir()" data-lang="Cut" id="mnuDirCut">Cut</a>
-	<hr>
-	<a href="#" onclick="copyDir()" data-lang="Copy" id="mnuDirCopy">Copy</a>
-	<hr>
-	<a href="#" onclick="renameDir()" data-lang="RenameDir" id="mnuRenameDir">Rename</a>
-	<hr>
-	<a href="#" onclick="deleteDir()" data-lang="DeleteDir" id="mnuDeleteDir">Delete</a>
+	<ul class="dropdown-menu">
+		<li>
+			<a href="#" onclick="downloadDir()" data-lang="Download" id="mnuDownloadDir"><i class="fa fa-download"></i></a>
+		</li>
+		<li>
+			<a href="#" onclick="addDir()" data-lang="T_CreateDir" id="mnuCreateDir"><i class="fa fa-plus-square"></i></a>
+		</li>
+		<li>
+			<a href="#" onclick="return pasteToDirs(event, this)" data-lang="Paste" class="paste pale" id="mnuDirPaste"><i class="fa fa-clipboard"></i></a>
+		</li>
+		<li>
+			<a href="#" onclick="cutDir()" data-lang="Cut" id="mnuDirCut"><i class="fa fa-scissors"></i></a>
+		</li>
+		<li>
+			<a href="#" onclick="copyDir()" data-lang="Copy" id="mnuDirCopy"><i class="fa fa-files-o"></i></a>
+		</li>
+		<li>
+			<a href="#" onclick="renameDir()" data-lang="RenameDir" id="mnuRenameDir"><i class="fa fa-pencil-square"></i></a>
+		</li>
+		<li>
+			<a href="#" onclick="deleteDir()" data-lang="DeleteDir" id="mnuDeleteDir"><i class="fa fa-trash"></i></a>
+		</li>
+	</ul>
 </div>
 <div id="pnlRenameFile" class="dialog">
 	<span class="name"></span><br>

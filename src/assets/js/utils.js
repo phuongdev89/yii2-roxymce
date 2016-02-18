@@ -271,7 +271,8 @@ RoxyUtils.Translate   = function() {
 	});
 	$('[data-lang]').each(function() {
 		var key = $(this).attr('data-lang');
-		$(this).html(t(key));
+		var html = $(this).html();
+		$(this).html(html + ' ' + t(key));
 	});
 };
 RoxyUtils.GetCookies  = function() {
