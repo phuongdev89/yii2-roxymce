@@ -957,7 +957,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 }
 .ui-dialog .ui-dialog-titlebar-close {
   position: absolute;
-  right: .3em;
+  right: 1.3em;
   top: 50%;
   width: 19px;
   margin: -20px 0 0 0;

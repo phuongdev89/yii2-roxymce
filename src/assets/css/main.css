@@ -124,7 +124,6 @@ input[type=text]::-ms-clear {
 
 /* Directory tree */
 .pnlDirs {
-    width: 260px;
     overflow: auto;
     border-right: 1px solid #DDD;
 }

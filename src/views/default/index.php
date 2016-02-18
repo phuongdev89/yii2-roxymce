@@ -17,7 +17,7 @@ $this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyM
 ?>
 <div class="col-sm-12" id="wrapper">
 	<div class="row">
-		<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 pnlDirs" id="dirActions">
+		<div class="col-sm-4 pnlDirs" id="dirActions">
 			<div class="actions">
 				<button type="button" class="btn btn-sm btn-primary" onclick="addDir()" data-lang-v="CreateDir" data-lang-t="T_CreateDir">
 					<i class="fa fa-plus-square"></i></button>
@@ -36,12 +36,12 @@ $this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyM
 			</div>
 
 		</div>
-		<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" id="fileActions">
+		<div class="col-sm-8" id="fileActions">
 			<input type="hidden" id="hdViewType" value="list">
 			<input type="hidden" id="hdOrder" value="asc">
 			<div class="actions">
 				<div class="row">
-					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<div class="col-sm-12">
 						<button type="button" class="btn btn-sm btn-primary" onclick="addFileClick()" data-lang-v="AddFile" data-lang-t="T_AddFile">
 							<i class="fa fa-plus"></i></button>
 						<button type="button" class="btn btn-sm btn-info" onclick="previewFile()" data-lang-v="Preview" data-lang-t="T_Preview">
@@ -73,7 +73,7 @@ $this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyM
 						<button type="button" class="btn btn-default" onclick="switchView('thumb')" data-lang-t="T_ThumbsView">
 							<i class="fa fa-picture-o"></i></button>
 					</div>
-					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<div class="col-sm-6">
 						<div class="form-inline">
 							<div class="input-group input-group-sm">
 								<input type="text" class="form-control" placeholder="Search for..." onkeyup="filterFiles()" onchange="filterFiles()">
