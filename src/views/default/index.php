@@ -8,12 +8,12 @@
  * @time    2:56 CH
  * @var string $roxyMceUrl
  */
-$roxyMceAsset = \navatech\roxymce\RoxyMceAsset::register($this);
-$this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyMceUrl = "' . $roxyMceUrl . '";', 1);
 \yii\jui\JuiAsset::register($this);
 \navatech\roxymce\JqueryDateFormatAsset::register($this);
 \yii\bootstrap\BootstrapAsset::register($this);
 \navatech\roxymce\FontAwesomeAsset::register($this);
+$roxyMceAsset = \navatech\roxymce\RoxyMceAsset::register($this);
+$this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyMceUrl = "' . $roxyMceUrl . '";', 1);
 ?>
 <div class="col-sm-12" id="wrapper">
 	<div class="row">

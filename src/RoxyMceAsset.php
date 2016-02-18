@@ -21,6 +21,7 @@ class RoxyMceAsset extends AssetBundle {
 			'yii\web\JqueryAsset',
 		];
 		$this->css        = [
+			'css/jquery-ui-1.10.0.custom.css',
 			'css/main.css',
 		];
 		$this->js         = [
