@@ -9,7 +9,6 @@
  * @version 1.0.0
  * @var string $roxyMceUrl
  */
-\yii\jui\JuiAsset::register($this);
 \navatech\roxymce\JqueryDateFormatAsset::register($this);
 \yii\bootstrap\BootstrapAsset::register($this);
 \navatech\roxymce\FontAwesomeAsset::register($this);

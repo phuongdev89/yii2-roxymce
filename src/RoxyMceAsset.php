@@ -38,6 +38,7 @@ class RoxyMceAsset extends AssetBundle {
 			'js/file.js',
 			'js/directory.js',
 			'js/custom.js',
+			'js/jquery-ui.js',
 		];
 		$this->jsOptions  = ['position' => View::POS_HEAD];
 	}

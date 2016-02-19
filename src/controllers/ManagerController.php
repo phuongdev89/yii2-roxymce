@@ -17,6 +17,7 @@ use navatech\roxymce\helpers\RoxyHelper;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\InvalidParamException;
+use yii\helpers\Json;
 use yii\web\Controller;
 
 /**
@@ -38,16 +39,15 @@ class ManagerController extends Controller {
 		if ($type !== 'image' && $type !== 'flash') {
 			$type = '';
 		}
-		echo "[\n";
-		$tmp = RoxyHelper::getFilesNumber(RoxyHelper::fixPath(RoxyHelper::getFilesPath()), $type);
-//		$response = [
-//			'p'=>mb_ereg_replace('"', '\\"', RoxyHelper::getFilesPath()),
-//			'f'=>$tmp['files'],
-//			'd'=>$tmp['dirs']
-//		]
-		echo '{"p":"' . mb_ereg_replace('"', '\\"', RoxyHelper::getFilesPath()) . '","f":"' . $tmp['files'] . '","d":"' . $tmp['dirs'] . '"}';
-		RoxyHelper::getDirs(RoxyHelper::getFilesPath(), $type);
-		echo "\n]";
+		$tmp      = RoxyHelper::getFilesNumber(RoxyHelper::fixPath(RoxyHelper::getFilesPath()), $type);
+		$response = array_merge_recursive([
+			[
+				'p' => mb_ereg_replace('"', '\\"', RoxyHelper::getFilesPath()),
+				'f' => $tmp['files'],
+				'd' => $tmp['dirs'],
+			],
+		], RoxyHelper::getDirs(RoxyHelper::getFilesPath(), $type));
+		echo Json::encode($response);
 	}
 
 	/**
@@ -236,7 +236,7 @@ class ManagerController extends Controller {
 			$method = $_POST['method'];
 			$d      = $_POST['d'];
 			$isAjax = ($method === 'ajax');
-			$errors = $errorsExt = array();
+			$errors = $errorsExt = [];
 			if ($d === null) {
 				RoxyHelper::getFilesPath();
 			}

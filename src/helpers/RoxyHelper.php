@@ -122,7 +122,7 @@ class RoxyHelper {
 	public static function listDirectory($path) {
 		$ret = @scandir($path);
 		if ($ret === false) {
-			$ret = array();
+			$ret = [];
 			$d   = opendir($path);
 			if ($d) {
 				while (($f = readdir($d)) !== false) {
@@ -154,19 +154,14 @@ class RoxyHelper {
 				$dirs ++;
 			}
 		}
-		return array(
+		return [
 			'files' => $files,
 			'dirs'  => $dirs,
-		);
+		];
 	}
 
-	/**
-	 * @param $path
-	 * @param $type
-	 * @throws InvalidConfigException
-	 */
-	public static function getDirs($path, $type) {
-		$ret   = $sort = array();
+	public static function getDirs($path, $type, $response = []) {
+		$ret   = $sort = [];
 		$files = self::listDirectory(self::fixPath($path));
 		foreach ($files as $f) {
 			$fullPath = $path . '/' . $f;
@@ -178,19 +173,24 @@ class RoxyHelper {
 				continue;
 			}
 			$tmp             = self::getFilesNumber(self::fixPath($fullPath), $type);
-			$ret[$fullPath]  = array(
+			$ret[$fullPath]  = [
 				'path'  => $fullPath,
 				'files' => $tmp['files'],
 				'dirs'  => $tmp['dirs'],
-			);
+			];
 			$sort[$fullPath] = $f;
 		}
 		natcasesort($sort);
 		foreach ($sort as $k => $v) {
-			$tmp = $ret[$k];
-			echo ',{"p":"' . mb_ereg_replace('"', '\\"', $tmp['path']) . '","f":"' . $tmp['files'] . '","d":"' . $tmp['dirs'] . '"}';
-			self::getDirs($tmp['path'], $type);
+			$tmp        = $ret[$k];
+			$response[] = [
+				'p' => mb_ereg_replace('"', '\\"', $tmp['path']),
+				'f' => $tmp['files'],
+				'd' => $tmp['dirs'],
+			];
+			$response   = self::getDirs($tmp['path'], $type, $response);
 		}
+		return $response;
 	}
 
 	/**

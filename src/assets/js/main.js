@@ -22,7 +22,7 @@
 
 $.ajaxSetup({cache: false});
 function selectFile(item) {
-	$('#pnlFileList li').removeClass('selected');
+	$('#pnlFileList').find('li').removeClass('selected');
 	$(item).prop('class', 'selected');
 	var html = RoxyUtils.GetFilename($(item).attr('data-path'));
 	html += '\n(' + t('Size') + ': ' + RoxyUtils.FormatFileSize($(item).attr('data-size'));
@@ -58,8 +58,7 @@ function dragFileOut() {
 }
 function makeDragFile(e) {
 	var f = new File($(e.target).closest('li').attr('data-path'));
-	return '<div class="pnlDragFile" data-path="' + f.fullPath + '"><img src="'
-	roxyMceAsset + '/' + f.bigIcon + '" align="absmiddle">&nbsp;' + f.name + '</div>';
+	return '<div class="pnlDragFile" data-path="' + f.fullPath + '"><img src="' + roxyMceAsset + '/' + f.bigIcon + '" align="absmiddle">&nbsp;' + f.name + '</div>';
 }
 function makeDragDir(e) {
 	var f = new Directory($(e.target).attr('data-path') ? $(e.target).attr('data-path') : $(e.target).closest('li').attr('data-path'));
@@ -90,11 +89,12 @@ function moveObject(e, ui) {
 	dragFileOut();
 }
 function clickFirstOnEnter(elId) {
-	$('#' + elId).unbind('keypress');
+	var $elId = $('#' + elId);
+	$elId.unbind('keypress');
 	$('.actions input').each(function() {
 		this.blur();
 	});
-	$('#' + elId).keypress(function(e) {
+	$elId.keypress(function(e) {
 		if(e.keyCode == $.ui.keyCode.ENTER) {
 			e.stopPropagation();
 			$(this).parent().find('.ui-dialog-buttonset button').eq(0).trigger('click');
@@ -128,7 +128,7 @@ function addDir() {
 		buttons: dialogButtons
 	});
 }
-var uploadFileList = new Array();
+var uploadFileList = [];
 function showUploadList(files) {
 	var filesPane = $('#uploadFilesList');
 	filesPane.html('');
@@ -147,12 +147,12 @@ function listUploadFiles(files) {
 		$('#btnUpload').button('enable');
 	}
 	else if(files.length > 0) {
-		uploadFileList = new Array();
+		uploadFileList = [];
 		addUploadFiles(files);
 	}
 }
 function addUploadFiles(files) {
-	for(i = 0; i < files.length; i++) {
+	for(var i = 0; i < files.length; i++) {
 		uploadFileList.push(files[i]);
 	}
 	showUploadList(uploadFileList);
@@ -169,7 +169,7 @@ function removeUpload(i) {
 	}
 }
 function findUploadElement(i) {
-	return $('#uploadFilesList .fileUpload:eq(' + (i) + ')');
+	return $('#uploadFilesList').find('.fileUpload:eq(' + (i) + ')');
 }
 function updateUploadProgress(e, i) {
 	var el      = findUploadElement(i);
@@ -225,12 +225,11 @@ function uploadFinished(e, i, res) {
 	checkUploadResult();
 }
 function checkUploadResult() {
-	var all       = $('#uploadFilesList .fileUpload').length;
-	var completed = $('#uploadFilesList .fileUpload[data-ulpoad]').length;
-	var success   = $('#uploadFilesList .fileUpload[data-ulpoad="ok"]').length;
+	var uploadFilesList = $('#uploadFilesList');
+	var all             = uploadFilesList.find('.fileUpload').length;
+	var completed       = uploadFilesList.find('.fileUpload[data-ulpoad]').length;
 	if(completed == all) {
-		//$('#uploadResult').html(success + ' files uploaded; '+(all - success)+' failed');
-		uploadFileList = new Array();
+		uploadFileList = [];
 		var d          = Directory.Parse($('#hdDir').val());
 		d.ListFiles(true);
 		$('#btnUpload').button('disable');
@@ -287,7 +286,7 @@ function clearFileField(selector) {
 }
 function addFileClick() {
 	$('#uploadResult').html('');
-	showUploadList(new Array());
+	showUploadList([]);
 	addFile();
 }
 function addFile() {
@@ -298,7 +297,6 @@ function addFile() {
 	dialogButtons[t('Upload')] = {
 		id      : 'btnUpload',
 		text    : t('Upload'),
-		class   : 'btn btn-sm',
 		disabled: true,
 		click   : function() {
 			if(!$('#fileUploads').val() && (!uploadFileList || uploadFileList.length == 0)) {
@@ -306,11 +304,10 @@ function addFile() {
 			} else {
 				if(!RoxyFilemanConf.UPLOAD) {
 					alert(t('E_ActionDisabled'));
-					//$('#dlgAddFile').dialog('close');
 				}
 				else {
 					if(window.FormData && window.XMLHttpRequest && window.FileList && uploadFileList && uploadFileList.length > 0) {
-						for(i = 0; i < uploadFileList.length; i++) {
+						for(var i = 0; i < uploadFileList.length; i++) {
 							fileUpload(uploadFileList[i], i);
 						}
 					}
@@ -331,19 +328,20 @@ function addFile() {
 		modal  : true,
 		buttons: dialogButtons,
 		width  : 400,
-		height : 'auto'
+		height : 400
 	});
 }
 function fileUploaded(res) {
+	var d;
 	if(res.res == 'ok' && res.msg) {
 		$('#dlgAddFile').dialog('close');
-		var d = Directory.Parse($('#hdDir').val());
+		d = Directory.Parse($('#hdDir').val());
 		d.ListFiles(true);
 		alert(res.msg);
 	}
 	else if(res.res == 'ok') {
 		$('#dlgAddFile').dialog('close');
-		var d = Directory.Parse($('#hdDir').val());
+		d = Directory.Parse($('#hdDir').val());
 		d.ListFiles(true);
 	}
 	else {
@@ -381,7 +379,7 @@ function renameDir() {
 		modal  : true,
 		buttons: dialogButtons
 	});
-	RoxyUtils.SelectText('txtDirName', 0, new String(f.name).length);
+	RoxyUtils.SelectText('txtDirName', 0, String(f.name).length);
 }
 function renameFile() {
 	var f = getSelectedFile();
@@ -416,16 +414,18 @@ function renameFile() {
 	}
 }
 function getSelectedFile() {
-	var ret = null;
-	if($('#pnlFileList .selected').length > 0) {
-		ret = new File($('#pnlFileList .selected').attr('data-path'));
+	var ret         = null;
+	var pnlFileList = $('#pnlFileList').find('.selected');
+	if(pnlFileList.length > 0) {
+		ret = new File(pnlFileList.attr('data-path'));
 	}
 	return ret;
 }
 function getSelectedDir() {
-	var ret = null;
-	if($('#pnlDirList .selected')) {
-		ret = Directory.Parse($('#pnlDirList .selected').closest('li').attr('data-path'));
+	var ret        = null;
+	var pnlDirList = $('#pnlDirList').find('.selected');
+	if(pnlDirList) {
+		ret = Directory.Parse(pnlDirList.closest('li').attr('data-path'));
 	}
 
 	return ret;
@@ -457,8 +457,7 @@ function previewFile() {
 function downloadFile() {
 	var f = getSelectedFile();
 	if(f && RoxyFilemanConf.DOWNLOAD) {
-		var url                                      = RoxyUtils.AddParam(RoxyFilemanConf.DOWNLOAD, 'f', f.fullPath);
-		window.frames['frmUploadFile'].location.href = url;
+		window.frames['frmUploadFile'].location.href = RoxyUtils.AddParam(RoxyFilemanConf.DOWNLOAD, 'f', f.fullPath);
 	}
 	else if(!RoxyFilemanConf.DOWNLOAD) {
 		alert(t('E_ActionDisabled'));
@@ -467,8 +466,7 @@ function downloadFile() {
 function downloadDir() {
 	var d = getSelectedDir();
 	if(d && RoxyFilemanConf.DOWNLOADDIR) {
-		var url                                      = RoxyUtils.AddParam(RoxyFilemanConf.DOWNLOADDIR, 'd', d.fullPath);
-		window.frames['frmUploadFile'].location.href = url;
+		window.frames['frmUploadFile'].location.href = RoxyUtils.AddParam(RoxyFilemanConf.DOWNLOADDIR, 'd', d.fullPath);
 	}
 	else if(!RoxyFilemanConf.DOWNLOAD) {
 		alert(t('E_ActionDisabled'));
@@ -483,7 +481,7 @@ function closeMenus(el) {
 	}
 }
 function selectFirst() {
-	var item = $('#pnlDirList li:first').children('div').first();
+	var item = $('#pnlDirList').find('li:first').children('div').first();
 	if(item.length > 0) {
 		selectDir(item);
 	} else {
@@ -570,11 +568,6 @@ function switchView(t) {
 			$('#dynStyle').html(rules);
 		}
 		$('#pnlFileList li').each(function() {
-
-			//$('ul#pnlFileList.thumbView li').css('width', RoxyFilemanConf.THUMBS_VIEW_WIDTH + 'px');
-			//$('ul#pnlFileList.thumbView li').css('height', (parseInt(RoxyFilemanConf.THUMBS_VIEW_HEIGHT) + 20) + 'px');
-			//$('ul#pnlFileList.thumbView .icon').css('width', RoxyFilemanConf.THUMBS_VIEW_WIDTH + 'px');
-			//$('ul#pnlFileList.thumbView .icon').css('height', RoxyFilemanConf.THUMBS_VIEW_HEIGHT + 'px');
 			var imgUrl = $(this).attr('data-icon-big');
 			if(RoxyFilemanConf.GENERATETHUMB && RoxyUtils.IsImage($(this).attr('data-path'))) {
 				imgUrl = RoxyUtils.AddParam(RoxyFilemanConf.GENERATETHUMB, 'f', imgUrl);
@@ -890,7 +883,7 @@ $(function() {
 
 	if(getFilemanIntegration() == 'tinymce3') {
 		try {
-			$('body').append('<script src="js/tiny_mce_popup.js"><\/script>');
+			$('body').append('<script src="' + roxyMceAsset + '/js/tiny_mce_popup.js"><\/script>');
 		}
 		catch(ex) {
 		}
@@ -905,6 +898,7 @@ function getFilemanIntegration() {
 	return integration.toLowerCase();
 }
 function setFile() {
+	var win;
 	var f = getSelectedFile();
 	if(!f) {
 		alert(t('E_NoFileSelected'));
@@ -924,7 +918,7 @@ function setFile() {
 			self.close();
 			break;
 		case 'tinymce3':
-			var win                                                               = tinyMCEPopup.getWindowArg("window");
+			win                                                                   = tinyMCEPopup.getWindowArg("window");
 			win.document.getElementById(tinyMCEPopup.getWindowArg("input")).value = insertPath;
 			if(typeof(win.ImageDialog) != "undefined") {
 				if(win.ImageDialog.getImageData) {
@@ -938,7 +932,7 @@ function setFile() {
 			tinyMCEPopup.close();
 			break;
 		case 'tinymce4':
-			var win                                                           = (window.opener ? window.opener : window.parent);
+			win                                                               = (window.opener ? window.opener : window.parent);
 			win.document.getElementById(RoxyUtils.GetUrlParam('input')).value = insertPath;
 			if(typeof(win.ImageDialog) != "undefined") {
 				if(win.ImageDialog.getImageData) {
