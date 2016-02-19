@@ -1,4 +1,13 @@
 <?php
+/**
+ * Created by Navatech.
+ * @project RoxyMce
+ * @author  Phuong
+ * @email   notteen[at]gmail.com
+ * @date    28/01/2016
+ * @time    1:59 SA
+ * @version 1.0.0
+ */
 namespace navatech\roxymce\widgets;
 
 use navatech\roxymce\TinyMceAsset;
@@ -11,12 +20,8 @@ use yii\helpers\Json;
 use yii\web\View;
 
 /**
- * Created by Navatech.
- * @project RoxyMce
- * @author  Phuong
- * @email   notteen[at]gmail.com
- * @date    28/01/2016
- * @time    1:59 SA
+ * This is RoxyMce widget, call <?=RoxyMceWidget::widget([])?>
+ * {@inheritDoc}
  */
 class RoxyMceWidget extends Widget {
 

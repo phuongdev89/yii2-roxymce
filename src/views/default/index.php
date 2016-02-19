@@ -1,11 +1,12 @@
 <?php
 /**
  * Created by Navatech.
- * @project yii2-roxymce
+ * @project RoxyMce
  * @author  Phuong
  * @email   phuong17889[at]gmail.com
  * @date    15/02/2016
  * @time    2:56 CH
+ * @version 1.0.0
  * @var string $roxyMceUrl
  */
 \yii\jui\JuiAsset::register($this);
@@ -112,8 +113,6 @@ $this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyM
 		</div>
 	</div>
 </div>
-
-<!-- Forms and other components -->
 <iframe name="frmUploadFile" width="0" height="0" style="display:none;border:0;"></iframe>
 <div id="dlgAddFile">
 	<form name="addfile" id="frmUpload" method="post" target="frmUploadFile" enctype="multipart/form-data">

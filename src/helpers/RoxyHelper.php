@@ -7,11 +7,15 @@
  * @date    15/02/2016
  * @time    4:45 CH
  */
-namespace navatech\roxymce\base;
+namespace navatech\roxymce\helpers;
 
+use yii\base\InvalidConfigException;
 use yii\base\InvalidParamException;
 
-class RoxyBase {
+/**
+ * RoxyHelper is core functions of Roxy file man
+ */
+class RoxyHelper {
 
 	/**
 	 * @param $action
@@ -61,7 +65,7 @@ class RoxyBase {
 	public static function fixPath($path) {
 		$path = $_SERVER['DOCUMENT_ROOT'] . '/' . $path;
 		$path = str_replace('\\', '/', $path);
-		$path = RoxyFile::FixPath($path);
+		$path = FileHelper::fixPath($path);
 		return $path;
 	}
 
@@ -98,7 +102,7 @@ class RoxyBase {
 	 * @throws InvalidParamException
 	 */
 	public static function getFilesPath() {
-		$ret = RoxyFile::FixPath(\Yii::$app->basePath . \Yii::getAlias('@web/') . FILES_ROOT);
+		$ret = FileHelper::fixPath(\Yii::$app->basePath . \Yii::getAlias('@web/') . FILES_ROOT);
 		$tmp = $_SERVER['DOCUMENT_ROOT'];
 		if (in_array(mb_substr($tmp, - 1), [
 			'/',
@@ -106,7 +110,7 @@ class RoxyBase {
 		], true)) {
 			$tmp = mb_substr($tmp, 0, - 1);
 		}
-		$ret = str_replace(RoxyFile::FixPath($tmp), '', $ret);
+		$ret = str_replace(FileHelper::fixPath($tmp), '', $ret);
 		return $ret;
 	}
 
@@ -135,6 +139,7 @@ class RoxyBase {
 	 * @param $type
 	 *
 	 * @return array
+	 * @throws InvalidConfigException
 	 */
 	public static function getFilesNumber($path, $type) {
 		$files = 0;
@@ -143,7 +148,7 @@ class RoxyBase {
 		foreach ($tmp as $ff) {
 			if ($ff === '.' || $ff === '..') {
 				continue;
-			} elseif (is_file($path . '/' . $ff) && ($type === '' || ($type === 'image' && RoxyFile::IsImage($ff)) || ($type === 'flash' && RoxyFile::IsFlash($ff)))) {
+			} elseif (is_file($path . '/' . $ff) && ($type === '' || ($type === 'image' && FileHelper::isImage($ff)) || ($type === 'flash' && FileHelper::isFlash($ff)))) {
 				$files ++;
 			} elseif (is_dir($path . '/' . $ff)) {
 				$dirs ++;
@@ -158,8 +163,9 @@ class RoxyBase {
 	/**
 	 * @param $path
 	 * @param $type
+	 * @throws InvalidConfigException
 	 */
-	public static function GetDirs($path, $type) {
+	public static function getDirs($path, $type) {
 		$ret   = $sort = array();
 		$files = self::listDirectory(self::fixPath($path));
 		foreach ($files as $f) {
@@ -183,7 +189,7 @@ class RoxyBase {
 		foreach ($sort as $k => $v) {
 			$tmp = $ret[$k];
 			echo ',{"p":"' . mb_ereg_replace('"', '\\"', $tmp['path']) . '","f":"' . $tmp['files'] . '","d":"' . $tmp['dirs'] . '"}';
-			self::GetDirs($tmp['path'], $type);
+			self::getDirs($tmp['path'], $type);
 		}
 	}
 

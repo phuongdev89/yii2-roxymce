@@ -6,6 +6,7 @@
  * @email   phuong17889[at]gmail.com
  * @date    15/02/2016
  * @time    4:19 CH
+ * @version 1.0.0
  */
 namespace navatech\roxymce\controllers;
 
@@ -14,8 +15,10 @@ use yii\base\Exception;
 use yii\base\InvalidParamException;
 use yii\web\Controller;
 use yii\web\Response;
-use yii\web\View;
 
+/**
+ * {@inheritDoc}
+ */
 class DefaultController extends Controller {
 
 	public function beforeAction($action) {

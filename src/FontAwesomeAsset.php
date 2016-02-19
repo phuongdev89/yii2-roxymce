@@ -1,18 +1,26 @@
 <?php
 /**
  * Created by Navatech.
- * @project yii-basic
+ * @project RoxyMce
  * @author  Phuong
  * @email   phuong17889[at]gmail.com
  * @date    17/02/2016
  * @time    12:09 CH
+ * @version 1.0.0
  */
 namespace navatech\roxymce;
 
 use yii\web\AssetBundle;
 
+/**
+ * This will register asset for FontAwesome
+ * {@inheritDoc}
+ */
 class FontAwesomeAsset extends AssetBundle {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function init() {
 		parent::init();
 		$this->depends    = [

@@ -1,44 +1,24 @@
 <?php
 /**
  * Created by Navatech.
- * @project yii2-roxymce
+ * @project RoxyMce
  * @author  Phuong
  * @email   phuong17889[at]gmail.com
  * @date    15/02/2016
  * @time    4:33 CH
+ * @version 1.0.0
  */
 namespace navatech\roxymce;
 
-use navatech\roxymce\base\RoxyBase;
+use navatech\roxymce\helpers\RoxyHelper;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\base\Module as ModuleBase;
 use yii\helpers\Url;
 
 /**
- * Module is the base class for module and application classes.
- *
- * A module represents a sub-application which contains MVC elements by itself, such as
- * models, views, controllers, etc.
- *
- * A module may consist of [[modules|sub-modules]].
- *
- * [[components|Components]] may be registered with the module so that they are globally
- * accessible within the module.
- *
- * @property array  $aliases        List of path aliases to be defined. The array keys are alias names (must start
- * with '@') and the array values are the corresponding paths or aliases. See [[setAliases()]] for an example.
- * This property is write-only.
- * @property string $basePath       The root directory of the module.
- * @property string $controllerPath The directory that contains the controller classes. This property is
- * read-only.
- * @property string $layoutPath     The root directory of layout files. Defaults to "[[viewPath]]/layouts".
- * @property array  $modules        The modules (indexed by their IDs).
- * @property string $uniqueId       The unique ID of the module. This property is read-only.
- * @property string $viewPath       The root directory of view files. Defaults to "[[basePath]]/views".
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since  2.0
+ * @property array $config List of configure for Roxy Fileman
+ * {@inheritDoc}
  */
 class Module extends ModuleBase {
 
@@ -57,7 +37,6 @@ class Module extends ModuleBase {
 	 * @throws InvalidParamException
 	 */
 	public function init() {
-		//TODO die if mod_rewrite not enable
 		parent::init();
 		$config = [
 			'FILES_ROOT'           => 'uploads/image',
@@ -100,7 +79,7 @@ class Module extends ModuleBase {
 			}
 			define($key, $value);
 		}
-		$FilesRoot = RoxyBase::fixPath(RoxyBase::getFilesPath());
+		$FilesRoot = RoxyHelper::fixPath(RoxyHelper::getFilesPath());
 		if (!is_dir($FilesRoot)) {
 			@mkdir($FilesRoot, octdec(DIRPERMISSIONS));
 		}

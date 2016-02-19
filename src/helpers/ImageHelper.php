@@ -1,24 +1,31 @@
 <?php
 /**
  * Created by Navatech.
- * @project yii2-roxymce
+ * @project RoxyMce
  * @author  Phuong
  * @email   phuong17889[at]gmail.com
  * @date    16/02/2016
  * @time    9:06 CH
+ * @version 1.0.0
  */
-namespace navatech\roxymce\base;
+namespace navatech\roxymce\helpers;
 
-class RoxyImage {
+use yii\base\InvalidConfigException;
+
+/**
+ * ImageHelper help some functions on image
+ */
+class ImageHelper {
 
 	/**
 	 * @param $path
 	 *
 	 * @return null|resource
+	 * @throws InvalidConfigException
 	 */
-	public static function GetImage($path) {
+	public static function getImage($path) {
 		$img = null;
-		switch (RoxyFile::GetExtension(basename($path))) {
+		switch (FileHelper::getExtension(basename($path))) {
 			case 'png':
 				$img = imagecreatefrompng($path);
 				break;
@@ -36,10 +43,12 @@ class RoxyImage {
 	 * @param        $type
 	 * @param string $destination
 	 * @param int    $quality
+	 *
+	 * @throws InvalidConfigException
 	 */
-	public static function OutputImage($img, $type, $destination = '', $quality = 90) {
+	public static function outputImage($img, $type, $destination = '', $quality = 90) {
 		if (is_string($img)) {
-			$img = self::GetImage($img);
+			$img = self::getImage($img);
 		}
 		switch (strtolower($type)) {
 			case 'png':
@@ -59,15 +68,17 @@ class RoxyImage {
 	 * @param int $width
 	 * @param int $height
 	 * @param int $quality
+	 *
+	 * @throws InvalidConfigException
 	 */
-	public static function Resize($source, $destination, $width = 150, $height = 0, $quality = 90) {
+	public static function resize($source, $destination, $width = 150, $height = 0, $quality = 90) {
 		$tmp = getimagesize($source);
 		$w   = $tmp[0];
 		$h   = $tmp[1];
 		$r   = $w / $h;
 		if ($w <= ($width + 1) && (($h <= ($height + 1)) || (!$height && !$width))) {
 			if ($source !== $destination) {
-				self::OutputImage($source, RoxyFile::GetExtension(basename($source)), $destination, $quality);
+				self::outputImage($source, FileHelper::getExtension(basename($source)), $destination, $quality);
 			}
 			return;
 		}
@@ -78,9 +89,9 @@ class RoxyImage {
 			$newWidth  = (int) ($newHeight * $r);
 		}
 		$thumbImg = imagecreatetruecolor($newWidth, $newHeight);
-		$img      = self::GetImage($source);
+		$img      = self::getImage($source);
 		imagecopyresampled($thumbImg, $img, 0, 0, 0, 0, $newWidth, $newHeight, $w, $h);
-		self::OutputImage($thumbImg, RoxyFile::GetExtension(basename($source)), $destination, $quality);
+		self::outputImage($thumbImg, FileHelper::getExtension(basename($source)), $destination, $quality);
 	}
 
 	/**
@@ -89,13 +100,15 @@ class RoxyImage {
 	 * @param     $width
 	 * @param     $height
 	 * @param int $quality
+	 *
+	 * @throws InvalidConfigException
 	 */
-	public static function CropCenter($source, $destination, $width, $height, $quality = 90) {
+	public static function cropCenter($source, $destination, $width, $height, $quality = 90) {
 		$tmp = getimagesize($source);
 		$w   = $tmp[0];
 		$h   = $tmp[1];
 		if (($w <= $width) && (!$height || ($h <= $height))) {
-			self::OutputImage(self::GetImage($source), RoxyFile::GetExtension(basename($source)), $destination, $quality);
+			self::outputImage(self::getImage($source), FileHelper::getExtension(basename($source)), $destination, $quality);
 		}
 		$ratio      = $width / $height;
 		$top        = $left = 0;
@@ -115,7 +128,7 @@ class RoxyImage {
 		if ($cropHeight < $h) {
 			$top = floor(($h - $cropHeight) / 2);
 		}
-		self::Crop($source, $destination, $left, $top, $cropWidth, $cropHeight, $width, $height, $quality);
+		self::crop($source, $destination, $left, $top, $cropWidth, $cropHeight, $width, $height, $quality);
 	}
 
 	/**
@@ -128,11 +141,13 @@ class RoxyImage {
 	 * @param     $width
 	 * @param     $height
 	 * @param int $quality
+	 *
+	 * @throws InvalidConfigException
 	 */
-	public static function Crop($source, $destination, $x, $y, $cropWidth, $cropHeight, $width, $height, $quality = 90) {
+	public static function crop($source, $destination, $x, $y, $cropWidth, $cropHeight, $width, $height, $quality = 90) {
 		$thumbImg = imagecreatetruecolor($width, $height);
-		$img      = self::GetImage($source);
+		$img      = self::getImage($source);
 		imagecopyresampled($thumbImg, $img, 0, 0, $x, $y, $width, $height, $cropWidth, $cropHeight);
-		self::OutputImage($thumbImg, RoxyFile::GetExtension(basename($source)), $destination, $quality);
+		self::outputImage($thumbImg, FileHelper::getExtension(basename($source)), $destination, $quality);
 	}
 }

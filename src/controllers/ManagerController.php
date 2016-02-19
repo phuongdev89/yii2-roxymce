@@ -1,27 +1,26 @@
 <?php
 /**
  * Created by Navatech.
- * @project yii2-roxymce
+ * @project RoxyMce
  * @author  Phuong
  * @email   phuong17889[at]gmail.com
  * @date    15/02/2016
  * @time    4:38 CH
+ * @version 1.0.0
  */
 namespace navatech\roxymce\controllers;
 
 use Exception;
-use navatech\roxymce\base\RoxyBase;
-use navatech\roxymce\base\RoxyFile;
-use navatech\roxymce\base\RoxyImage;
+use navatech\roxymce\helpers\FileHelper;
+use navatech\roxymce\helpers\ImageHelper;
+use navatech\roxymce\helpers\RoxyHelper;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\InvalidParamException;
 use yii\web\Controller;
 
 /**
- * Controller is the base class of web controllers.
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since  2.0
+ * {@inheritDoc}
  */
 class ManagerController extends Controller {
 
@@ -33,42 +32,49 @@ class ManagerController extends Controller {
 	/**
 	 * @param $type
 	 *
-	 * @throws InvalidParamException
+	 * @throws InvalidParamException|InvalidConfigException
 	 */
 	public function actionDirlist($type) {
 		if ($type !== 'image' && $type !== 'flash') {
 			$type = '';
 		}
 		echo "[\n";
-		$tmp = RoxyBase::getFilesNumber(RoxyBase::fixPath(RoxyBase::getFilesPath()), $type);
-		echo '{"p":"' . mb_ereg_replace('"', '\\"', RoxyBase::getFilesPath()) . '","f":"' . $tmp['files'] . '","d":"' . $tmp['dirs'] . '"}';
-		RoxyBase::GetDirs(RoxyBase::getFilesPath(), $type);
+		$tmp = RoxyHelper::getFilesNumber(RoxyHelper::fixPath(RoxyHelper::getFilesPath()), $type);
+//		$response = [
+//			'p'=>mb_ereg_replace('"', '\\"', RoxyHelper::getFilesPath()),
+//			'f'=>$tmp['files'],
+//			'd'=>$tmp['dirs']
+//		]
+		echo '{"p":"' . mb_ereg_replace('"', '\\"', RoxyHelper::getFilesPath()) . '","f":"' . $tmp['files'] . '","d":"' . $tmp['dirs'] . '"}';
+		RoxyHelper::getDirs(RoxyHelper::getFilesPath(), $type);
 		echo "\n]";
 	}
 
 	/**
 	 * @param $d
 	 * @param $type
+	 *
+	 * @throws InvalidConfigException
 	 */
 	public function actionFileslist($d, $type) {
 		if ($type !== 'image' && $type !== 'flash') {
 			$type = '';
 		}
-		$files = RoxyBase::listDirectory(RoxyBase::fixPath($d));
+		$files = RoxyHelper::listDirectory(RoxyHelper::fixPath($d));
 		natcasesort($files);
 		$str = '';
 		echo '[';
 		foreach ($files as $f) {
 			$fullPath = $d . '/' . $f;
-			if ((!RoxyFile::IsImage($f) && $type === 'image') || ($type === 'flash' && !RoxyFile::IsFlash($f)) || !is_file(RoxyBase::fixPath($fullPath))) {
+			if ((!FileHelper::isImage($f) && $type === 'image') || ($type === 'flash' && !FileHelper::isFlash($f)) || !is_file(RoxyHelper::fixPath($fullPath))) {
 				continue;
 			}
-			$size = filesize(RoxyBase::fixPath($fullPath));
-			$time = filemtime(RoxyBase::fixPath($fullPath));
+			$size = filesize(RoxyHelper::fixPath($fullPath));
+			$time = filemtime(RoxyHelper::fixPath($fullPath));
 			$w    = 0;
 			$h    = 0;
-			if (RoxyFile::IsImage($f)) {
-				$tmp = @getimagesize(RoxyBase::fixPath($fullPath));
+			if (FileHelper::isImage($f)) {
+				$tmp = @getimagesize(RoxyHelper::fixPath($fullPath));
 				if ($tmp) {
 					$w = $tmp[0];
 					$h = $tmp[1];
@@ -86,17 +92,17 @@ class ManagerController extends Controller {
 	 * @param int $width
 	 * @param int $height
 	 *
-	 * @throws InvalidParamException
+	 * @throws InvalidParamException|InvalidConfigException
 	 */
 	public function actionGeneratethumb($f, $width = 100, $height = 0) {
-		RoxyBase::verifyPath($f);
-		@chmod(RoxyBase::fixPath(dirname($f)), octdec(DIRPERMISSIONS));
-		@chmod(RoxyBase::fixPath($f), octdec(FILEPERMISSIONS));
-		header('Content-type: ' . RoxyFile::GetMIMEType(basename($f)));
+		RoxyHelper::verifyPath($f);
+		@chmod(RoxyHelper::fixPath(dirname($f)), octdec(DIRPERMISSIONS));
+		@chmod(RoxyHelper::fixPath($f), octdec(FILEPERMISSIONS));
+		header('Content-type: ' . FileHelper::getMimeType(basename($f)));
 		if ($width && $height) {
-			RoxyImage::CropCenter(RoxyBase::fixPath($f), null, $width, $height);
+			ImageHelper::cropCenter(RoxyHelper::fixPath($f), null, $width, $height);
 		} else {
-			RoxyImage::Resize(RoxyBase::fixPath($f), null, $width, $height);
+			ImageHelper::resize(RoxyHelper::fixPath($f), null, $width, $height);
 		}
 	}
 
@@ -107,15 +113,15 @@ class ManagerController extends Controller {
 	 * @throws InvalidParamException
 	 */
 	public function actionCreatedir($d, $n) {
-		RoxyBase::verifyPath($d);
-		if (is_dir(RoxyBase::fixPath($d))) {
-			if (mkdir(RoxyBase::fixPath($d) . '/' . $n, octdec(DIRPERMISSIONS))) {
-				echo RoxyBase::getSuccessRes();
+		RoxyHelper::verifyPath($d);
+		if (is_dir(RoxyHelper::fixPath($d))) {
+			if (mkdir(RoxyHelper::fixPath($d) . '/' . $n, octdec(DIRPERMISSIONS))) {
+				echo RoxyHelper::getSuccessRes();
 			} else {
-				echo RoxyBase::getErrorRes(RoxyBase::t('E_CreateDirFailed') . ' ' . basename($d));
+				echo RoxyHelper::getErrorRes(RoxyHelper::t('E_CreateDirFailed') . ' ' . basename($d));
 			}
 		} else {
-			echo RoxyBase::getErrorRes(RoxyBase::t('E_CreateDirInvalidPath'));
+			echo RoxyHelper::getErrorRes(RoxyHelper::t('E_CreateDirInvalidPath'));
 		}
 	}
 
@@ -125,19 +131,19 @@ class ManagerController extends Controller {
 	 * @throws InvalidParamException
 	 */
 	public function actionDeletedir($d) {
-		RoxyBase::verifyPath($d);
-		if (is_dir(RoxyBase::fixPath($d))) {
-			if (RoxyBase::fixPath($d . '/') === RoxyBase::fixPath(RoxyBase::getFilesPath() . '/')) {
-				echo RoxyBase::getErrorRes(RoxyBase::t('E_CannotDeleteRoot'));
-			} elseif (count(glob(RoxyBase::fixPath($d) . '/*'))) {
-				echo RoxyBase::getErrorRes(RoxyBase::t('E_DeleteNonEmpty'));
-			} elseif (rmdir(RoxyBase::fixPath($d))) {
-				echo RoxyBase::getSuccessRes();
+		RoxyHelper::verifyPath($d);
+		if (is_dir(RoxyHelper::fixPath($d))) {
+			if (RoxyHelper::fixPath($d . '/') === RoxyHelper::fixPath(RoxyHelper::getFilesPath() . '/')) {
+				echo RoxyHelper::getErrorRes(RoxyHelper::t('E_CannotDeleteRoot'));
+			} elseif (count(glob(RoxyHelper::fixPath($d) . '/*'))) {
+				echo RoxyHelper::getErrorRes(RoxyHelper::t('E_DeleteNonEmpty'));
+			} elseif (rmdir(RoxyHelper::fixPath($d))) {
+				echo RoxyHelper::getSuccessRes();
 			} else {
-				echo RoxyBase::getErrorRes(RoxyBase::t('E_CannotDeleteDir') . ' ' . basename($d));
+				echo RoxyHelper::getErrorRes(RoxyHelper::t('E_CannotDeleteDir') . ' ' . basename($d));
 			}
 		} else {
-			echo RoxyBase::getErrorRes(RoxyBase::t('E_DeleteDirInvalidPath') . ' ' . $d);
+			echo RoxyHelper::getErrorRes(RoxyHelper::t('E_DeleteDirInvalidPath') . ' ' . $d);
 		}
 	}
 
@@ -148,20 +154,20 @@ class ManagerController extends Controller {
 	 * @throws InvalidParamException
 	 */
 	public function actionMovedir($d, $n) {
-		RoxyBase::verifyPath($d);
-		RoxyBase::verifyPath($n);
-		if (is_dir(RoxyBase::fixPath($d))) {
+		RoxyHelper::verifyPath($d);
+		RoxyHelper::verifyPath($n);
+		if (is_dir(RoxyHelper::fixPath($d))) {
 			if (mb_strpos($n, $d) === 0) {
-				echo RoxyBase::getErrorRes(RoxyBase::t('E_CannotMoveDirToChild'));
-			} elseif (file_exists(RoxyBase::fixPath($n) . '/' . basename($d))) {
-				echo RoxyBase::getErrorRes(RoxyBase::t('E_DirAlreadyExists'));
-			} elseif (rename(RoxyBase::fixPath($d), RoxyBase::fixPath($n) . '/' . basename($d))) {
-				echo RoxyBase::getSuccessRes();
+				echo RoxyHelper::getErrorRes(RoxyHelper::t('E_CannotMoveDirToChild'));
+			} elseif (file_exists(RoxyHelper::fixPath($n) . '/' . basename($d))) {
+				echo RoxyHelper::getErrorRes(RoxyHelper::t('E_DirAlreadyExists'));
+			} elseif (rename(RoxyHelper::fixPath($d), RoxyHelper::fixPath($n) . '/' . basename($d))) {
+				echo RoxyHelper::getSuccessRes();
 			} else {
-				echo RoxyBase::getErrorRes(RoxyBase::t('E_MoveDir') . ' ' . basename($d));
+				echo RoxyHelper::getErrorRes(RoxyHelper::t('E_MoveDir') . ' ' . basename($d));
 			}
 		} else {
-			echo RoxyBase::getErrorRes(RoxyBase::t('E_MoveDirInvalisPath'));
+			echo RoxyHelper::getErrorRes(RoxyHelper::t('E_MoveDirInvalisPath'));
 		}
 	}
 
@@ -172,10 +178,10 @@ class ManagerController extends Controller {
 	 * @throws InvalidParamException
 	 */
 	public function actionCopydir($d, $n) {
-		RoxyBase::verifyPath($d);
-		RoxyBase::verifyPath($n);
+		RoxyHelper::verifyPath($d);
+		RoxyHelper::verifyPath($n);
 		function copyDir($d, $n) {
-			$items = RoxyBase::listDirectory($d);
+			$items = RoxyHelper::listDirectory($d);
 			if (!is_dir($n)) {
 				mkdir($n, octdec(DIRPERMISSIONS));
 			}
@@ -183,8 +189,8 @@ class ManagerController extends Controller {
 				if ($item === '.' || $item === '..') {
 					continue;
 				}
-				$oldPath    = RoxyFile::FixPath($d . '/' . $item);
-				$tmpNewPath = RoxyFile::FixPath($n . '/' . $item);
+				$oldPath    = FileHelper::fixPath($d . '/' . $item);
+				$tmpNewPath = FileHelper::fixPath($n . '/' . $item);
 				if (is_file($oldPath)) {
 					copy($oldPath, $tmpNewPath);
 				} elseif (is_dir($oldPath)) {
@@ -193,11 +199,11 @@ class ManagerController extends Controller {
 			}
 		}
 
-		if (is_dir(RoxyBase::fixPath($d))) {
-			copyDir(RoxyBase::fixPath($d . '/'), RoxyBase::fixPath($n . '/' . basename($d)));
-			echo RoxyBase::getSuccessRes();
+		if (is_dir(RoxyHelper::fixPath($d))) {
+			copyDir(RoxyHelper::fixPath($d . '/'), RoxyHelper::fixPath($n . '/' . basename($d)));
+			echo RoxyHelper::getSuccessRes();
 		} else {
-			echo RoxyBase::getErrorRes(RoxyBase::t('E_CopyDirInvalidPath'));
+			echo RoxyHelper::getErrorRes(RoxyHelper::t('E_CopyDirInvalidPath'));
 		}
 	}
 
@@ -208,22 +214,22 @@ class ManagerController extends Controller {
 	 * @throws InvalidParamException
 	 */
 	public function actionRenamedir($d, $n) {
-		RoxyBase::verifyPath($d);
-		if (is_dir(RoxyBase::fixPath($d))) {
-			if (RoxyBase::fixPath($d . '/') === RoxyBase::fixPath(RoxyBase::getFilesPath() . '/')) {
-				echo RoxyBase::getErrorRes(RoxyBase::t('E_CannotRenameRoot'));
-			} elseif (rename(RoxyBase::fixPath($d), dirname(RoxyBase::fixPath($d)) . '/' . $n)) {
-				echo RoxyBase::getSuccessRes();
+		RoxyHelper::verifyPath($d);
+		if (is_dir(RoxyHelper::fixPath($d))) {
+			if (RoxyHelper::fixPath($d . '/') === RoxyHelper::fixPath(RoxyHelper::getFilesPath() . '/')) {
+				echo RoxyHelper::getErrorRes(RoxyHelper::t('E_CannotRenameRoot'));
+			} elseif (rename(RoxyHelper::fixPath($d), dirname(RoxyHelper::fixPath($d)) . '/' . $n)) {
+				echo RoxyHelper::getSuccessRes();
 			} else {
-				echo RoxyBase::getErrorRes(RoxyBase::t('E_RenameDir') . ' ' . basename($d));
+				echo RoxyHelper::getErrorRes(RoxyHelper::t('E_RenameDir') . ' ' . basename($d));
 			}
 		} else {
-			echo RoxyBase::getErrorRes(RoxyBase::t('E_RenameDirInvalidPath'));
+			echo RoxyHelper::getErrorRes(RoxyHelper::t('E_RenameDirInvalidPath'));
 		}
 	}
 
 	/**
-	 * @throws InvalidParamException
+	 * @throws InvalidParamException|InvalidConfigException
 	 */
 	public function actionUpload() {
 		if (array_key_exists('method', $_POST) && array_key_exists('d', $_POST)) {
@@ -232,17 +238,17 @@ class ManagerController extends Controller {
 			$isAjax = ($method === 'ajax');
 			$errors = $errorsExt = array();
 			if ($d === null) {
-				RoxyBase::getFilesPath();
+				RoxyHelper::getFilesPath();
 			}
-			RoxyBase::verifyPath($d);
-			if (is_dir(RoxyBase::fixPath($d))) {
+			RoxyHelper::verifyPath($d);
+			if (is_dir(RoxyHelper::fixPath($d))) {
 				if (!empty($_FILES['files']) && is_array($_FILES['files']['tmp_name'])) {
 					foreach ($_FILES['files']['tmp_name'] as $k => $v) {
 						$filename   = $_FILES['files']['name'][$k];
-						$filename   = RoxyFile::MakeUniqueFilename(RoxyBase::fixPath($d), $filename);
-						$filePath   = RoxyBase::fixPath($d) . '/' . $filename;
+						$filename   = FileHelper::makeUniqueFilename(RoxyHelper::fixPath($d), $filename);
+						$filePath   = RoxyHelper::fixPath($d) . '/' . $filename;
 						$isUploaded = true;
-						if (!RoxyFile::CanUploadFile($filename)) {
+						if (!FileHelper::canUploadFile($filename)) {
 							$errorsExt[] = $filename;
 							$isUploaded  = false;
 						} elseif (!move_uploaded_file($v, $filePath)) {
@@ -252,35 +258,35 @@ class ManagerController extends Controller {
 						if (is_file($filePath)) {
 							@chmod($filePath, octdec(FILEPERMISSIONS));
 						}
-						if (((int) MAX_IMAGE_WIDTH > 0 || (int) MAX_IMAGE_HEIGHT > 0) && $isUploaded && RoxyFile::IsImage($filename)) {
-							RoxyImage::Resize($filePath, $filePath, (int) MAX_IMAGE_WIDTH, (int) MAX_IMAGE_HEIGHT);
+						if (((int) MAX_IMAGE_WIDTH > 0 || (int) MAX_IMAGE_HEIGHT > 0) && $isUploaded && FileHelper::isImage($filename)) {
+							ImageHelper::resize($filePath, $filePath, (int) MAX_IMAGE_WIDTH, (int) MAX_IMAGE_HEIGHT);
 						}
 					}
 					if ($errors && $errorsExt) {
-						$res = RoxyBase::getSuccessRes(RoxyBase::t('E_UploadNotAll') . ' ' . RoxyBase::t('E_FileExtensionForbidden'));
+						$res = RoxyHelper::getSuccessRes(RoxyHelper::t('E_UploadNotAll') . ' ' . RoxyHelper::t('E_FileExtensionForbidden'));
 					} elseif ($errorsExt) {
-						$res = RoxyBase::getSuccessRes(RoxyBase::t('E_FileExtensionForbidden'));
+						$res = RoxyHelper::getSuccessRes(RoxyHelper::t('E_FileExtensionForbidden'));
 					} elseif ($errors) {
-						$res = RoxyBase::getSuccessRes(RoxyBase::t('E_UploadNotAll'));
+						$res = RoxyHelper::getSuccessRes(RoxyHelper::t('E_UploadNotAll'));
 					} else {
-						$res = RoxyBase::getSuccessRes();
+						$res = RoxyHelper::getSuccessRes();
 					}
 				} else {
-					$res = RoxyBase::getErrorRes(RoxyBase::t('E_UploadNoFiles'));
+					$res = RoxyHelper::getErrorRes(RoxyHelper::t('E_UploadNoFiles'));
 				}
 			} else {
-				$res = RoxyBase::getErrorRes(RoxyBase::t('E_UploadInvalidPath'));
+				$res = RoxyHelper::getErrorRes(RoxyHelper::t('E_UploadInvalidPath'));
 			}
 			if ($isAjax) {
 				if ($errors || $errorsExt) {
-					$res = RoxyBase::getErrorRes(RoxyBase::t('E_UploadNotAll'));
+					$res = RoxyHelper::getErrorRes(RoxyHelper::t('E_UploadNotAll'));
 				}
 				echo $res;
 			} else {
 				echo '<script>parent.fileUploaded("' . $res . '");</script>';
 			}
 		} else {
-			RoxyBase::verifyPath('');
+			RoxyHelper::verifyPath('');
 		}
 	}
 
@@ -290,12 +296,12 @@ class ManagerController extends Controller {
 	 * @throws InvalidParamException
 	 */
 	public function actionDownload($f) {
-		RoxyBase::verifyPath($f);
-		if (is_file(RoxyBase::fixPath($f))) {
+		RoxyHelper::verifyPath($f);
+		if (is_file(RoxyHelper::fixPath($f))) {
 			$file = urldecode(basename($f));
 			header('Content-Disposition: attachment; filename="' . $file . '"');
 			header('Content-Type: application/force-download');
-			readfile(RoxyBase::fixPath($f));
+			readfile(RoxyHelper::fixPath($f));
 		}
 	}
 
@@ -306,8 +312,8 @@ class ManagerController extends Controller {
 	 */
 	public function actionDownloaddir($d) {
 		@ini_set('memory_limit', - 1);
-		RoxyBase::verifyPath($d);
-		$d = RoxyBase::fixPath($d);
+		RoxyHelper::verifyPath($d);
+		$d = RoxyHelper::fixPath($d);
 		if (!class_exists('ZipArchive')) {
 			echo '<script>alert("Cannot create zip archive - ZipArchive class is missing. Check your PHP version and configuration");</script>';
 		} else {
@@ -315,7 +321,7 @@ class ManagerController extends Controller {
 				$filename = basename($d);
 				$zipFile  = $filename . '.zip';
 				$zipPath  = BASE_PATH . '/tmp/' . $zipFile;
-				RoxyFile::ZipDir($d, $zipPath);
+				FileHelper::zipDir($d, $zipPath);
 				header('Content-Disposition: attachment; filename="' . $zipFile . '"');
 				header('Content-Type: application/force-download');
 				readfile($zipPath);
@@ -325,7 +331,7 @@ class ManagerController extends Controller {
 
 				register_shutdown_function('deleteTmp', $zipPath);
 			} catch (Exception $ex) {
-				echo '<script>alert("' . addslashes(RoxyBase::t('E_CreateArchive')) . '");</script>';
+				echo '<script>alert("' . addslashes(RoxyHelper::t('E_CreateArchive')) . '");</script>';
 			}
 		}
 	}
@@ -336,15 +342,15 @@ class ManagerController extends Controller {
 	 * @throws InvalidParamException
 	 */
 	public function actionDeletefile($f) {
-		RoxyBase::verifyPath($f);
-		if (is_file(RoxyBase::fixPath($f))) {
-			if (unlink(RoxyBase::fixPath($f))) {
-				echo RoxyBase::getSuccessRes();
+		RoxyHelper::verifyPath($f);
+		if (is_file(RoxyHelper::fixPath($f))) {
+			if (unlink(RoxyHelper::fixPath($f))) {
+				echo RoxyHelper::getSuccessRes();
 			} else {
-				echo RoxyBase::getErrorRes(RoxyBase::t('E_DeletеFile') . ' ' . basename($f));
+				echo RoxyHelper::getErrorRes(RoxyHelper::t('E_DeletеFile') . ' ' . basename($f));
 			}
 		} else {
-			echo RoxyBase::getErrorRes(RoxyBase::t('E_DeleteFileInvalidPath'));
+			echo RoxyHelper::getErrorRes(RoxyHelper::t('E_DeleteFileInvalidPath'));
 		}
 	}
 
@@ -356,20 +362,20 @@ class ManagerController extends Controller {
 	 */
 	public function actionMovefile($f, $n) {
 		if (!$n) {
-			$n = RoxyBase::getFilesPath();
+			$n = RoxyHelper::getFilesPath();
 		}
-		RoxyBase::verifyPath($f);
-		RoxyBase::verifyPath($n);
-		if (is_file(RoxyBase::fixPath($f))) {
-			if (file_exists(RoxyBase::fixPath($n))) {
-				echo RoxyBase::getErrorRes(RoxyBase::t('E_MoveFileAlreadyExists') . ' ' . basename($n));
-			} elseif (rename(RoxyBase::fixPath($f), RoxyBase::fixPath($n))) {
-				echo RoxyBase::getSuccessRes();
+		RoxyHelper::verifyPath($f);
+		RoxyHelper::verifyPath($n);
+		if (is_file(RoxyHelper::fixPath($f))) {
+			if (file_exists(RoxyHelper::fixPath($n))) {
+				echo RoxyHelper::getErrorRes(RoxyHelper::t('E_MoveFileAlreadyExists') . ' ' . basename($n));
+			} elseif (rename(RoxyHelper::fixPath($f), RoxyHelper::fixPath($n))) {
+				echo RoxyHelper::getSuccessRes();
 			} else {
-				echo RoxyBase::getErrorRes(RoxyBase::t('E_MoveFile') . ' ' . basename($f));
+				echo RoxyHelper::getErrorRes(RoxyHelper::t('E_MoveFile') . ' ' . basename($f));
 			}
 		} else {
-			echo RoxyBase::getErrorRes(RoxyBase::t('E_MoveFileInvalisPath'));
+			echo RoxyHelper::getErrorRes(RoxyHelper::t('E_MoveFileInvalisPath'));
 		}
 	}
 
@@ -377,23 +383,23 @@ class ManagerController extends Controller {
 	 * @param $f
 	 * @param $n
 	 *
-	 * @throws InvalidParamException
+	 * @throws InvalidParamException|InvalidConfigException
 	 */
 	public function actionCopyfile($f, $n) {
 		if (!$n) {
-			$n = RoxyBase::getFilesPath();
+			$n = RoxyHelper::getFilesPath();
 		}
-		RoxyBase::verifyPath($f);
-		RoxyBase::verifyPath($n);
-		if (is_file(RoxyBase::fixPath($f))) {
-			$n = $n . '/' . RoxyFile::MakeUniqueFilename(RoxyBase::fixPath($n), basename($f));
-			if (copy(RoxyBase::fixPath($f), RoxyBase::fixPath($n))) {
-				echo RoxyBase::getSuccessRes();
+		RoxyHelper::verifyPath($f);
+		RoxyHelper::verifyPath($n);
+		if (is_file(RoxyHelper::fixPath($f))) {
+			$n = $n . '/' . FileHelper::makeUniqueFilename(RoxyHelper::fixPath($n), basename($f));
+			if (copy(RoxyHelper::fixPath($f), RoxyHelper::fixPath($n))) {
+				echo RoxyHelper::getSuccessRes();
 			} else {
-				echo RoxyBase::getErrorRes(RoxyBase::t('E_CopyFile'));
+				echo RoxyHelper::getErrorRes(RoxyHelper::t('E_CopyFile'));
 			}
 		} else {
-			echo RoxyBase::getErrorRes(RoxyBase::t('E_CopyFileInvalisPath'));
+			echo RoxyHelper::getErrorRes(RoxyHelper::t('E_CopyFileInvalisPath'));
 		}
 	}
 
@@ -401,20 +407,20 @@ class ManagerController extends Controller {
 	 * @param $f
 	 * @param $n
 	 *
-	 * @throws InvalidParamException
+	 * @throws InvalidParamException|InvalidConfigException
 	 */
 	public function actionRenamefile($f, $n) {
-		RoxyBase::verifyPath($f);
-		if (is_file(RoxyBase::fixPath($f))) {
-			if (!RoxyFile::CanUploadFile($n)) {
-				echo RoxyBase::getErrorRes(RoxyBase::t('E_FileExtensionForbidden') . ' ".' . RoxyFile::GetExtension($n) . '"');
-			} elseif (rename(RoxyBase::fixPath($f), dirname(RoxyBase::fixPath($f)) . '/' . $n)) {
-				echo RoxyBase::getSuccessRes();
+		RoxyHelper::verifyPath($f);
+		if (is_file(RoxyHelper::fixPath($f))) {
+			if (!FileHelper::canUploadFile($n)) {
+				echo RoxyHelper::getErrorRes(RoxyHelper::t('E_FileExtensionForbidden') . ' ".' . FileHelper::getExtension($n) . '"');
+			} elseif (rename(RoxyHelper::fixPath($f), dirname(RoxyHelper::fixPath($f)) . '/' . $n)) {
+				echo RoxyHelper::getSuccessRes();
 			} else {
-				echo RoxyBase::getErrorRes(RoxyBase::t('E_RenameFile') . ' ' . basename($f));
+				echo RoxyHelper::getErrorRes(RoxyHelper::t('E_RenameFile') . ' ' . basename($f));
 			}
 		} else {
-			echo RoxyBase::getErrorRes(RoxyBase::t('E_RenameFileInvalidPath'));
+			echo RoxyHelper::getErrorRes(RoxyHelper::t('E_RenameFileInvalidPath'));
 		}
 	}
 }

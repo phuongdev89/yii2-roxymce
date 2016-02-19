@@ -21,7 +21,7 @@
  */
 var FileTypes         = new Array();
 FileTypes['image']    = new Array('jpg', 'jpeg', 'png', 'gif');
-FileTypes['media']    = new Array('avi', 'flv', 'swf', 'wmv', 'mp3', 'wma', 'mpg', 'mpeg');
+FileTypes['media']    = new Array('avi', 'flv', 'swf', 'wmv', 'mp3', 'wma', 'mpg', 'mpeg', 'mp4');
 FileTypes['document'] = new Array('doc', 'docx', 'txt', 'rtf', 'pdf', 'xls', 'mdb', 'html', 'htm', 'db');
 function RoxyUtils() {
 }
@@ -270,7 +270,7 @@ RoxyUtils.Translate   = function() {
 		$(this).html(html + ' ' + t(key));
 	});
 	$('[data-lang]').each(function() {
-		var key = $(this).attr('data-lang');
+		var key  = $(this).attr('data-lang');
 		var html = $(this).html();
 		$(this).html(html + ' ' + t(key));
 	});
