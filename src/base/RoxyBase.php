@@ -26,28 +26,16 @@ class RoxyBase {
 	 * @param $key
 	 *
 	 * @return mixed
+	 * @throws InvalidParamException
 	 */
 	public static function t($key) {
-		global $LANG;
-		if ($LANG === null) {
-			$file     = 'en.json';
-			$langPath = '../lang/';
-			if (defined('LANG')) {
-				if (LANG === 'auto') {
-					$lang = strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
-					if (is_file($langPath . $lang . '.json')) {
-						$file = $lang . '.json';
-					}
-				} elseif (is_file($langPath . LANG . '.json')) {
-					$file = LANG . '.json';
-				}
-			}
-			$file = $langPath . $file;
-			$LANG = json_decode(file_get_contents($file), true);
+		$file     = \Yii::$app->language . '.json';
+		$langPath = \Yii::getAlias('@vendor/navatech/yii2-roxymce/src/assets/lang');
+		if (defined('LANG')) {
+			$file = LANG . '.json';
 		}
-		if (!$LANG[$key]) {
-			$LANG[$key] = $key;
-		}
+		$file = $langPath . DIRECTORY_SEPARATOR . $file;
+		$LANG = json_decode(file_get_contents($file), true);
 		return $LANG[$key];
 	}
 

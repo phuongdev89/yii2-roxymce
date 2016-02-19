@@ -58,7 +58,7 @@ $this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyM
 			<div class="actions">
 				<div class="row">
 					<div class="col-sm-3">
-						<select onchange="sortFiles()" class="form-control input-sm">
+						<select id="ddlOrder" onchange="sortFiles()" class="form-control input-sm">
 							<option value="name" data-lang="Name_asc"></option>
 							<option value="size" data-lang="Size_asc"></option>
 							<option value="time" data-lang="Date_asc"></option>

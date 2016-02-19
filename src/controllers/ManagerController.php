@@ -257,23 +257,23 @@ class ManagerController extends Controller {
 						}
 					}
 					if ($errors && $errorsExt) {
-						$res = RoxyBase::getSuccessRes(RoxyBase::t('E_UploadNotAll') . ' ' . RoxyBase::t('E_FileExtensionForbidden')) . '4';
+						$res = RoxyBase::getSuccessRes(RoxyBase::t('E_UploadNotAll') . ' ' . RoxyBase::t('E_FileExtensionForbidden'));
 					} elseif ($errorsExt) {
-						$res = RoxyBase::getSuccessRes(RoxyBase::t('E_FileExtensionForbidden')) . '5';
+						$res = RoxyBase::getSuccessRes(RoxyBase::t('E_FileExtensionForbidden'));
 					} elseif ($errors) {
-						$res = RoxyBase::getSuccessRes(RoxyBase::t('E_UploadNotAll')) . '6';
+						$res = RoxyBase::getSuccessRes(RoxyBase::t('E_UploadNotAll'));
 					} else {
-						$res = RoxyBase::getSuccessRes() . '7';
+						$res = RoxyBase::getSuccessRes();
 					}
 				} else {
-					$res = RoxyBase::getErrorRes(RoxyBase::t('E_UploadNoFiles')) . '1';
+					$res = RoxyBase::getErrorRes(RoxyBase::t('E_UploadNoFiles'));
 				}
 			} else {
-				$res = RoxyBase::getErrorRes(RoxyBase::t('E_UploadInvalidPath')) . '2';
+				$res = RoxyBase::getErrorRes(RoxyBase::t('E_UploadInvalidPath'));
 			}
 			if ($isAjax) {
 				if ($errors || $errorsExt) {
-					$res = RoxyBase::getErrorRes(RoxyBase::t('E_UploadNotAll')) . '3';
+					$res = RoxyBase::getErrorRes(RoxyBase::t('E_UploadNotAll'));
 				}
 				echo $res;
 			} else {
