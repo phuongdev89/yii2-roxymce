@@ -114,7 +114,7 @@ class RoxyMceWidget extends Widget {
 				file          : roxyFileman,
 				title         : "' . (array_key_exists('title', $this->options) ? $this->options['title'] : 'RoxyMce') . '",
 				width         : 850,
-				height        : 650,
+				height        : 480,
 				resizable     : "yes",
 				plugins       : "media",
 				inline        : "yes",

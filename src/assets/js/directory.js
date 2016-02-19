@@ -233,7 +233,7 @@ function Directory(fullPath, numDirs, numFiles) {
 			error   : function(data) {
 				$('#pnlLoadingDirs').hide();
 				$('#pnlDirList').show();
-				alert(t('1 E_LoadingAjax') + ' ' + RoxyFilemanConf.DIRLIST);
+				alert(t('E_LoadingAjax') + ' ' + RoxyFilemanConf.DIRLIST);
 			}
 		});
 	};
@@ -279,7 +279,7 @@ function Directory(fullPath, numDirs, numFiles) {
 				}
 			},
 			error   : function(data) {
-				alert(t('2 E_LoadingAjax') + ' ' + item.name);
+				alert(t('E_LoadingAjax') + ' ' + item.name);
 			}
 		});
 		return ret;
@@ -313,7 +313,7 @@ function Directory(fullPath, numDirs, numFiles) {
 				}
 			},
 			error   : function(data) {
-				alert(t('3 E_LoadingAjax') + ' ' + item.name);
+				alert(t('E_LoadingAjax') + ' ' + item.name);
 			}
 		});
 		return ret;
@@ -351,7 +351,7 @@ function Directory(fullPath, numDirs, numFiles) {
 				}
 			},
 			error   : function(data) {
-				alert(t('4 E_LoadingAjax') + ' ' + item.name);
+				alert(t('E_LoadingAjax') + ' ' + item.name);
 			}
 		});
 		return ret;
@@ -388,7 +388,7 @@ function Directory(fullPath, numDirs, numFiles) {
 				}
 			},
 			error   : function(data) {
-				alert(t('5 E_LoadingAjax') + ' ' + url);
+				alert(t('E_LoadingAjax') + ' ' + url);
 			}
 		});
 		return ret;
@@ -424,7 +424,7 @@ function Directory(fullPath, numDirs, numFiles) {
 				}
 			},
 			error   : function(data) {
-				alert(t('6 E_LoadingAjax') + ' ' + item.name);
+				alert(t('E_LoadingAjax') + ' ' + item.name);
 			}
 		});
 		return ret;
@@ -485,7 +485,7 @@ function Directory(fullPath, numDirs, numFiles) {
 					item.FilesLoaded(ret, selectedFile);
 				},
 				error   : function(data) {
-					alert(t('7 E_LoadingAjax') + ' ' + fileURL);
+					alert(t('E_LoadingAjax') + ' ' + fileURL);
 				}
 			});
 		}

@@ -38,7 +38,7 @@ $this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyM
 		</div>
 		<div class="col-sm-8" id="fileActions">
 			<input type="hidden" id="hdViewType" value="list">
-			<input type="hidden" id="hdOrder" value="asc">
+			<input type="hidden" id="hdOrder" value="time_desc">
 			<div class="actions">
 				<div class="row">
 					<div class="col-sm-12">
@@ -76,7 +76,7 @@ $this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyM
 					<div class="col-sm-6">
 						<div class="form-inline">
 							<div class="input-group input-group-sm">
-								<input type="text" class="form-control" placeholder="Search for..." onkeyup="filterFiles()" onchange="filterFiles()">
+								<input id="txtSearch" type="text" class="form-control" placeholder="Search for..." onkeyup="filterFiles()" onchange="filterFiles()">
 									<span class="input-group-btn">
 									    <button class="btn btn-default" type="button"><i class="fa fa-search"></i>
 									    </button>

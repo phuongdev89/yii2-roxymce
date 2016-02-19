@@ -103,19 +103,6 @@ ul {
     opacity: 0.5;
 }
 
-/* Search and order fields */
-#txtSearch, #ddlOrder {
-    border: 1px solid #CCC;
-    border-radius: 3px;
-}
-
-#txtSearch {
-    padding: 0 22px 0 3px;
-    background: url(../images/sprite.png) no-repeat 87px -314px;
-    width: 80px;
-    height: 20px;
-}
-
 input[type=text]::-ms-clear {
     display: none;
 }
@@ -434,4 +421,16 @@ div.ui-tooltip {
     text-align: left;
 }
 
-/* END OF Upload dialog */
+.ui-dialog .ui-dialog-title {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.ui-dialog .ui-dialog-buttonpane {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.mce-window[aria-label="RoxyMce"] {
+    position: absolute !important;
+}

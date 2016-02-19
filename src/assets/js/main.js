@@ -298,6 +298,7 @@ function addFile() {
 	dialogButtons[t('Upload')] = {
 		id      : 'btnUpload',
 		text    : t('Upload'),
+		class   : 'btn btn-sm',
 		disabled: true,
 		click   : function() {
 			if(!$('#fileUploads').val() && (!uploadFileList || uploadFileList.length == 0)) {
@@ -329,7 +330,8 @@ function addFile() {
 		title  : t('T_AddFile'),
 		modal  : true,
 		buttons: dialogButtons,
-		width  : 400
+		width  : 400,
+		height : 'auto'
 	});
 }
 function fileUploaded(res) {
@@ -684,6 +686,7 @@ function setClipboard(a, obj) {
 function ResizeLists() {
 	var tmp = $(window).innerHeight() - $('#fileActions .actions').outerHeight() - $('.bottomLine').outerHeight() - 14;
 	$('.scrollPane:first').css('height', tmp);
+	$('.scrollPane:last').css('height', (tmp - 38));
 }
 function removeDisabledActions() {
 	if(RoxyFilemanConf.CREATEDIR == '') {
