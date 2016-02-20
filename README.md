@@ -1,7 +1,13 @@
-# RoxyMce
-This allow to intergrate TinyMce 4 with Roxy Fileman
-TODO recode actions
+# RoxyMce - Beautiful File manager for Tinymce
+This allow to integrate [TinyMce](https://github.com/tinymce/tinymce) 4 with [Roxy Fileman](http://roxyfileman.com)
 
+User story
+---
+I'm try to find a good file manager for tinymce for a long time.
+
+elFinder is good, but too much function and it's not my style. MoxieManager maybe best with tinymce, but it's too much for me.
+
+One day, I saw roxyman, immediately, I know it is all I need.
 ## Usage
 ~~~
 [php]
@@ -9,6 +15,7 @@ TODO recode actions
 		'roxymce'  => [
 			'class' => '\navatech\roxymce\Module',
 			'config'=> [
+			//all is not required
 						'FILES_ROOT'           => 'uploads/image',
             			'RETURN_URL_PREFIX'    => '',
             			'SESSION_PATH_KEY'     => '',
@@ -31,3 +38,4 @@ TODO recode actions
 	],
 
 ~~~
+TODO need auto create folder for FILESROOT
