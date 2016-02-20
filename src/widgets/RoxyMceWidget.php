@@ -17,6 +17,7 @@ use yii\base\Widget;
 use yii\bootstrap\Html;
 use yii\db\ActiveRecord;
 use yii\helpers\Json;
+use yii\helpers\Url;
 use yii\web\View;
 
 /**
@@ -86,11 +87,7 @@ class RoxyMceWidget extends Widget {
 			];
 		}
 		if ($this->action === null) {
-			if (class_exists('navatech\localeurls\UrlManager')) {
-				$this->action = Yii::$app->homeUrl . Yii::$app->language . '/roxymce/default';
-			} else {
-				$this->action = Yii::$app->homeUrl . 'roxymce/default';
-			}
+			$this->action = Url::to(['roxymce/default']);
 		}
 	}
 

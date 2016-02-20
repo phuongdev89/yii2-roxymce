@@ -31,7 +31,9 @@ class ManagerController extends Controller {
 	}
 
 	/**
-	 * @param $type
+	 * Return list of all directory
+	 *
+	 * @param $type string type of media
 	 *
 	 * @throws InvalidParamException|InvalidConfigException
 	 */
@@ -51,10 +53,12 @@ class ManagerController extends Controller {
 	}
 
 	/**
-	 * @param $d
-	 * @param $type
+	 * Return all files on input directory
 	 *
-	 * @throws InvalidConfigException
+	 * @param $d    string input directory name
+	 * @param $type string type of media
+	 *
+	 * @throws InvalidConfigException|InvalidParamException
 	 */
 	public function actionFileslist($d, $type) {
 		if ($type !== 'image' && $type !== 'flash') {
@@ -62,8 +66,7 @@ class ManagerController extends Controller {
 		}
 		$files = RoxyHelper::listDirectory(RoxyHelper::fixPath($d));
 		natcasesort($files);
-		$str = '';
-		echo '[';
+		$response = [];
 		foreach ($files as $f) {
 			$fullPath = $d . '/' . $f;
 			if ((!FileHelper::isImage($f) && $type === 'image') || ($type === 'flash' && !FileHelper::isFlash($f)) || !is_file(RoxyHelper::fixPath($fullPath))) {
@@ -80,17 +83,23 @@ class ManagerController extends Controller {
 					$h = $tmp[1];
 				}
 			}
-			$str .= '{"p":"' . mb_ereg_replace('"', '\\"', $fullPath) . '","s":"' . $size . '","t":"' . $time . '","w":"' . $w . '","h":"' . $h . '"},';
+			$response[] = [
+				'p' => mb_ereg_replace('"', '\\"', $fullPath),
+				's' => $size,
+				't' => $time,
+				'w' => $w,
+				'h' => $h,
+			];
 		}
-		$str = mb_substr($str, 0, - 1);
-		echo $str;
-		echo ']';
+		echo Json::encode($response);
 	}
 
 	/**
-	 * @param     $f
-	 * @param int $width
-	 * @param int $height
+	 * This action will generate an thumbnail for input image (Like timthumb)
+	 *
+	 * @param string $f file path to generate thumbnail
+	 * @param int    $width
+	 * @param int    $height
 	 *
 	 * @throws InvalidParamException|InvalidConfigException
 	 */
@@ -107,8 +116,10 @@ class ManagerController extends Controller {
 	}
 
 	/**
-	 * @param $d
-	 * @param $n
+	 * This action will create an folder on current directory
+	 *
+	 * @param $d string current path of directory
+	 * @param $n string name of new directory will be create
 	 *
 	 * @throws InvalidParamException
 	 */
@@ -126,7 +137,9 @@ class ManagerController extends Controller {
 	}
 
 	/**
-	 * @param $d
+	 * This action will delete current folder
+	 *
+	 * @param $d string path of directory will be delete
 	 *
 	 * @throws InvalidParamException
 	 */
@@ -148,8 +161,10 @@ class ManagerController extends Controller {
 	}
 
 	/**
-	 * @param $d
-	 * @param $n
+	 * This action will help to move directory from current position to everywhere
+	 *
+	 * @param $d string path of current directory
+	 * @param $n string new path
 	 *
 	 * @throws InvalidParamException
 	 */
@@ -172,8 +187,10 @@ class ManagerController extends Controller {
 	}
 
 	/**
-	 * @param $d
-	 * @param $n
+	 * This action will help to copy a directory
+	 *
+	 * @param $d string path of current directory
+	 * @param $n string new path
 	 *
 	 * @throws InvalidParamException
 	 */
@@ -208,8 +225,10 @@ class ManagerController extends Controller {
 	}
 
 	/**
-	 * @param $d
-	 * @param $n
+	 * This action support rename a directory
+	 *
+	 * @param $d string path of current directory
+	 * @param $n string new name
 	 *
 	 * @throws InvalidParamException
 	 */
@@ -229,6 +248,7 @@ class ManagerController extends Controller {
 	}
 
 	/**
+	 * This action support upload file
 	 * @throws InvalidParamException|InvalidConfigException
 	 */
 	public function actionUpload() {
@@ -291,7 +311,9 @@ class ManagerController extends Controller {
 	}
 
 	/**
-	 * @param $f
+	 * This action support download a file
+	 *
+	 * @param $f string selected file path
 	 *
 	 * @throws InvalidParamException
 	 */
@@ -306,11 +328,17 @@ class ManagerController extends Controller {
 	}
 
 	/**
-	 * @param $d
+	 * This action will zip a directory and force download it
+	 *
+	 * @param $d string path of current directory
 	 *
 	 * @throws InvalidParamException
 	 */
 	public function actionDownloaddir($d) {
+		$tmpPath = Yii::$app->basePath . Yii::getAlias('@web/' . FILES_ROOT . '/tmp');
+		if (!file_exists($tmpPath)) {
+			@mkdir($tmpPath, 0777, true);
+		}
 		@ini_set('memory_limit', - 1);
 		RoxyHelper::verifyPath($d);
 		$d = RoxyHelper::fixPath($d);
@@ -320,15 +348,13 @@ class ManagerController extends Controller {
 			try {
 				$filename = basename($d);
 				$zipFile  = $filename . '.zip';
-				$zipPath  = BASE_PATH . '/tmp/' . $zipFile;
+				$zipPath  = $tmpPath . '/' . $zipFile;
 				FileHelper::zipDir($d, $zipPath);
 				header('Content-Disposition: attachment; filename="' . $zipFile . '"');
 				header('Content-Type: application/force-download');
 				readfile($zipPath);
-				function deleteTmp($zipPath) {
-					@unlink($zipPath);
-				}
-
+				@unlink($zipPath);
+				@rmdir($tmpPath);
 				register_shutdown_function('deleteTmp', $zipPath);
 			} catch (Exception $ex) {
 				echo '<script>alert("' . addslashes(RoxyHelper::t('E_CreateArchive')) . '");</script>';
@@ -337,7 +363,9 @@ class ManagerController extends Controller {
 	}
 
 	/**
-	 * @param $f
+	 * This help to unlink a file
+	 *
+	 * @param $f string path of current file
 	 *
 	 * @throws InvalidParamException
 	 */
@@ -355,8 +383,10 @@ class ManagerController extends Controller {
 	}
 
 	/**
-	 * @param $f
-	 * @param $n
+	 * This help move file from current directory to everywhere
+	 *
+	 * @param $f string path of current file
+	 * @param $n string new path
 	 *
 	 * @throws InvalidParamException
 	 */
@@ -380,8 +410,10 @@ class ManagerController extends Controller {
 	}
 
 	/**
-	 * @param $f
-	 * @param $n
+	 * This help to copy file
+	 *
+	 * @param $f string path of current file
+	 * @param $n string new path
 	 *
 	 * @throws InvalidParamException|InvalidConfigException
 	 */
@@ -404,8 +436,10 @@ class ManagerController extends Controller {
 	}
 
 	/**
-	 * @param $f
-	 * @param $n
+	 * This help to rename a file
+	 *
+	 * @param $f string path of current file
+	 * @param $n string new name
 	 *
 	 * @throws InvalidParamException|InvalidConfigException
 	 */

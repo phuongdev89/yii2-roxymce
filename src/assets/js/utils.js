@@ -205,7 +205,7 @@ function RoxyFilemanConf() {
 }
 RoxyUtils.LoadConfig = function() {
 	$.ajax({
-		url     : roxyMceUrl + 'default/config',
+		url     : roxyMceConfig,
 		type    : "GET",
 		dataType: 'json',
 		async   : false,

@@ -461,7 +461,7 @@ function Directory(fullPath, numDirs, numFiles) {
 			alert(t('E_ActionDisabled'));
 			return;
 		}
-		var ret     = new Array();
+		var ret     = [];
 		var fileURL = RoxyFilemanConf.FILESLIST;
 		fileURL     = RoxyUtils.AddParam(fileURL, 'd', this.fullPath);
 		fileURL     = RoxyUtils.AddParam(fileURL, 'type', RoxyUtils.GetUrlParam('type'));
@@ -479,7 +479,7 @@ function Directory(fullPath, numDirs, numFiles) {
 				async   : true,
 				cache   : false,
 				success : function(files) {
-					for(i = 0; i < files.length; i++) {
+					for(var i = 0; i < files.length; i++) {
 						ret.push(new File(files[i].p, files[i].s, files[i].t, files[i].w, files[i].h));
 					}
 					item.FilesLoaded(ret, selectedFile);

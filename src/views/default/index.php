@@ -7,13 +7,18 @@
  * @date    15/02/2016
  * @time    2:56 CH
  * @version 1.0.0
- * @var string $roxyMceUrl
  */
-\navatech\roxymce\JqueryDateFormatAsset::register($this);
-\yii\bootstrap\BootstrapAsset::register($this);
-\navatech\roxymce\FontAwesomeAsset::register($this);
-$roxyMceAsset = \navatech\roxymce\RoxyMceAsset::register($this);
-$this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyMceUrl = "' . $roxyMceUrl . '";', 1);
+use navatech\roxymce\FontAwesomeAsset;
+use navatech\roxymce\JqueryDateFormatAsset;
+use navatech\roxymce\RoxyMceAsset;
+use yii\bootstrap\BootstrapAsset;
+use yii\helpers\Url;
+
+BootstrapAsset::register($this);
+JqueryDateFormatAsset::register($this);
+FontAwesomeAsset::register($this);
+$roxyMceAsset = RoxyMceAsset::register($this);
+$this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyMceConfig = "' . Url::to(['default/config']) . '";', 1);
 ?>
 <div class="col-sm-12" id="wrapper">
 	<div class="row">

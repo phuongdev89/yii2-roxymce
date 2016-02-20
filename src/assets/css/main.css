@@ -195,7 +195,6 @@ input[type=text]::-ms-clear {
 .contextMenu {
     position: absolute;
     background-color: #DDD;
-    border: 1px solid #BBB;
     min-width: 100px;
     font-weight: bold;
     z-index: 1000 !important;

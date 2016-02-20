@@ -21,25 +21,25 @@ use yii\web\Response;
  */
 class DefaultController extends Controller {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function beforeAction($action) {
 		$this->enableCsrfValidation = false;
 		return parent::beforeAction($action);
 	}
 
 	/**
+	 * Render a view
 	 * @return string
 	 * @throws InvalidParamException
 	 */
 	public function actionIndex() {
-		if (class_exists('navatech\localeurls\UrlManager')) {
-			$roxyMceUrl = Yii::$app->homeUrl . Yii::$app->language . '/roxymce/';
-		} else {
-			$roxyMceUrl = Yii::$app->homeUrl . 'roxymce/';
-		}
-		return $this->renderAjax('index', ['roxyMceUrl' => $roxyMceUrl]);
+		return $this->renderAjax('index');
 	}
 
 	/**
+	 * Return all default config
 	 * @return mixed
 	 * @throws Exception
 	 */
@@ -48,7 +48,7 @@ class DefaultController extends Controller {
 			Yii::$app->response->format = Response::FORMAT_JSON;
 			return Yii::$app->getModule('roxymce')->config;
 		} else {
-			throw  new Exception('Unknown');
+			throw new Exception('Unknown');
 		}
 	}
 }

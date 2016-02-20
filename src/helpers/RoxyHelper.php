@@ -61,9 +61,10 @@ class RoxyHelper {
 	 * @param $path
 	 *
 	 * @return mixed|string
+	 * @throws InvalidParamException
 	 */
 	public static function fixPath($path) {
-		$path = $_SERVER['DOCUMENT_ROOT'] . '/' . $path;
+		$path = \Yii::$app->basePath . \Yii::getAlias($path);
 		$path = str_replace('\\', '/', $path);
 		$path = FileHelper::fixPath($path);
 		return $path;
