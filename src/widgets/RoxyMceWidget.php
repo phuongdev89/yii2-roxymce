@@ -55,10 +55,10 @@ class RoxyMceWidget extends Widget {
 				throw new InvalidParamException('Field "attribute" is required');
 			} else {
 				$model = $this->model;
-				if ($model->hasAttribute($this->attribute)) {
+				if (method_exists($model, 'hasAttribute') && $model->hasAttribute($this->attribute)) {
 					$this->id = $model::tableName() . '_' . $this->attribute;
 				} else {
-					throw new InvalidParamException('Column "' . $this->attribute . '" not found in ' . $model::tableName());
+					throw new InvalidParamException('Column "' . $this->attribute . '" not found in model');
 				}
 			}
 		} else {
