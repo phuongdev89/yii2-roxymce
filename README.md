@@ -67,7 +67,7 @@ $model = Post::findOne(['id' => 1]);
 echo \navatech\roxymce\widgets\RoxyMceWidget::widget([
 	'model'       => $model, //your Model, REQUIRED
 	'attributess' => 'content', //attribute name of your model, REQUIRED if using 'model' section
-	'name'        => 'Post[content]', //defaul name of textarea which will be generated, NOT REQUIRED if using 'model' section
+	'name'        => 'Post[content]', //default name of textarea which will be auto generated, NOT REQUIRED if using 'model' section
 	'value'       => isset($_POST['Post']['content']) ? $_POST['Post']['content'] : $model->content, //default value of current textarea, NOT REQUIRED
 	'action'      => Url::to(['roxymce/default']), //default roxymce action route, NOT REQUIRED
 	'options'     => [//TinyMce options, NOT REQUIRED, see https://www.tinymce.com/docs/
@@ -80,7 +80,7 @@ echo \navatech\roxymce\widgets\RoxyMceWidget::widget([
 ~~~
 [php]
 echo \navatech\roxymce\widgets\RoxyMceWidget::widget([
-	'name'        => 'content', //defaul name of textarea which will be generated, REQUIRED if not using 'model' section
+	'name'        => 'content', //default name of textarea which will be auto generated, REQUIRED if not using 'model' section
 	'value'       => isset($_POST['content']) ? $_POST['content'] : '', //default value of current textarea, NOT REQUIRED
 	'action'      => Url::to(['roxymce/default']), //default roxymce action route, NOT REQUIRED
 	'options'     => [//TinyMce options, NOT REQUIRED, see https://www.tinymce.com/docs/
