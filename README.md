@@ -10,13 +10,13 @@ Install
 ---
 Preferred way to install this extension through [composer](http://getcomposer.org)  
 Either run
-```
+~~~
 composer require navatech/yii2-roxymce "@dev"
-```
+~~~
 Or add to `require` section of `composer.json` then run `composer update`
-```
+~~~
 "navatech/yii2-roxymce" : "@dev" 
-```
+~~~
 Configure
 ---
 Just add to `config/web.php`
@@ -58,7 +58,7 @@ Usage
 ---
 In your view file, call roxymce widget
 ### Include ActiveRecord Model
-```
+~~~
 [php]
 //example in action create
 $model = new Post(); 
@@ -70,21 +70,25 @@ echo \navatech\roxymce\widgets\RoxyMceWidget::widget([
 	'name'        => 'Post[content]', //defaul name of textarea which will be generated, NOT REQUIRED if using 'model' section
 	'value'       => isset($_POST['Post']['content']) ? $_POST['Post']['content'] : $model->content, //default value of current textarea, NOT REQUIRED
 	'action'      => Url::to(['roxymce/default']), //default roxymce action route, NOT REQUIRED
-	'options'     => [],//TinyMce options, NOT REQUIRED, see https://www.tinymce.com/docs/
+	'options'     => [//TinyMce options, NOT REQUIRED, see https://www.tinymce.com/docs/
+		'title' => 'RoxyMCE',//title of roxymce dialog, NOT REQUIRED
+	],
 	'htmlOptions' => [],//html options of this widget, NOT REQUIRED
 ]);
-```
+~~~
 ### Sample HTML without ActiveRecord Model
-```
+~~~
 [php]
 echo \navatech\roxymce\widgets\RoxyMceWidget::widget([
 	'name'        => 'content', //defaul name of textarea which will be generated, REQUIRED if not using 'model' section
 	'value'       => isset($_POST['content']) ? $_POST['content'] : '', //default value of current textarea, NOT REQUIRED
 	'action'      => Url::to(['roxymce/default']), //default roxymce action route, NOT REQUIRED
-	'options'     => [],//TinyMce options, NOT REQUIRED, see https://www.tinymce.com/docs/
+	'options'     => [//TinyMce options, NOT REQUIRED, see https://www.tinymce.com/docs/
+		'title' => 'RoxyMCE',//title of roxymce dialog, NOT REQUIRED
+	],
 	'htmlOptions' => [],//html options of this widget, NOT REQUIRED
 ]);
-```
+~~~
 Screenshot & Demo
 ---
 ### Demo
@@ -96,6 +100,13 @@ Please referrence to [RoxyFileMan demo](http://www.roxyfileman.com/demo) and scr
 ### Upload view
 ![upload](http://i.imgur.com/9zvpFTM.png)
 
-Credits
+Resource
 ---
-Thanks to [TinyMce](http://tinymce.com), [RoxyFileMan](http://roxyfileman.com)
+
+ * [TinyMce](http://tinymce.com)
+ * [RoxyFileMan](http://roxyfileman.com)
+ * [Project root](https://github.com/navatech/yii2-roxymce)
+
+Bugs & Issues
+---
+Found some bugs? Just [create an issue](https://github.com/navatech/yii2-roxymce/issues/new) or [fork it](https://github.com/navatech/yii2-roxymce) and send pull request
