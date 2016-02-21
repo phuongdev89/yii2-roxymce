@@ -50,7 +50,7 @@ class Module extends ModuleBase {
 			'MAX_IMAGE_HEIGHT'     => '1000',
 			'DEFAULTVIEW'          => 'thumb',
 			'FORBIDDEN_UPLOADS'    => 'zip js jsp jsb mhtml mht xhtml xht php phtml php3 php4 php5 phps shtml jhtml pl sh py cgi exe application gadget hta cpl msc jar vb jse ws wsf wsc wsh ps1 ps2 psc1 psc2 msh msh1 msh2 inf reg scf msp scr dll msi vbs bat com pif cmd vxd cpl htpasswd htaccess',
-			'ALLOWED_UPLOADS'      => 'jpg png jpeg gif mp4 mp3 avi wmv flv',
+			'ALLOWED_UPLOADS'      => 'jpeg jpg png gif mov mp3 mp4 avi wmv flv mpeg',
 			'FILEPERMISSIONS'      => '0644',
 			'DIRPERMISSIONS'       => '0755',
 			'LANG'                 => Yii::$app->language,
@@ -81,7 +81,7 @@ class Module extends ModuleBase {
 		}
 		$FilesRoot = RoxyHelper::fixPath(RoxyHelper::getFilesPath());
 		if (!is_dir($FilesRoot)) {
-			@mkdir($FilesRoot, octdec(DIRPERMISSIONS));
+			@mkdir($FilesRoot, octdec(DIRPERMISSIONS), true);
 		}
 	}
 }

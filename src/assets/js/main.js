@@ -231,8 +231,11 @@ function checkUploadResult() {
 	if(completed == all) {
 		uploadFileList = [];
 		var d          = Directory.Parse($('#hdDir').val());
-		d.ListFiles(true);
-		$('#btnUpload').button('disable');
+		setTimeout(function() {
+			d.ListFiles(true);
+			$('#dlgAddFile').dialog('close');
+		}, 500);
+
 	}
 }
 function fileUpload(f, i) {
