@@ -37,7 +37,7 @@ Just add to `config/web.php`
 			'class' => '\navatech\roxymce\Module',
 			'config'=> [
 			//all below is not required
-				'FILES_ROOT'           => 'uploads/image', //The root directory of roxymce's resource, where can be uploaded to
+				'FILES_ROOT'           => 'uploads/image', //The root directory of roxymce's resource, where can be uploaded to. if not existed, Roxy will auto create
 				'DEFAULTVIEW'          => 'list', //default view when you call roxymce (thumb/list)
 				'THUMBS_VIEW_WIDTH'    => '100', //default width of thumbs when thumb view activated
 				'THUMBS_VIEW_HEIGHT'   => '100', //default height of thumbs when thumb view activated
@@ -47,7 +47,7 @@ Just add to `config/web.php`
 				'ALLOWED_UPLOADS'      => 'jpeg jpg png gif mov mp3 mp4 avi wmv flv mpeg', //default allowed upload files extension
 				'FILEPERMISSIONS'      => '0644', //default file permissions
 				'DIRPERMISSIONS'       => '0755', //default folder permissions
-				'LANG'                 => 'en', //default language interface
+				'LANG'                 => 'en', //fix language interface. if NOT SET, language interface will auto follow Yii::$app->language
 				'DATEFORMAT'           => 'dd/MM/yyyy HH:mm', //default datetime format
 				'OPEN_LAST_DIR'        => 'yes', //default roxymce will open last dir where you leave
 			]
