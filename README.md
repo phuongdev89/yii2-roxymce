@@ -15,7 +15,7 @@ composer require navatech/yii2-roxymce "@dev"
 ```
 Or add to `require` section of `composer.json` then run `composer update`
 ```
-"navatech/roxy-mce" : "@dev" 
+"navatech/yii2-roxymce" : "@dev" 
 ```
 Configure
 ---
@@ -98,4 +98,4 @@ Please referrence to [RoxyFileMan demo](http://www.roxyfileman.com/demo) and scr
 
 Credits
 ---
-Thank to [TinyMce](http://tinymce.com), [RoxyFileMan](http://roxyfileman.com)
+Thanks to [TinyMce](http://tinymce.com), [RoxyFileMan](http://roxyfileman.com)
