@@ -66,7 +66,7 @@ $model = new Post();
 $model = Post::findOne(['id' => 1]); 
 echo \navatech\roxymce\widgets\RoxyMceWidget::widget([
 	'model'       => $model, //your Model, REQUIRED
-	'attributess' => 'content', //attribute name of your model, REQUIRED if using 'model' section
+	'attribute'   => 'content', //attribute name of your model, REQUIRED if using 'model' section
 	'name'        => 'Post[content]', //default name of textarea which will be auto generated, NOT REQUIRED if using 'model' section
 	'value'       => isset($_POST['Post']['content']) ? $_POST['Post']['content'] : $model->content, //default value of current textarea, NOT REQUIRED
 	'action'      => Url::to(['roxymce/default']), //default roxymce action route, NOT REQUIRED
