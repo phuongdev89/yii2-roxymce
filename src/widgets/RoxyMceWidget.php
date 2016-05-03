@@ -56,7 +56,8 @@ class RoxyMceWidget extends Widget {
 			} else {
 				$model = $this->model;
 				if (method_exists($model, 'hasAttribute') && $model->hasAttribute($this->attribute)) {
-					$this->id = $model::tableName() . '_' . $this->attribute;
+					$classNames = explode("\\", $model::className());
+					$this->id   = end($classNames) . '_' . $this->attribute;
 				} else {
 					throw new InvalidParamException('Column "' . $this->attribute . '" not found in model');
 				}
