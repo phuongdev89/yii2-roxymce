@@ -102,7 +102,7 @@ class FileHelper extends BaseFileHelper {
 	 */
 	public static function zipDir($path, $zipFile, $zipPath = '') {
 		$zip = new ZipArchive();
-		$zip->open($zipFile, ZIPARCHIVE::CREATE);
+		$zip->open($zipFile, ZipArchive::CREATE);
 		self::zipAddDir($path, $zip, $zipPath);
 		$zip->close();
 	}

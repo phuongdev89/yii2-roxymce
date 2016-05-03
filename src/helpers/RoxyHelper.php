@@ -16,6 +16,17 @@ use yii\base\InvalidParamException;
  * RoxyHelper is core functions of Roxy file man
  */
 class RoxyHelper {
+	
+	/**
+	 * @return string current base path
+	 */
+	public static function getBasePath(){
+		if(\Yii::getAlias('@common', false) !== false){
+			return dirname(\Yii::getAlias('@common', false));
+		} else {
+			return \Yii::$app->basePath;
+		}
+	}
 
 	/**
 	 * @param $action
@@ -64,7 +75,7 @@ class RoxyHelper {
 	 * @throws InvalidParamException
 	 */
 	public static function fixPath($path) {
-		$path = \Yii::$app->basePath . \Yii::getAlias($path);
+		$path = self::getBasePath() . \Yii::getAlias($path);
 		$path = str_replace('\\', '/', $path);
 		$path = FileHelper::fixPath($path);
 		return $path;
@@ -103,7 +114,7 @@ class RoxyHelper {
 	 * @throws InvalidParamException
 	 */
 	public static function getFilesPath() {
-		$ret = FileHelper::fixPath(\Yii::$app->basePath . \Yii::getAlias('@web/') . FILES_ROOT);
+		$ret = FileHelper::fixPath(self::getBasePath() . \Yii::getAlias('@web/') . FILES_ROOT);
 		$tmp = $_SERVER['DOCUMENT_ROOT'];
 		if (in_array(mb_substr($tmp, - 1), [
 			'/',
