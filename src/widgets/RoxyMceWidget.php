@@ -16,6 +16,7 @@ use yii\base\InvalidParamException;
 use yii\base\Widget;
 use yii\bootstrap\Html;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\View;
@@ -50,43 +51,43 @@ class RoxyMceWidget extends Widget {
 	public function init() {
 		parent::init();
 		TinyMceAsset::register($this->view);
-		if ($this->model !== null) {
-			if ($this->attribute === null) {
-				throw new InvalidParamException('Field "attribute" is required');
-			} else {
-				$model = $this->model;
-				if (method_exists($model, 'hasAttribute') && $model->hasAttribute($this->attribute)) {
-					$classNames = explode("\\", $model::className());
-					$this->id   = end($classNames) . '_' . $this->attribute;
+		if ($this->id === null) {
+			if ($this->model !== null) {
+				if ($this->attribute === null) {
+					throw new InvalidParamException('Field "attribute" is required');
 				} else {
-					throw new InvalidParamException('Column "' . $this->attribute . '" not found in model');
+					$model = $this->model;
+					if (method_exists($model, 'hasAttribute') && $model->hasAttribute($this->attribute)) {
+						$classNames = explode("\\", $model::className());
+						$this->id   = end($classNames) . '_' . $this->attribute;
+					} else {
+						throw new InvalidParamException('Column "' . $this->attribute . '" not found in model');
+					}
 				}
-			}
-		} else {
-			if ($this->name === null) {
-				throw new InvalidParamException('Field "name" is required');
 			} else {
-				$this->id = $this->name;
+				if ($this->name === null) {
+					throw new InvalidParamException('Field "name" is required');
+				} else {
+					$this->id = $this->name;
+				}
 			}
 		}
 		if (!array_key_exists('id', $this->htmlOptions)) {
 			$this->htmlOptions['id'] = $this->id;
 		}
-		if ($this->options === null) {
-			$this->options = [
-				'selector'     => '#' . $this->id,
-				'plugins'      => [
-					'advlist autolink lists link image charmap print preview hr anchor pagebreak',
-					'searchreplace wordcount visualblocks visualchars code fullscreen',
-					'insertdatetime media nonbreaking save table contextmenu directionality',
-					'emoticons template paste textcolor colorpicker textpattern imagetools',
-				],
-				'theme'        => 'modern',
-				'toolbar1'     => 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
-				'toolbar2'     => 'print preview media | forecolor backcolor emoticons',
-				'image_advtab' => true,
-			];
-		}
+		$this->options = ArrayHelper::merge($this->options, [
+			'selector'     => '#' . $this->id,
+			'plugins'      => [
+				'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+				'searchreplace wordcount visualblocks visualchars code fullscreen',
+				'insertdatetime media nonbreaking save table contextmenu directionality',
+				'emoticons template paste textcolor colorpicker textpattern imagetools',
+			],
+			'theme'        => 'modern',
+			'toolbar1'     => 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+			'toolbar2'     => 'print preview media | forecolor backcolor emoticons',
+			'image_advtab' => true,
+		]);
 		if ($this->action === null) {
 			$this->action = Url::to(['roxymce/default']);
 		}

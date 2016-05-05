@@ -13,14 +13,13 @@ namespace navatech\roxymce;
 use navatech\roxymce\helpers\RoxyHelper;
 use Yii;
 use yii\base\InvalidParamException;
-use yii\base\Module as ModuleBase;
 use yii\helpers\Url;
 
 /**
  * @property array $config List of configure for Roxy Fileman
  * {@inheritDoc}
  */
-class Module extends ModuleBase {
+class Module extends \navatech\base\Module {
 
 	const VERSION = '1.0.0';
 
