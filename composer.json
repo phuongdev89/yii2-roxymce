@@ -11,7 +11,7 @@
 	],
 	"type" : "yii2-extension",
 	"license" : "MIT",
-	"minimum-stability" : "stable",
+	"homepage" : "https://navatech.vn",
 	"support" : {
 		"source" : "https://github.com/navatech/yii2-roxymce",
 		"original" : "http://www.roxyfileman.com/"
@@ -27,7 +27,6 @@
 		}
 	],
 	"require" : {
-		"php" : ">=5.4.0",
 		"ext-gd" : "*",
 		"ext-mbstring" : "*",
 		"ext-zip" : "*",
