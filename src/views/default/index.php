@@ -8,13 +8,11 @@
  * @time    2:56 CH
  * @version 1.0.0
  */
-use navatech\roxymce\FontAwesomeAsset;
-use navatech\roxymce\JqueryDateFormatAsset;
+use navatech\base\assets\FontAwesomeAsset;
+use navatech\base\assets\JqueryDateFormatAsset;
 use navatech\roxymce\RoxyMceAsset;
-use yii\bootstrap\BootstrapAsset;
 use yii\helpers\Url;
 
-BootstrapAsset::register($this);
 JqueryDateFormatAsset::register($this);
 FontAwesomeAsset::register($this);
 $roxyMceAsset = RoxyMceAsset::register($this);

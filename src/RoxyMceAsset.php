@@ -26,6 +26,7 @@ class RoxyMceAsset extends AssetBundle {
 		$this->sourcePath = '@vendor/navatech/yii2-roxymce/src/assets';
 		$this->depends    = [
 			'yii\web\JqueryAsset',
+			'yii\bootstrap\BootstrapAsset',
 		];
 		$this->css        = [
 			'css/jquery-ui-1.10.0.custom.css',
