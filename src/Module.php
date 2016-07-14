@@ -76,6 +76,8 @@ class Module extends \navatech\base\Module {
 			if (!array_key_exists($key, $this->config)) {
 				$this->config[$key] = $value;
 			}
+		}
+		foreach ($this->config as $key => $value) {
 			define($key, $value);
 		}
 		$FilesRoot = RoxyHelper::fixPath(RoxyHelper::getFilesPath());
