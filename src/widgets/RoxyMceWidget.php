@@ -10,8 +10,7 @@
  */
 namespace navatech\roxymce\widgets;
 
-use navatech\base\assets\TinyMceAsset;
-use Yii;
+use navatech\roxymce\assets\TinyMceAsset;
 use yii\base\InvalidParamException;
 use yii\base\Widget;
 use yii\bootstrap\Html;

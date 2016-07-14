@@ -8,9 +8,9 @@
  * @time    2:56 CH
  * @version 1.0.0
  */
-use navatech\base\assets\FontAwesomeAsset;
-use navatech\base\assets\JqueryDateFormatAsset;
-use navatech\roxymce\RoxyMceAsset;
+use navatech\roxymce\assets\FontAwesomeAsset;
+use navatech\roxymce\assets\JqueryDateFormatAsset;
+use navatech\roxymce\assets\RoxyMceAsset;
 use yii\helpers\Url;
 
 JqueryDateFormatAsset::register($this);
@@ -80,7 +80,7 @@ $this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyM
 						<div class="form-inline">
 							<div class="input-group input-group-sm">
 								<input id="txtSearch" type="text" class="form-control" placeholder="Search for..." onkeyup="filterFiles()" onchange="filterFiles()">
-									<span class="input-group-btn">
+								<span class="input-group-btn">
 									    <button class="btn btn-default" type="button"><i class="fa fa-search"></i>
 									    </button>
 									</span>
