@@ -187,7 +187,7 @@ class RoxyHelper {
 	 * @throws InvalidParamException
 	 */
 	public static function getFilesPath() {
-		$ret = Module::isAdvanced() ? FileHelper::fixPath(Yii::getAlias('@frontend/web/') . FILES_ROOT) : FileHelper::fixPath(Yii::getAlias('@web/') . FILES_ROOT);
+		$ret = Module::isAdvanced() ? FileHelper::fixPath(Yii::getAlias('@frontend/web/') . FILES_ROOT) : FileHelper::fixPath(Yii::getAlias('@app/web/') . FILES_ROOT);
 		$tmp = $_SERVER['DOCUMENT_ROOT'];
 		if (in_array(mb_substr($tmp, - 1), [
 			'/',
