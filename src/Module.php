@@ -78,7 +78,9 @@ class Module extends \navatech\base\Module {
 			}
 		}
 		foreach ($this->config as $key => $value) {
-			define($key, $value);
+			if (!defined($key)) {
+				define($key, $value);
+			}
 		}
 		$FilesRoot = RoxyHelper::fixPath(RoxyHelper::getFilesPath());
 		if (!is_dir($FilesRoot)) {
