@@ -25,19 +25,6 @@ class FileHelper extends BaseFileHelper {
 	 * @return bool
 	 * @throws Exception
 	 */
-	public static function createPath($dir) {
-		if (!@mkdir($dir, 0777, true) && !@is_dir($dir)) {
-			throw new Exception('Can not create directory');
-		}
-		return true;
-	}
-
-	/**
-	 * @param $dir
-	 *
-	 * @return bool
-	 * @throws Exception
-	 */
 	public static function checkWritable($dir) {
 		$ret = false;
 		if (self::createPath($dir)) {
@@ -51,6 +38,28 @@ class FileHelper extends BaseFileHelper {
 			}
 		}
 		return $ret;
+	}
+
+	/**
+	 * @param $dir
+	 *
+	 * @return bool
+	 * @throws Exception
+	 */
+	public static function createPath($dir) {
+		if (!@mkdir($dir, 0777, true) && !@is_dir($dir)) {
+			throw new Exception('Can not create directory');
+		}
+		return true;
+	}
+
+	/**
+	 * @param $path
+	 *
+	 * @return string
+	 */
+	public static function fixPath($path) {
+		return mb_ereg_replace('[\\\/]+', '/', $path);
 	}
 
 	/**
@@ -68,6 +77,33 @@ class FileHelper extends BaseFileHelper {
 			$ret = true;
 		}
 		return $ret;
+	}
+
+	/**
+	 * Returns file extension without dot
+	 *
+	 * @param string $filename
+	 *
+	 * @return string
+	 */
+	public static function getExtension($filename) {
+		$ext = '';
+		if (mb_strrpos($filename, '.') !== false) {
+			$ext = mb_substr($filename, mb_strrpos($filename, '.') + 1);
+		}
+		return strtolower($ext);
+	}
+
+	/**
+	 * @param        $path
+	 * @param        $zipFile
+	 * @param string $zipPath
+	 */
+	public static function zipDir($path, $zipFile, $zipPath = '') {
+		$zip = new ZipArchive();
+		$zip->open($zipFile, ZipArchive::CREATE);
+		self::zipAddDir($path, $zip, $zipPath);
+		$zip->close();
 	}
 
 	/**
@@ -93,18 +129,6 @@ class FileHelper extends BaseFileHelper {
 			}
 		}
 		closedir($d);
-	}
-
-	/**
-	 * @param        $path
-	 * @param        $zipFile
-	 * @param string $zipPath
-	 */
-	public static function zipDir($path, $zipFile, $zipPath = '') {
-		$zip = new ZipArchive();
-		$zip->open($zipFile, ZipArchive::CREATE);
-		self::zipAddDir($path, $zip, $zipPath);
-		$zip->close();
 	}
 
 	/**
@@ -217,68 +241,6 @@ class FileHelper extends BaseFileHelper {
 	}
 
 	/**
-	 * Replaces any character that is not letter, digit or underscore from $filename with $sep
-	 *
-	 * @param string $filename
-	 * @param string $sep
-	 *
-	 * @return string
-	 * @throws InvalidConfigException
-	 */
-	public static function cleanupFilename($filename, $sep = '_') {
-		$str = '';
-		if (strpos($filename, '.')) {
-			$ext  = self::getExtension($filename);
-			$name = self::getName($filename);
-		} else {
-			$ext  = '';
-			$name = $filename;
-		}
-		if (mb_strlen($name) > 32) {
-			$name = mb_substr($name, 0, 32);
-		}
-		$str = str_replace('.php', '', $str);
-		$str = mb_ereg_replace("[^\\w]", $str, $name);
-		$str = mb_ereg_replace("$sep+", $sep, $str) . ($ext ? '.' . $ext : '');
-		return $str;
-	}
-
-	/**
-	 * Returns file extension without dot
-	 *
-	 * @param string $filename
-	 *
-	 * @return string
-	 */
-	public static function getExtension($filename) {
-		$ext = '';
-		if (mb_strrpos($filename, '.') !== false) {
-			$ext = mb_substr($filename, mb_strrpos($filename, '.') + 1);
-		}
-		return strtolower($ext);
-	}
-
-	/**
-	 * Returns file name without extension
-	 *
-	 * @param string $filename
-	 *
-	 * @return string
-	 */
-	public static function getName($filename) {
-		$tmp = mb_strpos($filename, '?');
-		if ($tmp !== false) {
-			$filename = mb_substr($filename, 0, $tmp);
-		}
-		$dotPos = mb_strrpos($filename, '.');
-		$name   = $filename;
-		if ($dotPos !== false) {
-			$name = mb_substr($filename, 0, $dotPos);
-		}
-		return $name;
-	}
-
-	/**
 	 * @param $filename
 	 *
 	 * @return string
@@ -290,15 +252,6 @@ class FileHelper extends BaseFileHelper {
 		}
 		$filename = basename($filename);
 		return $filename;
-	}
-
-	/**
-	 * @param $path
-	 *
-	 * @return string
-	 */
-	public static function fixPath($path) {
-		return mb_ereg_replace('[\\\/]+', '/', $path);
 	}
 
 	/**
@@ -330,6 +283,53 @@ class FileHelper extends BaseFileHelper {
 			$i ++;
 		} while (file_exists($dir . $temp));
 		return $temp;
+	}
+
+	/**
+	 * Returns file name without extension
+	 *
+	 * @param string $filename
+	 *
+	 * @return string
+	 */
+	public static function getName($filename) {
+		$tmp = mb_strpos($filename, '?');
+		if ($tmp !== false) {
+			$filename = mb_substr($filename, 0, $tmp);
+		}
+		$dotPos = mb_strrpos($filename, '.');
+		$name   = $filename;
+		if ($dotPos !== false) {
+			$name = mb_substr($filename, 0, $dotPos);
+		}
+		return $name;
+	}
+
+	/**
+	 * Replaces any character that is not letter, digit or underscore from $filename with $sep
+	 *
+	 * @param string $filename
+	 * @param string $sep
+	 *
+	 * @return string
+	 * @throws InvalidConfigException
+	 */
+	public static function cleanupFilename($filename, $sep = '_') {
+		$str = '';
+		if (strpos($filename, '.')) {
+			$ext  = self::getExtension($filename);
+			$name = self::getName($filename);
+		} else {
+			$ext  = '';
+			$name = $filename;
+		}
+		if (mb_strlen($name) > 32) {
+			$name = mb_substr($name, 0, 32);
+		}
+		$str = str_replace('.php', '', $str);
+		$str = mb_ereg_replace("[^\\w]", $str, $name);
+		$str = mb_ereg_replace("$sep+", $sep, $str) . ($ext ? '.' . $ext : '');
+		return $str;
 	}
 
 	/**

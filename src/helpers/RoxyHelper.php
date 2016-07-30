@@ -9,7 +9,6 @@
  */
 namespace navatech\roxymce\helpers;
 
-use navatech\roxymce\Module;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\InvalidParamException;
@@ -36,7 +35,7 @@ class RoxyHelper {
 	 */
 	public static function t($key) {
 		$file     = Yii::$app->language . '.json';
-		$langPath = Yii::getAlias('@vendor/navatech/yii2-roxymce/src/assets/lang');
+		$langPath = Yii::getAlias('@vendor/navatech/yii2-roxymce/src/web/lang');
 		if (defined('LANG')) {
 			$file = LANG . '.json';
 		}
@@ -104,15 +103,19 @@ class RoxyHelper {
 	 */
 	public static function listDirectory($path) {
 		$ret = @scandir($path);
-		if ($ret === false) {
-			$ret = [];
-			$d   = opendir($path);
-			if ($d) {
-				while (($f = readdir($d)) !== false) {
-					$ret[] = $f;
+		try {
+			if ($ret === false) {
+				$ret = [];
+				$d   = opendir($path);
+				if ($d) {
+					while (($f = readdir($d)) !== false) {
+						$ret[] = $f;
+					}
+					closedir($d);
 				}
-				closedir($d);
 			}
+		} catch (\yii\base\ErrorException $e) {
+			return [];
 		}
 		return $ret;
 	}
@@ -127,7 +130,18 @@ class RoxyHelper {
 		$path = Yii::getAlias($path);
 		$path = str_replace('\\', '/', $path);
 		$path = FileHelper::fixPath($path);
-		return $path;
+		return RoxyHelper::getBasePath() . $path;
+	}
+
+	/**
+	 * @return string current base path
+	 */
+	public static function getBasePath() {
+		if (\Yii::getAlias('@common', false) !== false) {
+			return dirname(\Yii::getAlias('@common', false));
+		} else {
+			return \Yii::$app->basePath;
+		}
 	}
 
 	/**
@@ -187,7 +201,7 @@ class RoxyHelper {
 	 * @throws InvalidParamException
 	 */
 	public static function getFilesPath() {
-		$ret = Module::isAdvanced() ? FileHelper::fixPath(Yii::getAlias('@frontend/web/') . FILES_ROOT) : FileHelper::fixPath(Yii::getAlias('@app/web/') . FILES_ROOT);
+		$ret = FileHelper::fixPath(RoxyHelper::getBasePath() . Yii::getAlias('@web/') . FILES_ROOT);
 		$tmp = $_SERVER['DOCUMENT_ROOT'];
 		if (in_array(mb_substr($tmp, - 1), [
 			'/',

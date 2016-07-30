@@ -82,7 +82,7 @@ class Module extends \navatech\base\Module {
 				define($key, $value);
 			}
 		}
-		$FilesRoot = RoxyHelper::fixPath(RoxyHelper::getFilesPath());
+		$FilesRoot = RoxyHelper::fixPath(RoxyHelper::getBasePath() . RoxyHelper::getFilesPath());
 		if (!is_dir($FilesRoot)) {
 			@mkdir($FilesRoot, octdec(DIRPERMISSIONS), true);
 		}

@@ -261,6 +261,9 @@ class ManagerController extends Controller {
 				RoxyHelper::getFilesPath();
 			}
 			RoxyHelper::verifyPath($d);
+			if (!file_exists(RoxyHelper::fixPath($d))) {
+				mkdir(RoxyHelper::fixPath($d), octdec(DIRPERMISSIONS), true);
+			}
 			if (is_dir(RoxyHelper::fixPath($d))) {
 				if (!empty($_FILES['files']) && is_array($_FILES['files']['tmp_name'])) {
 					foreach ($_FILES['files']['tmp_name'] as $k => $v) {
