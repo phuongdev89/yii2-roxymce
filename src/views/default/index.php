@@ -22,8 +22,9 @@ $this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyM
 	<div class="row">
 		<div class="col-sm-4 pnlDirs" id="dirActions">
 			<div class="actions">
-				<button type="button" class="btn btn-sm btn-primary" onclick="addDir()" data-lang-v="CreateDir" data-lang-t="T_CreateDir">
-					<i class="fa fa-plus-square"></i></button>
+				<button type="button" class="btn btn-sm btn-primary" onclick="addDir()">
+					<i class="fa fa-plus-square"></i> <?=Yii::t('')?>
+				</button>
 				<button type="button" class="btn btn-sm btn-warning" onclick="renameDir()" data-lang-t="T_RenameDir" data-lang-v="RenameDir">
 					<i class="fa fa-pencil-square"></i></button>
 				<button type="button" class="btn btn-sm btn-danger" onclick="deleteDir()" data-lang-t="T_DeleteDir" data-lang-v="DeleteDir">
