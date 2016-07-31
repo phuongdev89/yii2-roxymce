@@ -7,7 +7,7 @@
  * @date    05/07/2016
  * @time    11:50 PM
  */
-namespace navatech\setting;
+namespace navatech\roxymce;
 
 use yii\base\Application;
 use yii\base\BootstrapInterface;
@@ -21,8 +21,8 @@ class Bootstrap implements BootstrapInterface {
 	 * @param Application $app the application currently running
 	 */
 	public function bootstrap($app) {
-		if (!isset($app->get('i18n')->translations['roxymce*'])) {
-			$app->get('i18n')->translations['roxymce*'] = [
+		if (!isset($app->get('i18n')->translations['roxy*'])) {
+			$app->get('i18n')->translations['roxy*'] = [
 				'class'          => PhpMessageSource::className(),
 				'basePath'       => __DIR__ . '/messages',
 				'sourceLanguage' => 'en-US',

@@ -8,31 +8,33 @@
  * @time    2:56 CH
  * @version 1.0.0
  */
+use navatech\roxymce\assets\BootstrapSelectAsset;
 use navatech\roxymce\assets\FontAwesomeAsset;
 use navatech\roxymce\assets\JqueryDateFormatAsset;
 use navatech\roxymce\assets\RoxyMceAsset;
-use yii\helpers\Url;
 
 JqueryDateFormatAsset::register($this);
 FontAwesomeAsset::register($this);
+BootstrapSelectAsset::register($this);
 $roxyMceAsset = RoxyMceAsset::register($this);
-$this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyMceConfig = "' . Url::to(['default/config']) . '";', 1);
+//$this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyMceConfig = "' . Url::to(['default/config']) . '";', 1);
 ?>
 <div class="col-sm-12" id="wrapper">
 	<div class="row">
 		<div class="col-sm-4 pnlDirs" id="dirActions">
 			<div class="actions">
-				<button type="button" class="btn btn-sm btn-primary" onclick="addDir()">
-					<i class="fa fa-plus-square"></i> <?=Yii::t('')?>
+				<button type="button" class="btn btn-sm btn-primary" onclick="addDir()" title="<?= Yii::t('roxy', 'Create new folder') ?>">
+					<i class="fa fa-plus-square"></i> <?= Yii::t('roxy', 'Create') ?>
 				</button>
-				<button type="button" class="btn btn-sm btn-warning" onclick="renameDir()" data-lang-t="T_RenameDir" data-lang-v="RenameDir">
-					<i class="fa fa-pencil-square"></i></button>
-				<button type="button" class="btn btn-sm btn-danger" onclick="deleteDir()" data-lang-t="T_DeleteDir" data-lang-v="DeleteDir">
-					<i class="fa fa-trash"></i></button>
+				<button type="button" class="btn btn-sm btn-warning" onclick="renameDir()" title="<?= Yii::t('roxy', 'Rename selected folder') ?>">
+					<i class="fa fa-pencil-square"></i> <?= Yii::t('roxy', 'Rename') ?>
+				</button>
+				<button type="button" class="btn btn-sm btn-danger" onclick="deleteDir()" title="<?= Yii::t('roxy', 'Delete selected folder') ?>">
+					<i class="fa fa-trash"></i> <?= Yii::t('roxy', 'Delete') ?></button>
 			</div>
 			<div id="pnlLoadingDirs" class="progress">
 				<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-					<span data-lang="LoadingDirectories"></span><br>
+					<span><?= Yii::t('roxy', 'Loading directory') ?></span><br>
 				</div>
 			</div>
 			<div class="scrollPane">
@@ -46,41 +48,51 @@ $this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyM
 			<div class="actions">
 				<div class="row">
 					<div class="col-sm-12">
-						<button type="button" class="btn btn-sm btn-primary" onclick="addFileClick()" data-lang-v="AddFile" data-lang-t="T_AddFile">
-							<i class="fa fa-plus"></i></button>
-						<button type="button" class="btn btn-sm btn-info" onclick="previewFile()" data-lang-v="Preview" data-lang-t="T_Preview">
-							<i class="fa fa-search"></i></button>
-						<button type="button" class="btn btn-sm btn-warning" onclick="renameFile()" data-lang-v="RenameFile" data-lang-t="T_RenameFile">
-							<i class="fa fa-pencil"></i></button>
-						<button type="button" class="btn btn-sm btn-success" onclick="downloadFile()" data-lang-v="DownloadFile" data-lang-t="T_DownloadFile">
-							<i class="fa fa-download"></i></button>
-						<button type="button" class="btn btn-sm btn-danger" onclick="deleteFile()" data-lang-v="DeleteFile" data-lang-t="T_DeleteFile">
-							<i class="fa fa-trash"></i></button>
+						<button type="button" class="btn btn-sm btn-primary" onclick="addFileClick()" title="<?= Yii::t('roxy', 'Upload files') ?>">
+							<i class="fa fa-plus"></i> <?= Yii::t('roxy', 'Add file') ?>
+						</button>
+						<button type="button" class="btn btn-sm btn-info" onclick="previewFile()" title="<?= Yii::t('roxy', 'Preview selected file') ?>">
+							<i class="fa fa-search"></i> <?= Yii::t('roxy', 'Preview image') ?>
+						</button>
+						<button type="button" class="btn btn-sm btn-warning" onclick="renameFile()" title="<?= Yii::t('roxy', 'Rename file') ?>">
+							<i class="fa fa-pencil"></i> <?= Yii::t('roxy', 'Rename file') ?>
+						</button>
+						<button type="button" class="btn btn-sm btn-success" onclick="downloadFile()" title="<?= Yii::t('roxy', 'Download file') ?>">
+							<i class="fa fa-download"></i> <?= Yii::t('roxy', 'Download') ?>
+						</button>
+						<button type="button" class="btn btn-sm btn-danger" onclick="deleteFile()" title="<?= Yii::t('roxy', 'Delete file') ?>">
+							<i class="fa fa-trash"></i> <?= Yii::t('roxy', 'Delete file') ?>
+						</button>
 					</div>
 				</div>
 			</div>
 			<div class="actions">
 				<div class="row">
 					<div class="col-sm-3">
-						<select id="ddlOrder" onchange="sortFiles()" class="form-control input-sm">
-							<option value="name" data-lang="Name_asc"></option>
-							<option value="size" data-lang="Size_asc"></option>
-							<option value="time" data-lang="Date_asc"></option>
-							<option value="name_desc" data-lang="Name_desc"></option>
-							<option value="size_desc" data-lang="Size_desc"></option>
-							<option value="time_desc" data-lang="Date_desc"></option>
+						<select id="ddlOrder" onchange="sortFiles()" class="form-control input-sm selectpicker">
+							<option value="name" data-icon="glyphicon-sort-by-attributes"><?= Yii::t('roxy', 'Name') ?></option>
+							<option value="size" data-icon="glyphicon-sort-by-attributes"><?= Yii::t('roxy', 'Size') ?></option>
+							<option value="time" data-icon="glyphicon-sort-by-attributes"><?= Yii::t('roxy', 'Date') ?></option>
+							<option value="name_desc" data-icon="glyphicon-sort-by-attributes-alt"><?= Yii::t('roxy', 'Name') ?>
+							</option>
+							<option value="size_desc" data-icon="glyphicon-sort-by-attributes-alt"><?= Yii::t('roxy', 'Size') ?>
+							</option>
+							<option value="time_desc" data-icon="glyphicon-sort-by-attributes-alt"><?= Yii::t('roxy', 'Date') ?>
+							</option>
 						</select>
 					</div>
 					<div class="col-sm-3">
-						<button type="button" class="btn btn-default" onclick="switchView('list')" data-lang-t="T_ListView">
-							<i class="fa fa-list"></i></button>
-						<button type="button" class="btn btn-default" onclick="switchView('thumb')" data-lang-t="T_ThumbsView">
-							<i class="fa fa-picture-o"></i></button>
+						<button type="button" class="btn btn-default" onclick="switchView('list')" title="<?= Yii::t('roxy', 'List view') ?>">
+							<i class="fa fa-list"></i>
+						</button>
+						<button type="button" class="btn btn-default" onclick="switchView('thumb')" title="<?= Yii::t('roxy', 'Thumbnails view') ?>">
+							<i class="fa fa-picture-o"></i>
+						</button>
 					</div>
 					<div class="col-sm-6">
 						<div class="form-inline">
 							<div class="input-group input-group-sm">
-								<input id="txtSearch" type="text" class="form-control" placeholder="Search for..." onkeyup="filterFiles()" onchange="filterFiles()">
+								<input id="txtSearch" type="text" class="form-control" placeholder="<?= Yii::t('roxy', 'Search for...') ?>" onkeyup="filterFiles()" onchange="filterFiles()">
 								<span class="input-group-btn">
 									    <button class="btn btn-default" type="button"><i class="fa fa-search"></i>
 									    </button>
@@ -94,11 +106,11 @@ $this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyM
 				<div class="scrollPane">
 					<div id="pnlLoading" class="progress">
 						<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-							<span data-lang="LoadingFiles"></span><br>
+							<span><?= Yii::t('roxy', 'Loading files') ?></span><br>
 						</div>
 					</div>
-					<div id="pnlEmptyDir" data-lang="DirIsEmpty"></div>
-					<div id="pnlSearchNoFiles" data-lang="NoFilesFound"></div>
+					<div id="pnlEmptyDir"><?= Yii::t('roxy', 'Empty directory') ?></div>
+					<div id="pnlSearchNoFiles"><?= Yii::t('roxy', 'File not found') ?></div>
 					<ul id="pnlFileList"></ul>
 				</div>
 			</div>
@@ -106,13 +118,15 @@ $this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyM
 	</div>
 	<div class="row bottomLine">
 		<div class="col-sm-9">
-			<div id="pnlStatus">Status bar</div>
+			<div id="pnlStatus"><?= Yii::t('roxy', 'Status bar') ?></div>
 		</div>
 		<div class="col-sm-3 pull-right">
-			<button type="button" class="btn btn-success" onclick="setFile()" data-lang-v="SelectFile" data-lang-t="T_SelectFile">
-				<i class="fa fa-check"></i></button>
-			<button type="button" class="btn btn-default" data-lang-v="Close" data-lang-t="T_Close" onclick="closeWindow()">
-				<i class="fa fa-ban"></i></button>
+			<button type="button" class="btn btn-success" onclick="setFile()" title="<?= Yii::t('roxy', 'Select highlighted file') ?>">
+				<i class="fa fa-check"></i> <?= Yii::t('roxy', 'Select') ?>
+			</button>
+			<button type="button" class="btn btn-default" onclick="closeWindow()">
+				<i class="fa fa-ban"></i> <?= Yii::t('roxy', 'Close') ?>
+			</button>
 		</div>
 	</div>
 </div>
@@ -132,53 +146,68 @@ $this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyM
 <div id="menuFile" class="contextMenu">
 	<ul class="dropdown-menu">
 		<li>
-			<a href="#" onclick="setFile()" data-lang="SelectFile" id="mnuSelectFile"><i class="fa fa-check"></i></a>
+			<a href="#" onclick="setFile()" id="mnuSelectFile"><i class="fa fa-check"></i> <?= Yii::t('roxy', 'Select') ?>
+			</a>
 		</li>
 		<li>
-			<a href="#" onclick="previewFile()" data-lang="Preview" id="mnuPreview"><i class="fa fa-search"></i></a>
+			<a href="#" onclick="previewFile()" id="mnuPreview"><i class="fa fa-search"></i> <?= Yii::t('roxy', 'Preview image') ?>
+			</a>
 		</li>
 		<li>
-			<a href="#" onclick="downloadFile()" data-lang="DownloadFile" id="mnuDownload"><i class="fa fa-download"></i></a>
+			<a href="#" onclick="downloadFile()" id="mnuDownload"><i class="fa fa-download"></i> <?= Yii::t('roxy', 'Download') ?>
+			</a>
 		</li>
 		<li>
-			<a href="#" onclick="return pasteToFiles(event, this)" data-lang="Paste" class="paste pale" id="mnuFilePaste"><i class="fa fa-clipboard"></i></a>
+			<a href="#" onclick="return pasteToFiles(event, this)" class="paste pale" id="mnuFilePaste"><i class="fa fa-clipboard"></i> <?= Yii::t('roxy', 'Paste') ?>
+			</a>
 		</li>
 		<li>
-			<a href="#" onclick="cutFile()" data-lang="Cut" id="mnuFileCut"><i class="fa fa-scissors"></i></a>
+			<a href="#" onclick="cutFile()" id="mnuFileCut"><i class="fa fa-scissors"></i> <?= Yii::t('roxy', 'Cut') ?>
+			</a>
 		</li>
 		<li>
-			<a href="#" onclick="copyFile()" data-lang="Copy" id="mnuFileCopy"><i class="fa fa-files-o"></i></a>
+			<a href="#" onclick="copyFile()" id="mnuFileCopy"><i class="fa fa-files-o"></i> <?= Yii::t('roxy', 'Copy') ?>
+			</a>
 		</li>
 		<li>
-			<a href="#" onclick="renameFile()" data-lang="RenameFile" id="mnuRenameFile"><i class="fa fa-pencil"></i></a>
+			<a href="#" onclick="renameFile()" id="mnuRenameFile"><i class="fa fa-pencil"></i> <?= Yii::t('roxy', 'Rename') ?>
+			</a>
 		</li>
 		<li>
-			<a href="#" onclick="deleteFile()" data-lang="DeleteFile" id="mnuDeleteFile"><i class="fa fa-trash"></i></a>
+			<a href="#" onclick="deleteFile()" id="mnuDeleteFile"><i class="fa fa-trash"></i> <?= Yii::t('roxy', 'Delete') ?>
+			</a>
 		</li>
 	</ul>
 </div>
 <div id="menuDir" class="contextMenu">
 	<ul class="dropdown-menu">
 		<li>
-			<a href="#" onclick="downloadDir()" data-lang="Download" id="mnuDownloadDir"><i class="fa fa-download"></i></a>
+			<a href="#" onclick="downloadDir()" id="mnuDownloadDir"><i class="fa fa-download"></i> <?= Yii::t('roxy', 'Download') ?>
+			</a>
 		</li>
 		<li>
-			<a href="#" onclick="addDir()" data-lang="T_CreateDir" id="mnuCreateDir"><i class="fa fa-plus-square"></i></a>
+			<a href="#" onclick="addDir()" id="mnuCreateDir"><i class="fa fa-plus-square"></i> <?= Yii::t('roxy', 'Create') ?>
+			</a>
 		</li>
 		<li>
-			<a href="#" onclick="return pasteToDirs(event, this)" data-lang="Paste" class="paste pale" id="mnuDirPaste"><i class="fa fa-clipboard"></i></a>
+			<a href="#" onclick="return pasteToDirs(event, this)" class="paste pale" id="mnuDirPaste"><i class="fa fa-clipboard"></i> <?= Yii::t('roxy', 'Paste') ?>
+			</a>
 		</li>
 		<li>
-			<a href="#" onclick="cutDir()" data-lang="Cut" id="mnuDirCut"><i class="fa fa-scissors"></i></a>
+			<a href="#" onclick="cutDir()" id="mnuDirCut"><i class="fa fa-scissors"></i> <?= Yii::t('roxy', 'Cut') ?>
+			</a>
 		</li>
 		<li>
-			<a href="#" onclick="copyDir()" data-lang="Copy" id="mnuDirCopy"><i class="fa fa-files-o"></i></a>
+			<a href="#" onclick="copyDir()" id="mnuDirCopy"><i class="fa fa-files-o"></i> <?= Yii::t('roxy', 'Copy') ?>
+			</a>
 		</li>
 		<li>
-			<a href="#" onclick="renameDir()" data-lang="RenameDir" id="mnuRenameDir"><i class="fa fa-pencil-square"></i></a>
+			<a href="#" onclick="renameDir()" id="mnuRenameDir"><i class="fa fa-pencil-square"></i> <?= Yii::t('roxy', 'Rename') ?>
+			</a>
 		</li>
 		<li>
-			<a href="#" onclick="deleteDir()" data-lang="DeleteDir" id="mnuDeleteDir"><i class="fa fa-trash"></i></a>
+			<a href="#" onclick="deleteDir()" id="mnuDeleteDir"><i class="fa fa-trash"></i> <?= Yii::t('roxy', 'Delete') ?>
+			</a>
 		</li>
 	</ul>
 </div>
@@ -190,3 +219,8 @@ $this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyM
 	<span class="name"></span><br>
 	<input type="text" id="txtDirName">
 </div>
+<script>
+	$('.selectpicker').selectpicker({
+		style: 'btn-sm'
+	});
+</script>

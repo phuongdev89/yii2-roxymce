@@ -28,4 +28,9 @@ return [
 	'Delete selected folder'  => '',
 	'Select highlighted file' => '',
 	'Dimensions'              => '',
+	'Status bar'              => '',
+	'Loading directory'       => '',
+	'Loading files'           => '',
+	'Empty directory'         => '',
+	'File not found'          => '',
 ];
