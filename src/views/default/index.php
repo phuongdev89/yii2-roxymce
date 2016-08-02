@@ -12,18 +12,18 @@ use navatech\roxymce\assets\BootstrapSelectAsset;
 use navatech\roxymce\assets\FontAwesomeAsset;
 use navatech\roxymce\assets\JqueryDateFormatAsset;
 use navatech\roxymce\assets\RoxyMceAsset;
+use yii\helpers\Url;
 
 JqueryDateFormatAsset::register($this);
 FontAwesomeAsset::register($this);
 BootstrapSelectAsset::register($this);
 $roxyMceAsset = RoxyMceAsset::register($this);
-//$this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyMceConfig = "' . Url::to(['default/config']) . '";', 1);
 ?>
 <div class="col-sm-12" id="wrapper">
 	<div class="row">
 		<div class="col-sm-4 pnlDirs" id="dirActions">
 			<div class="actions">
-				<button type="button" class="btn btn-sm btn-primary" onclick="addDir()" title="<?= Yii::t('roxy', 'Create new folder') ?>">
+				<button type="button" class="btn btn-sm btn-primary" data-toggle="modal" href="#folder-add" title="<?= Yii::t('roxy', 'Create new folder') ?>">
 					<i class="fa fa-plus-square"></i> <?= Yii::t('roxy', 'Create') ?>
 				</button>
 				<button type="button" class="btn btn-sm btn-warning" onclick="renameDir()" title="<?= Yii::t('roxy', 'Rename selected folder') ?>">
@@ -40,7 +40,6 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 			<div class="scrollPane">
 				<ul id="pnlDirList"></ul>
 			</div>
-
 		</div>
 		<div class="col-sm-8" id="fileActions">
 			<input type="hidden" id="hdViewType" value="list">
@@ -68,20 +67,7 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 			</div>
 			<div class="actions">
 				<div class="row">
-					<div class="col-sm-3">
-						<select id="ddlOrder" onchange="sortFiles()" class="form-control input-sm selectpicker">
-							<option value="name" data-icon="glyphicon-sort-by-attributes"><?= Yii::t('roxy', 'Name') ?></option>
-							<option value="size" data-icon="glyphicon-sort-by-attributes"><?= Yii::t('roxy', 'Size') ?></option>
-							<option value="time" data-icon="glyphicon-sort-by-attributes"><?= Yii::t('roxy', 'Date') ?></option>
-							<option value="name_desc" data-icon="glyphicon-sort-by-attributes-alt"><?= Yii::t('roxy', 'Name') ?>
-							</option>
-							<option value="size_desc" data-icon="glyphicon-sort-by-attributes-alt"><?= Yii::t('roxy', 'Size') ?>
-							</option>
-							<option value="time_desc" data-icon="glyphicon-sort-by-attributes-alt"><?= Yii::t('roxy', 'Date') ?>
-							</option>
-						</select>
-					</div>
-					<div class="col-sm-3">
+					<div class="col-sm-4">
 						<button type="button" class="btn btn-default" onclick="switchView('list')" title="<?= Yii::t('roxy', 'List view') ?>">
 							<i class="fa fa-list"></i>
 						</button>
@@ -89,7 +75,7 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 							<i class="fa fa-picture-o"></i>
 						</button>
 					</div>
-					<div class="col-sm-6">
+					<div class="col-sm-8">
 						<div class="form-inline">
 							<div class="input-group input-group-sm">
 								<input id="txtSearch" type="text" class="form-control" placeholder="<?= Yii::t('roxy', 'Search for...') ?>" onkeyup="filterFiles()" onchange="filterFiles()">
@@ -219,8 +205,70 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 	<span class="name"></span><br>
 	<input type="text" id="txtDirName">
 </div>
+<div class="modal fade" id="folder-add">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title"><?= Yii::t('roxy', 'Create new folder') ?></h4>
+			</div>
+			<div class="modal-body">
+				<form action="<?= Url::to(['/roxymce/management/create-folder']) ?>" method="get" role="form">
+					<input type="hidden" name="f" value="">
+					<div class="form-group">
+						<input type="text" class="form-control" name="n" id="folder_name" placeholder="<?= Yii::t('roxy', 'Folder\'s name') ?>">
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('roxy', 'Close') ?></button>
+				<button type="button" class="btn btn-primary btn-submit"><?= Yii::t('roxy', 'Save') ?></button>
+			</div>
+		</div>
+	</div>
+</div>
 <script>
-	$('.selectpicker').selectpicker({
-		style: 'btn-sm'
+	$(document).on("ready", function() {
+		$.ajax({
+			type    : "get",
+			cache   : false,
+			dataType: "json",
+			url     : '<?=Url::to(['/roxymce/management/folder-list'])?>',
+			success : function(response) {
+				if(response.error == 0) {
+					$("#pnlLoadingDirs").fadeOut();
+					$("#pnlDirList").append(response.content);
+				} else {
+					alert(response.message);
+				}
+			},
+			error   : function() {
+				alert("<?=Yii::t('roxy', 'Somethings went wrong')?>");
+			}
+		})
+	});
+	$('#folder-add').on('show.bs.modal', function() {
+		$(this).on("click", ".btn-submit", function() {
+			var th   = $(this);
+			var form = th.closest(".modal").find("form");
+			$.ajax({
+				type    : "get",
+				cache   : false,
+				data    : form.serializeArray(),
+				url     : form.attr("action"),
+				dataType: "json",
+				success : function(response) {
+					if(response.error == 0) {
+						$('#folder-add').modal('hide');
+					} else {
+						alert(response.message);
+					}
+				},
+				error   : function() {
+					alert("<?=Yii::t('roxy', 'Somethings went wrong')?>");
+				}
+			});
+			return false;
+		});
 	});
 </script>

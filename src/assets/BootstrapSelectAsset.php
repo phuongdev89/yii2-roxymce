@@ -8,6 +8,7 @@
 namespace navatech\roxymce\assets;
 
 use yii\web\AssetBundle;
+use yii\web\View;
 
 class BootstrapSelectAsset extends AssetBundle {
 
@@ -26,5 +27,6 @@ class BootstrapSelectAsset extends AssetBundle {
 		$this->js         = [
 			'js/bootstrap-select.min.js',
 		];
+		$this->jsOptions  = ['position' => View::POS_HEAD];
 	}
 }

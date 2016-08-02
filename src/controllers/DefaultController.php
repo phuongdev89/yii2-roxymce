@@ -10,6 +10,7 @@
  */
 namespace navatech\roxymce\controllers;
 
+use navatech\roxymce\helpers\FolderHelper;
 use Yii;
 use yii\base\Exception;
 use yii\base\InvalidParamException;

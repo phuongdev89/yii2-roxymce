@@ -27,19 +27,20 @@ class RoxyMceAsset extends AssetBundle {
 		$this->depends    = [
 			'yii\web\JqueryAsset',
 			'yii\bootstrap\BootstrapAsset',
+			'yii\bootstrap\BootstrapPluginAsset',
 		];
 		$this->css        = [
 			'css/jquery-ui-1.10.0.custom.css',
 			'css/main.css',
 		];
 		$this->js         = [
-			'js/filetypes.js',
-			'js/main.js',
-			'js/utils.js',
-			'js/file.js',
-			'js/directory.js',
-			'js/custom.js',
-			'js/jquery-ui.js',
+			//			'js/filetypes.js',
+			//			'js/main.js',
+			//			'js/utils.js',
+			//			'js/file.js',
+			//			'js/directory.js',
+			//			'js/custom.js',
+			//			'js/jquery-ui.js',
 		];
 		$this->jsOptions  = ['position' => View::POS_HEAD];
 	}
