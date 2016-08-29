@@ -30,7 +30,7 @@ return [
 	'Dimensions'              => 'Độ phân giải',
 	'Status bar'              => 'Trạng thái',
 	'Loading directory'       => 'Đang tải thư mục',
-	'Loading files'       => 'Đang tải tệp',
-	'Empty directory'       => 'Thư mục rỗng',
-	'File not found'       => 'Không tìm thấy tệp',
+	'Loading files'           => 'Đang tải tệp',
+	'Empty directory'         => 'Thư mục rỗng',
+	'File not found'          => 'Không tìm thấy tệp',
 ];
