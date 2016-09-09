@@ -89,6 +89,31 @@ echo \navatech\roxymce\widgets\RoxyMceWidget::widget([
 	'htmlOptions' => [],//html options of this widget, NOT REQUIRED
 ]);
 ~~~
+### Sample HTML Input Demo
+~~~
+[php]
+
+use yii\bootstrap\Modal;
+Modal::begin([
+    'header' => '<h2>Hello world</h2>',
+    'size' => Modal::SIZE_LARGE,
+    'id' => "modal"
+    //'toggleButton' => ['label' => 'click me'],
+]);
+echo "<div id='modalContent'><iframe width='100%' height='470px' src='".Url::to(['roxymce/default', 'type' => 'image', 'input' => 'filepath','modal'=>'modal','tabindex'=>-1,])."'></iframe></div>";
+
+Modal::end();
+[html]
+<input type="text" id="filepath"/>
+<a href="#" onclick="return demoPopup();">Choose Picture</a>
+[javascript]
+<script type="text/javascript">
+    function demoPopup() {
+        $('#modal').modal('show');
+        return false;
+    }
+</script>
+~~~
 Screenshot & Demo
 ---
 ### Demo

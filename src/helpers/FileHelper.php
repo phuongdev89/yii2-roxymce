@@ -192,7 +192,7 @@ class FileHelper extends BaseFileHelper {
 	 *
 	 * @return string
 	 */
-	public static function getMimeType($filename) {
+	public static function getMimeType($filename, $magicFile = null, $checkExtension = true) {
 		$ext = self::getExtension($filename);
 		switch (strtolower($ext)) {
 			case 'jpg':
