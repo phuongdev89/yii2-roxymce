@@ -946,6 +946,7 @@ function setFile() {
 				}
 			}
 			win.tinyMCE.activeEditor.windowManager.close();
+			win.document.querySelectorAll("#"+RoxyUtils.GetUrlParam('modal') + " .close")[0].click();
 			break;
 		default:
 			FileSelected(f);

@@ -33,14 +33,14 @@ class RoxyMceAsset extends AssetBundle {
 			'css/main.css',
 		];
 		$this->js         = [
-			'js/filetypes.js',
-			'js/main.js',
-			'js/utils.js',
-			'js/file.js',
-			'js/directory.js',
-			'js/custom.js',
 			'js/jquery-ui.js',
+			'js/filetypes.js',
+			'js/directory.js',
+			'js/utils.js',
+			'js/main.js',
+			'js/file.js',
+			'js/custom.js',
 		];
-		$this->jsOptions  = ['position' => View::POS_HEAD];
+		$this->jsOptions  = ['position' => View::POS_BEGIN];
 	}
 }

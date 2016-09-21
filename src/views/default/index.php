@@ -12,11 +12,14 @@ use navatech\roxymce\assets\FontAwesomeAsset;
 use navatech\roxymce\assets\JqueryDateFormatAsset;
 use navatech\roxymce\assets\RoxyMceAsset;
 use yii\helpers\Url;
+use yii\web\View;
+
+$this->registerJs('var roxyMceConfig = "' . Url::to(['default/config']) . '";', View::POS_HEAD);
 
 JqueryDateFormatAsset::register($this);
 FontAwesomeAsset::register($this);
 $roxyMceAsset = RoxyMceAsset::register($this);
-$this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl . '";var roxyMceConfig = "' . Url::to(['default/config']) . '";', 1);
+$this->registerJs('var roxyMceAsset = "' . $roxyMceAsset->baseUrl.'";', 1);
 ?>
 <div class="col-sm-12" id="wrapper">
 	<div class="row">
