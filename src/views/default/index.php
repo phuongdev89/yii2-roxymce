@@ -9,14 +9,16 @@
  * @version 1.0.0
  */
 use navatech\roxymce\assets\BootstrapSelectAsset;
+use navatech\roxymce\assets\BootstrapTreeviewAsset;
 use navatech\roxymce\assets\FontAwesomeAsset;
 use navatech\roxymce\assets\JqueryDateFormatAsset;
 use navatech\roxymce\assets\RoxyMceAsset;
 use yii\helpers\Url;
 
-JqueryDateFormatAsset::register($this);
 FontAwesomeAsset::register($this);
 BootstrapSelectAsset::register($this);
+JqueryDateFormatAsset::register($this);
+BootstrapTreeviewAsset::register($this);
 $roxyMceAsset = RoxyMceAsset::register($this);
 ?>
 <div class="col-sm-12" id="wrapper">
@@ -37,7 +39,7 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 					<span><?= Yii::t('roxy', 'Loading directory') ?></span><br>
 				</div>
 			</div>
-			<div class="scrollPane">
+			<div class="scrollPane folder-list" data-url="<?= Url::to(['/roxymce/management/folder-list']) ?>">
 				<ul id="pnlDirList"></ul>
 			</div>
 		</div>
@@ -89,14 +91,12 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 				</div>
 			</div>
 			<div class="pnlFiles">
-				<div class="scrollPane">
-					<div id="pnlLoading" class="progress">
-						<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-							<span><?= Yii::t('roxy', 'Loading files') ?></span><br>
-						</div>
+				<div id="pnlLoading" class="progress">
+					<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+						<span><?= Yii::t('roxy', 'Loading files') ?></span><br>
 					</div>
-					<div id="pnlEmptyDir"><?= Yii::t('roxy', 'Empty directory') ?></div>
-					<div id="pnlSearchNoFiles"><?= Yii::t('roxy', 'File not found') ?></div>
+				</div>
+				<div class="scrollPane file-list" data-url="<?= Url::to(['/roxymce/management/file-list']) ?>">
 					<ul id="pnlFileList"></ul>
 				</div>
 			</div>
@@ -229,23 +229,42 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 </div>
 <script>
 	$(document).on("ready", function() {
+		var tree;
 		$.ajax({
 			type    : "get",
 			cache   : false,
 			dataType: "json",
-			url     : '<?=Url::to(['/roxymce/management/folder-list'])?>',
+			url     : $(".folder-list").data('url'),
 			success : function(response) {
 				if(response.error == 0) {
 					$("#pnlLoadingDirs").fadeOut();
-					$("#pnlDirList").append(response.content);
+					tree = response.content;
+					$(".pnlDirs .scrollPane").treeview({data: tree});
 				} else {
 					alert(response.message);
 				}
 			},
 			error   : function() {
-				alert("<?=Yii::t('roxy', 'Somethings went wrong')?>");
+				alert(error_message);
 			}
-		})
+		});
+		$.ajax({
+			type    : "get",
+			cache   : false,
+			dataType: "json",
+			url     : $(".file-list").data('url'),
+			success : function(response) {
+				if(response.error == 0) {
+					$("#pnlLoading").fadeOut();
+					$("#pnlFileList").html(response.content);
+				} else {
+					alert(response.message);
+				}
+			},
+			error   : function() {
+				alert(error_message);
+			}
+		});
 	});
 	$('#folder-add').on('show.bs.modal', function() {
 		$(this).on("click", ".btn-submit", function() {
@@ -265,7 +284,7 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 					}
 				},
 				error   : function() {
-					alert("<?=Yii::t('roxy', 'Somethings went wrong')?>");
+					alert(error_message);
 				}
 			});
 			return false;

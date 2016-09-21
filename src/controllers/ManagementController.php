@@ -9,7 +9,6 @@ namespace navatech\roxymce\controllers;
 
 use navatech\roxymce\helpers\FolderHelper;
 use Yii;
-use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\Response;
 
@@ -53,16 +52,30 @@ class ManagementController extends Controller {
 	}
 
 	public function actionFolderList($f = '') {
-		Yii::$app->response->format = Response::FORMAT_JSON;
-		$data                       = [];
-		$content                    = [];
-		if ($f == null || $f == '') {
-			$f      = Yii::getAlias(Yii::$app->getModule('roxymce')->uploadFolder);
-			$data[] = FolderHelper::rootFolderName();
+		if ($f == '') {
+			$f = Yii::getAlias($this->module->uploadFolder);
 		}
-		$data = ArrayHelper::merge($data, FolderHelper::listFolder($f));
-		foreach ($data as $item) {
-			$content[] = '<li>' . $item . '</li>';
+		Yii::$app->response->format = Response::FORMAT_JSON;
+		$content                    = FolderHelper::folderList($f);
+		return [
+			'error'   => 0,
+			'content' => $content,
+		];
+	}
+
+	public function actionFileList($f = '') {
+		if ($f == '') {
+			$f = Yii::getAlias($this->module->uploadFolder);
+		}
+		Yii::$app->response->format = Response::FORMAT_JSON;
+		$content                    = '';
+		foreach (FolderHelper::fileList($f) as $item) {
+			$content .= '<li>';
+			$content .= '<div class="file-icon"></div>';
+			$content .= '<div class="file-name">' . $item . '</div>';
+			$content .= '<div class="file-size">' . filesize($f . DIRECTORY_SEPARATOR . $item) . '</div>';
+			$content .= '<div class="file-date"></div>';
+			$content .= '</li>';
 		}
 		return [
 			'error'   => 0,

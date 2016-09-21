@@ -10,6 +10,7 @@
  */
 namespace navatech\roxymce;
 
+use Yii;
 use yii\base\InvalidParamException;
 
 /**
@@ -66,8 +67,8 @@ class Module extends \navatech\base\Module {
 				$this->fileOptions[$defaultFileOptionKey] = $defaultFileOption;
 			}
 		}
-		if (!is_dir(\Yii::getAlias($this->uploadFolder))) {
-			mkdir(\Yii::getAlias($this->uploadFolder), 0777, true);
+		if (!is_dir(Yii::getAlias($this->uploadFolder))) {
+			mkdir(Yii::getAlias($this->uploadFolder), 0777, true);
 		}
 	}
 }

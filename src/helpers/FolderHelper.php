@@ -10,7 +10,6 @@
 namespace navatech\roxymce\helpers;
 
 use Yii;
-use yii\base\ErrorException;
 
 class FolderHelper {
 
@@ -19,24 +18,65 @@ class FolderHelper {
 	 *
 	 * @return array|bool
 	 */
-	public static function listFolder($path) {
-		$ret = preg_grep('/^([^.])/', scandir($path));
-		try {
-			if ($ret === false) {
-				$ret = [];
-				$d   = opendir($path);
-				if ($d) {
-					while (($f = readdir($d)) !== false) {
-						echo $f;
-						$ret[] = $f;
-					}
-					closedir($d);
+	private static function _folderList($path) {
+		$response = null;
+		if (is_dir($path)) {
+			$dirs = glob($path . '/*', GLOB_ONLYDIR);
+			foreach ($dirs as $dir) {
+				$array      = [
+					'text'         => basename($dir),
+					'path'         => $dir,
+					'icon'         => 'glyphicon glyphicon-folder-close',
+					'selectedIcon' => 'glyphicon glyphicon-folder-open',
+					'nodes'        => self::_folderList($dir),
+				];
+				$response[] = $array;
+			}
+		}
+		return $response;
+	}
+
+	/**
+	 * @param $path
+	 *
+	 * @return array|bool
+	 */
+	public static function folderList($path) {
+		$response[] = [
+			'text'         => basename($path),
+			'path'         => $path,
+			'icon'         => 'glyphicon glyphicon-folder-close',
+			'selectedIcon' => 'glyphicon glyphicon-folder-open',
+			'state'        => [
+				'checked'  => true,
+				'expanded' => true,
+				'selected' => true,
+			],
+			'nodes'        => self::_folderList($path),
+		];
+		return $response;
+	}
+
+	/**
+	 * @param $path
+	 *
+	 * @return array
+	 */
+	public static function fileList($path) {
+		$result = array();
+		$dirs   = scandir($path);
+		foreach ($dirs as $key => $value) {
+			if (!in_array($value, array(
+				".",
+				"..",
+			))
+			) {
+				if (!is_dir($path . DIRECTORY_SEPARATOR . $value)) {
+					$result[] = $value;
 				}
 			}
-		} catch (ErrorException $e) {
-			return [];
 		}
-		return $ret;
+		return $result;
 	}
 
 	/**

@@ -30,7 +30,7 @@ class RoxyMceAsset extends AssetBundle {
 			'yii\bootstrap\BootstrapPluginAsset',
 		];
 		$this->css        = [
-			'css/jquery-ui-1.10.0.custom.css',
+			//			'css/jquery-ui-1.10.0.custom.css',
 			'css/main.css',
 		];
 		$this->js         = [
@@ -43,5 +43,6 @@ class RoxyMceAsset extends AssetBundle {
 			//			'js/jquery-ui.js',
 		];
 		$this->jsOptions  = ['position' => View::POS_HEAD];
+		echo '<script>var error_message = "' . \Yii::t('roxy', 'Somethings went wrong') . '";</script>';
 	}
 }

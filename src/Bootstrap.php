@@ -9,6 +9,7 @@
  */
 namespace navatech\roxymce;
 
+use Yii;
 use yii\base\Application;
 use yii\base\BootstrapInterface;
 use yii\i18n\PhpMessageSource;
@@ -28,5 +29,6 @@ class Bootstrap implements BootstrapInterface {
 				'sourceLanguage' => 'en-US',
 			];
 		}
+		Yii::setAlias('roxymce', __DIR__);
 	}
 }

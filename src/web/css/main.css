@@ -433,3 +433,12 @@ div.ui-tooltip {
 .mce-window[aria-label="RoxyMce"] {
     position: absolute !important;
 }
+
+.pnlDirs .list-group-item {
+    border: none;
+    padding: 5px 15px;
+}
+
+.pnlDirs .list-group-item:first-child {
+    border-radius: 0;
+}
