@@ -7,6 +7,7 @@
  * @date    15/02/2016
  * @time    2:56 CH
  * @version 1.0.0
+ * @var \yii\web\View $this
  */
 use navatech\roxymce\assets\BootstrapSelectAsset;
 use navatech\roxymce\assets\BootstrapTreeviewAsset;
@@ -70,10 +71,16 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 			<div class="actions">
 				<div class="row">
 					<div class="col-sm-4">
-						<button type="button" class="btn btn-default" onclick="switchView('list')" title="<?= Yii::t('roxy', 'List view') ?>">
+						<button type="button" data-action="switch_view" data-url="<?= Url::to([
+							'/roxymce/management/file-list',
+							'type' => 'list',
+						]) ?>" class="btn btn-default <?= Yii::$app->controller->module->defaultView != 'list' ? : 'btn-primary' ?>" title="<?= Yii::t('roxy', 'List view') ?>">
 							<i class="fa fa-list"></i>
 						</button>
-						<button type="button" class="btn btn-default" onclick="switchView('thumb')" title="<?= Yii::t('roxy', 'Thumbnails view') ?>">
+						<button type="button" data-action="switch_view" data-url="<?= Url::to([
+							'/roxymce/management/file-list',
+							'type' => 'thumb',
+						]) ?>" class="btn btn-default <?= Yii::$app->controller->module->defaultView != 'thumb' ? : 'btn-primary' ?>" title="<?= Yii::t('roxy', 'Thumbnails view') ?>">
 							<i class="fa fa-picture-o"></i>
 						</button>
 					</div>
@@ -96,7 +103,10 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 						<span><?= Yii::t('roxy', 'Loading files') ?></span><br>
 					</div>
 				</div>
-				<div class="scrollPane file-list" data-url="<?= Url::to(['/roxymce/management/file-list']) ?>">
+				<div class="scrollPane file-list" data-url="<?= Url::to([
+					'/roxymce/management/file-list',
+					'type' => 'thumb',
+				]) ?>">
 					<ul id="pnlFileList"></ul>
 				</div>
 			</div>
@@ -265,6 +275,32 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 				alert(error_message);
 			}
 		});
+	});
+	$(document).on("click", "[data-action='switch_view']", function() {
+		var th = $(this);
+		$.ajax({
+			type    : "get",
+			cache   : false,
+			dataType: "json",
+			url     : th.data('url'),
+			success : function(response) {
+				if(response.error == 0) {
+					$("[data-action='switch_view']").removeClass('btn-primary');
+					$("#pnlLoading").fadeOut();
+					th.addClass('btn-primary');
+					$("#pnlFileList").html(response.content);
+				} else {
+					alert(response.message);
+				}
+			},
+			error   : function() {
+				alert(error_message);
+			}
+		});
+	});
+	$(document).on("click", "#pnlFileList li", function() {
+		$("#pnlFileList li").removeClass('selected');
+		$(this).addClass("selected");
 	});
 	$('#folder-add').on('show.bs.modal', function() {
 		$(this).on("click", ".btn-submit", function() {

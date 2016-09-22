@@ -85,7 +85,7 @@ ul {
 }
 
 .scrollPane {
-    height: 500px;
+    height: 340px;
     overflow: auto;
 }
 
@@ -164,8 +164,6 @@ input[type=text]::-ms-clear {
 #pnlFileList li {
     float: left;
     padding: 3px;
-    clear: both;
-    width: 98%;
     cursor: pointer;
     /*color: #ffffff;*/
 }
@@ -221,18 +219,6 @@ hr {
     padding: 2px;
     margin: 5px 0;
 }
-
-/*.actions input {*/
-/*background-repeat: no-repeat;*/
-/*background-position: 3px center;*/
-/*padding: 0 3px 0 18px;*/
-/*height: 22px;*/
-/*font-size: 11px;*/
-/*border: 1px solid #CCC;*/
-/*background-color: #EEE;*/
-/*border-radius: 3px;*/
-/*margin-bottom: 3px;*/
-/*}*/
 
 .actions input[type=button]:hover, .actions input.selected {
     background-color: #DFD;
@@ -441,4 +427,43 @@ div.ui-tooltip {
 
 .pnlDirs .list-group-item:first-child {
     border-radius: 0;
+}
+
+#pnlFileList img:not(.icon) {
+    margin-right: 4px;
+}
+
+.list .file-size, .list .file-date {
+    text-align: right;
+}
+
+.thumb .file-size, .thumb .file-name {
+    text-align: center;
+}
+
+li.list {
+    width: 98%;
+    clear: both;
+}
+
+li.thumb {
+    margin: 5px 0;
+}
+
+div.thumb {
+    border: 1px solid #DDDDDD;
+    -webkit-box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.51);
+    -moz-box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.51);
+    box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.51);
+}
+
+.file-preview {
+    padding: 5px 0;
+    height: 80px;
+    text-align: center;
+}
+
+.file-preview img {
+    max-height: 70px;
+    max-width: 120px;
 }
