@@ -10,6 +10,7 @@
 namespace navatech\roxymce\helpers;
 
 use Yii;
+use yii\helpers\Url;
 
 class FolderHelper {
 
@@ -26,6 +27,10 @@ class FolderHelper {
 				$array      = [
 					'text'         => basename($dir),
 					'path'         => $dir,
+					'href'         => Url::to([
+						'/roxymce/management/file-list',
+						'f' => $dir,
+					]),
 					'icon'         => 'glyphicon glyphicon-folder-close',
 					'selectedIcon' => 'glyphicon glyphicon-folder-open',
 					'nodes'        => self::_folderList($dir),
@@ -45,6 +50,10 @@ class FolderHelper {
 		$response[] = [
 			'text'         => basename($path),
 			'path'         => $path,
+			'href'         => Url::to([
+				'/roxymce/management/file-list',
+				'f' => $path,
+			]),
 			'icon'         => 'glyphicon glyphicon-folder-close',
 			'selectedIcon' => 'glyphicon glyphicon-folder-open',
 			'state'        => [

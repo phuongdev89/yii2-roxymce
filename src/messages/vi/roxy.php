@@ -33,4 +33,5 @@ return [
 	'Loading files'           => 'Đang tải tệp',
 	'Empty directory'         => 'Thư mục rỗng',
 	'File not found'          => 'Không tìm thấy tệp',
+	'Folder existed'          => 'Thư mục đã tồn tại',
 ];

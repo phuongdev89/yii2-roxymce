@@ -43,6 +43,9 @@ class RoxyMceAsset extends AssetBundle {
 			//			'js/jquery-ui.js',
 		];
 		$this->jsOptions  = ['position' => View::POS_HEAD];
-		echo '<script>var error_message = "' . \Yii::t('roxy', 'Somethings went wrong') . '";</script>';
+		echo '<script>';
+		echo 'var somethings_went_wrong = "' . \Yii::t('roxy', 'Somethings went wrong') . '";';
+		echo 'var empty_directory = "' . \Yii::t('roxy', 'Empty directory') . '";';
+		echo '</script>';
 	}
 }

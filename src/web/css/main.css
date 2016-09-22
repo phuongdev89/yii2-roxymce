@@ -425,7 +425,7 @@ div.ui-tooltip {
     padding: 5px 15px;
 }
 
-.pnlDirs .list-group-item:first-child {
+.pnlDirs .list-group-item:first-child, .pnlDirs .list-group-item:last-child {
     border-radius: 0;
 }
 

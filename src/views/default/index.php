@@ -71,16 +71,10 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 			<div class="actions">
 				<div class="row">
 					<div class="col-sm-4">
-						<button type="button" data-action="switch_view" data-url="<?= Url::to([
-							'/roxymce/management/file-list',
-							'type' => 'list',
-						]) ?>" class="btn btn-default <?= Yii::$app->controller->module->defaultView != 'list' ? : 'btn-primary' ?>" title="<?= Yii::t('roxy', 'List view') ?>">
+						<button type="button" data-action="switch_view" data-name="list_view" class="btn btn-default <?= Yii::$app->controller->module->defaultView != 'list' ? : 'btn-primary' ?>" title="<?= Yii::t('roxy', 'List view') ?>">
 							<i class="fa fa-list"></i>
 						</button>
-						<button type="button" data-action="switch_view" data-url="<?= Url::to([
-							'/roxymce/management/file-list',
-							'type' => 'thumb',
-						]) ?>" class="btn btn-default <?= Yii::$app->controller->module->defaultView != 'thumb' ? : 'btn-primary' ?>" title="<?= Yii::t('roxy', 'Thumbnails view') ?>">
+						<button type="button" data-action="switch_view" data-name="thumb_view" class="btn btn-default <?= Yii::$app->controller->module->defaultView != 'thumb' ? : 'btn-primary' ?>" title="<?= Yii::t('roxy', 'Thumbnails view') ?>">
 							<i class="fa fa-picture-o"></i>
 						</button>
 					</div>
@@ -238,26 +232,9 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 	</div>
 </div>
 <script>
+	var data = [];
 	$(document).on("ready", function() {
-		var tree;
-		$.ajax({
-			type    : "get",
-			cache   : false,
-			dataType: "json",
-			url     : $(".folder-list").data('url'),
-			success : function(response) {
-				if(response.error == 0) {
-					$("#pnlLoadingDirs").fadeOut();
-					tree = response.content;
-					$(".pnlDirs .scrollPane").treeview({data: tree});
-				} else {
-					alert(response.message);
-				}
-			},
-			error   : function() {
-				alert(error_message);
-			}
-		});
+		ajax_folder($(".folder-list").data('url'));
 		$.ajax({
 			type    : "get",
 			cache   : false,
@@ -266,64 +243,112 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 			success : function(response) {
 				if(response.error == 0) {
 					$("#pnlLoading").fadeOut();
-					$("#pnlFileList").html(response.content);
+					data = response.content;
+					display();
 				} else {
 					alert(response.message);
 				}
 			},
 			error   : function() {
-				alert(error_message);
+				alert(somethings_went_wrong);
 			}
 		});
 	});
-	$(document).on("click", "[data-action='switch_view']", function() {
-		var th = $(this);
+	$(document).on('nodeSelected', '.pnlDirs .scrollPane', function(e, d) {
+		$("#folder-add").find("input[name='f']").val(d.path);
 		$.ajax({
 			type    : "get",
 			cache   : false,
 			dataType: "json",
-			url     : th.data('url'),
+			url     : d.href,
 			success : function(response) {
 				if(response.error == 0) {
-					$("[data-action='switch_view']").removeClass('btn-primary');
 					$("#pnlLoading").fadeOut();
-					th.addClass('btn-primary');
-					$("#pnlFileList").html(response.content);
+					data = response.content;
+					display();
 				} else {
 					alert(response.message);
 				}
 			},
 			error   : function() {
-				alert(error_message);
+				alert(somethings_went_wrong);
 			}
 		});
+	});
+	$(document).on("click", "[data-action='switch_view']", function() {
+		$("[data-action='switch_view']").removeClass('btn-primary');
+		$("#pnlLoading").fadeOut();
+		$(this).addClass('btn-primary');
+		display();
 	});
 	$(document).on("click", "#pnlFileList li", function() {
 		$("#pnlFileList li").removeClass('selected');
 		$(this).addClass("selected");
 	});
-	$('#folder-add').on('show.bs.modal', function() {
-		$(this).on("click", ".btn-submit", function() {
-			var th   = $(this);
-			var form = th.closest(".modal").find("form");
-			$.ajax({
-				type    : "get",
-				cache   : false,
-				data    : form.serializeArray(),
-				url     : form.attr("action"),
-				dataType: "json",
-				success : function(response) {
-					if(response.error == 0) {
-						$('#folder-add').modal('hide');
-					} else {
-						alert(response.message);
-					}
-				},
-				error   : function() {
-					alert(error_message);
+	$(document).on("click", "#folder-add .btn-submit", function() {
+		var th   = $(this);
+		var form = th.closest(".modal").find("form");
+		$.ajax({
+			type    : "get",
+			cache   : false,
+			data    : form.serializeArray(),
+			url     : form.attr("action"),
+			dataType: "json",
+			success : function(response) {
+				if(response.error == 0) {
+					$('#folder-add').modal('hide');
+					ajax_folder($(".folder-list").data('url'));
+				} else {
+					alert(response.message);
 				}
-			});
-			return false;
+			},
+			error   : function() {
+				alert(somethings_went_wrong);
+			}
 		});
+		return false;
 	});
+
+	function display() {
+		var html = '';
+		$.each(data, function(e, d) {
+			if($("button[data-name='thumb_view']").hasClass('btn-primary')) {
+				html += '<li class="col-sm-3 thumb"><div class="thumb">';
+				html += '<div class="file-preview"><img src="' + d.preview + '"></div>';
+				html += '<div class="file-name">' + d.name + '</div>';
+				html += '<div class="file-size">' + d.size + '</div>';
+				html += '</div></li>';
+			} else {
+				html += '<li class="list">';
+				html += '<div class="col-sm-6 file-name"><img class="icon" src="' + d.icon + '">' + d.name + '</div>';
+				html += '<div class="col-sm-2 file-size">' + d.size + '</div>';
+				html += '<div class="col-sm-4 file-date">' + d.date + '</div>';
+				html += '</li>';
+			}
+		});
+		if(html == '') {
+			html = empty_directory;
+		}
+		$("#pnlFileList").html(html);
+	}
+
+	function ajax_folder(url) {
+		$.ajax({
+			type    : "get",
+			cache   : false,
+			dataType: "json",
+			url     : url,
+			success : function(response) {
+				if(response.error == 0) {
+					$("#pnlLoadingDirs").fadeOut();
+					$(".pnlDirs .scrollPane").treeview({data: response.content});
+				} else {
+					alert(response.message);
+				}
+			},
+			error   : function() {
+				alert(somethings_went_wrong);
+			}
+		});
+	}
 </script>

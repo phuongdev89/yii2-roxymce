@@ -29,18 +29,28 @@ class ManagementController extends Controller {
 	 *
 	 * @return array
 	 */
-	public function actionCreateFolder($f, $n) {
+	public function actionCreateFolder($n, $f = '') {
+		if ($f == '') {
+			$f = Yii::getAlias($this->module->uploadFolder);
+		}
 		if (is_dir($f)) {
-			if (mkdir($f . DIRECTORY_SEPARATOR . $n)) {
-				$response = [
-					'error'   => 0,
-					'message' => Yii::t('roxy', 'Folder created'),
-				];
-			} else {
+			if (file_exists($f . DIRECTORY_SEPARATOR . $n)) {
 				$response = [
 					'error'   => 1,
-					'message' => Yii::t('roxy', 'Can\'t create folder in {0}', [$f]),
+					'message' => Yii::t('roxy', 'Folder existed'),
 				];
+			} else {
+				if (mkdir($f . DIRECTORY_SEPARATOR . $n, 0777, true)) {
+					$response = [
+						'error'   => 0,
+						'message' => Yii::t('roxy', 'Folder created'),
+					];
+				} else {
+					$response = [
+						'error'   => 1,
+						'message' => Yii::t('roxy', 'Can\'t create folder in {0}', [$f]),
+					];
+				}
 			}
 		} else {
 			$response = [
@@ -64,27 +74,21 @@ class ManagementController extends Controller {
 		];
 	}
 
-	public function actionFileList($type = 'thumb', $f = '') {
+	public function actionFileList($f = '') {
 		if ($f == '') {
 			$f = Yii::getAlias($this->module->uploadFolder);
 		}
 		Yii::$app->response->format = Response::FORMAT_JSON;
-		$content                    = '';
+		$content                    = [];
 		foreach (FolderHelper::fileList($f) as $item) {
-			$file = $f . DIRECTORY_SEPARATOR . $item;
-			if ($type == 'thumb') {
-				$content .= '<li class="col-sm-3 thumb"><div class="thumb">';
-				$content .= '<div class="file-preview"><img src="' . FileHelper::filepreview($file) . '"></div>';
-				$content .= '<div class="file-name">' . $item . '</div>';
-				$content .= '<div class="file-size">' . FileHelper::filesize(filesize($file), 0) . '</div>';
-				$content .= '</div></li>';
-			} else {
-				$content .= '<li class="list">';
-				$content .= '<div class="col-sm-6 file-name"><img class="icon" src="' . FileHelper::fileicon($file) . '">' . $item . '</div>';
-				$content .= '<div class="col-sm-2 file-size">' . FileHelper::filesize(filesize($file), 0) . '</div>';
-				$content .= '<div class="col-sm-4 file-date">' . date('Y-m-d H:i:s', filemtime($file)) . '</div>';
-				$content .= '</li>';
-			}
+			$file      = $f . DIRECTORY_SEPARATOR . $item;
+			$content[] = [
+				'preview' => FileHelper::filepreview($file),
+				'icon'    => FileHelper::fileicon($file),
+				'name'    => $item,
+				'size'    => FileHelper::filesize(filesize($file), 0),
+				'date'    => date('Y-m-d H:i:s', filemtime($file)),
+			];
 		}
 		return [
 			'error'   => 0,
