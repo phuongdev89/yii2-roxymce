@@ -9,10 +9,14 @@ namespace navatech\roxymce\controllers;
 
 use navatech\roxymce\helpers\FileHelper;
 use navatech\roxymce\helpers\FolderHelper;
+use navatech\roxymce\Module;
 use Yii;
 use yii\web\Controller;
 use yii\web\Response;
 
+/**
+ * @property Module $module
+ */
 class ManagementController extends Controller {
 
 	/**
@@ -24,23 +28,23 @@ class ManagementController extends Controller {
 	}
 
 	/**
-	 * @param $f string current directory
-	 * @param $n string new dicrectory's name
+	 * @param        $name
+	 * @param string $folder
 	 *
 	 * @return array
 	 */
-	public function actionCreateFolder($n, $f = '') {
-		if ($f == '') {
-			$f = Yii::getAlias($this->module->uploadFolder);
+	public function actionFolderCreate($name, $folder = '') {
+		if ($folder == '') {
+			$folder = Yii::getAlias($this->module->uploadFolder);
 		}
-		if (is_dir($f)) {
-			if (file_exists($f . DIRECTORY_SEPARATOR . $n)) {
+		if (is_dir($folder)) {
+			if (file_exists($folder . DIRECTORY_SEPARATOR . $name)) {
 				$response = [
 					'error'   => 1,
 					'message' => Yii::t('roxy', 'Folder existed'),
 				];
 			} else {
-				if (mkdir($f . DIRECTORY_SEPARATOR . $n, 0777, true)) {
+				if (mkdir($folder . DIRECTORY_SEPARATOR . $name, 0777, true)) {
 					$response = [
 						'error'   => 0,
 						'message' => Yii::t('roxy', 'Folder created'),
@@ -48,40 +52,50 @@ class ManagementController extends Controller {
 				} else {
 					$response = [
 						'error'   => 1,
-						'message' => Yii::t('roxy', 'Can\'t create folder in {0}', [$f]),
+						'message' => Yii::t('roxy', 'Can\'t create folder in {0}', [$folder]),
 					];
 				}
 			}
 		} else {
 			$response = [
 				'error'   => 1,
-				'message' => Yii::t('roxy', 'Invalid directory {0}', [$f]),
+				'message' => Yii::t('roxy', 'Invalid directory {0}', [$folder]),
 			];
 		}
 		Yii::$app->response->format = Response::FORMAT_JSON;
 		return $response;
 	}
 
-	public function actionFolderList($f = '') {
-		if ($f == '') {
-			$f = Yii::getAlias($this->module->uploadFolder);
+	/**
+	 * @param string $folder
+	 *
+	 * @return array
+	 */
+	public function actionFolderList($folder = '') {
+		if ($folder == '') {
+			$folder = Yii::getAlias($this->module->uploadFolder);
 		}
 		Yii::$app->response->format = Response::FORMAT_JSON;
-		$content                    = FolderHelper::folderList($f);
+		$content                    = FolderHelper::folderList($folder);
 		return [
 			'error'   => 0,
 			'content' => $content,
 		];
 	}
 
-	public function actionFileList($f = '') {
-		if ($f == '') {
-			$f = Yii::getAlias($this->module->uploadFolder);
+	/**
+	 * @param string $folder
+	 *
+	 * @return array
+	 */
+	public function actionFileList($folder = '') {
+		if ($folder == '') {
+			$folder = Yii::getAlias($this->module->uploadFolder);
 		}
 		Yii::$app->response->format = Response::FORMAT_JSON;
 		$content                    = [];
-		foreach (FolderHelper::fileList($f) as $item) {
-			$file      = $f . DIRECTORY_SEPARATOR . $item;
+		foreach (FolderHelper::fileList($folder) as $item) {
+			$file      = $folder . DIRECTORY_SEPARATOR . $item;
 			$content[] = [
 				'preview' => FileHelper::filepreview($file),
 				'icon'    => FileHelper::fileicon($file),
@@ -94,5 +108,32 @@ class ManagementController extends Controller {
 			'error'   => 0,
 			'content' => $content,
 		];
+	}
+
+	/**
+	 * @param string $folder
+	 * @param        $name
+	 *
+	 * @return array
+	 */
+	public function actionFolderRename($folder = '', $name) {
+		Yii::$app->response->format = Response::FORMAT_JSON;
+		if ($folder == '') {
+			return [
+				'error'   => 0,
+				'message' => Yii::t('roxy', 'Can not rename root folder'),
+			];
+		}
+		if (rename($folder, dirname($folder) . DIRECTORY_SEPARATOR . $name)) {
+			return [
+				'error'   => 0,
+				'content' => $name,
+			];
+		} else {
+			return [
+				'error'   => 1,
+				'message' => Yii::t('roxy', 'Somethings went wrong'),
+			];
+		}
 	}
 }

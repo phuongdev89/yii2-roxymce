@@ -26,10 +26,10 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 	<div class="row">
 		<div class="col-sm-4 pnlDirs" id="dirActions">
 			<div class="actions">
-				<button type="button" class="btn btn-sm btn-primary" data-toggle="modal" href="#folder-add" title="<?= Yii::t('roxy', 'Create new folder') ?>">
+				<button type="button" class="btn btn-sm btn-primary" data-toggle="modal" href="#folder-create" title="<?= Yii::t('roxy', 'Create new folder') ?>">
 					<i class="fa fa-plus-square"></i> <?= Yii::t('roxy', 'Create') ?>
 				</button>
-				<button type="button" class="btn btn-sm btn-warning" onclick="renameDir()" title="<?= Yii::t('roxy', 'Rename selected folder') ?>">
+				<button type="button" class="btn btn-sm btn-warning" data-toggle="modal" href="#folder-rename" title="<?= Yii::t('roxy', 'Rename selected folder') ?>">
 					<i class="fa fa-pencil-square"></i> <?= Yii::t('roxy', 'Rename') ?>
 				</button>
 				<button type="button" class="btn btn-sm btn-danger" onclick="deleteDir()" title="<?= Yii::t('roxy', 'Delete selected folder') ?>">
@@ -209,7 +209,7 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 	<span class="name"></span><br>
 	<input type="text" id="txtDirName">
 </div>
-<div class="modal fade" id="folder-add">
+<div class="modal fade" id="folder-create">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -217,10 +217,32 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 				<h4 class="modal-title"><?= Yii::t('roxy', 'Create new folder') ?></h4>
 			</div>
 			<div class="modal-body">
-				<form action="<?= Url::to(['/roxymce/management/create-folder']) ?>" method="get" role="form">
-					<input type="hidden" name="f" value="">
+				<form action="<?= Url::to(['/roxymce/management/folder-create']) ?>" method="get" role="form">
+					<input type="hidden" name="folder" value="">
 					<div class="form-group">
-						<input type="text" class="form-control" name="n" id="folder_name" placeholder="<?= Yii::t('roxy', 'Folder\'s name') ?>">
+						<input type="text" class="form-control" name="name" id="folder_name" placeholder="<?= Yii::t('roxy', 'Folder\'s name') ?>">
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('roxy', 'Close') ?></button>
+				<button type="button" class="btn btn-primary btn-submit"><?= Yii::t('roxy', 'Save') ?></button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="folder-rename">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title"><?= Yii::t('roxy', 'Rename selected folder') ?></h4>
+			</div>
+			<div class="modal-body">
+				<form action="<?= Url::to(['/roxymce/management/folder-rename']) ?>" method="get" role="form">
+					<input type="hidden" name="folder" value="">
+					<div class="form-group">
+						<input type="text" class="form-control" name="name" id="folder_name" placeholder="<?= Yii::t('roxy', 'Folder\'s name') ?>">
 					</div>
 				</form>
 			</div>
@@ -232,7 +254,8 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 	</div>
 </div>
 <script>
-	var data = [];
+	var data   = [];
+	var nodeId = 0;
 	$(document).on("ready", function() {
 		ajax_folder($(".folder-list").data('url'));
 		$.ajax({
@@ -254,8 +277,13 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 			}
 		});
 	});
+	$(document).on("submit", 'form', function() {
+		return false;
+	});
 	$(document).on('nodeSelected', '.pnlDirs .scrollPane', function(e, d) {
-		$("#folder-add").find("input[name='f']").val(d.path);
+		$("#folder-create").find("input[name='folder']").val(d.path);
+		$("#folder-rename").find("input[name='folder']").val(d.path);
+		nodeId = d.id;
 		$.ajax({
 			type    : "get",
 			cache   : false,
@@ -285,27 +313,64 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 		$("#pnlFileList li").removeClass('selected');
 		$(this).addClass("selected");
 	});
-	$(document).on("click", "#folder-add .btn-submit", function() {
-		var th   = $(this);
-		var form = th.closest(".modal").find("form");
-		$.ajax({
-			type    : "get",
-			cache   : false,
-			data    : form.serializeArray(),
-			url     : form.attr("action"),
-			dataType: "json",
-			success : function(response) {
-				if(response.error == 0) {
-					$('#folder-add').modal('hide');
-					ajax_folder($(".folder-list").data('url'));
-				} else {
-					alert(response.message);
+	$(document).on("click", "#folder-create .btn-submit", function() {
+		var node = $("ul.list-group").find("li.node-selected");
+		if(node.length != 0) {
+			var th   = $(this);
+			var form = th.closest(".modal").find("form");
+			$.ajax({
+				type    : "get",
+				cache   : false,
+				data    : form.serializeArray(),
+				url     : form.attr("action"),
+				dataType: "json",
+				success : function(response) {
+					if(response.error == 0) {
+						$('#folder-create').modal('hide');
+						nodeId = node.data('nodeid');
+						ajax_folder($(".folder-list").data('url'));
+					} else {
+						alert(response.message);
+					}
+				},
+				error   : function() {
+					alert(somethings_went_wrong);
 				}
-			},
-			error   : function() {
-				alert(somethings_went_wrong);
-			}
-		});
+			});
+		} else {
+			alert(please_select_one_folder);
+			$('#folder-create').modal('hide');
+		}
+		return false;
+	});
+	$(document).on("click", "#folder-rename .btn-submit", function() {
+		var node = $("ul.list-group").find("li.node-selected");
+		if(node.length != 0) {
+			var th   = $(this);
+			var form = th.closest(".modal").find("form");
+			$.ajax({
+				type    : "get",
+				cache   : false,
+				data    : form.serializeArray(),
+				url     : form.attr("action"),
+				dataType: "json",
+				success : function(response) {
+					if(response.error == 0) {
+						$('#folder-rename').modal('hide');
+						nodeId = node.data('nodeid');
+						ajax_folder($(".folder-list").data('url'));
+					} else {
+						alert(response.message);
+					}
+				},
+				error   : function() {
+					alert(somethings_went_wrong);
+				}
+			});
+		} else {
+			alert(please_select_one_folder);
+			$('#folder-rename').modal('hide');
+		}
 		return false;
 	});
 
@@ -341,7 +406,7 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 			success : function(response) {
 				if(response.error == 0) {
 					$("#pnlLoadingDirs").fadeOut();
-					$(".pnlDirs .scrollPane").treeview({data: response.content});
+					$(".pnlDirs .scrollPane").treeview({data: response.content}).treeview('selectNode', nodeId);
 				} else {
 					alert(response.message);
 				}

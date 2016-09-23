@@ -29,7 +29,7 @@ class FolderHelper {
 					'path'         => $dir,
 					'href'         => Url::to([
 						'/roxymce/management/file-list',
-						'f' => $dir,
+						'folder' => $dir,
 					]),
 					'icon'         => 'glyphicon glyphicon-folder-close',
 					'selectedIcon' => 'glyphicon glyphicon-folder-open',
@@ -52,7 +52,7 @@ class FolderHelper {
 			'path'         => $path,
 			'href'         => Url::to([
 				'/roxymce/management/file-list',
-				'f' => $path,
+				'folder' => $path,
 			]),
 			'icon'         => 'glyphicon glyphicon-folder-close',
 			'selectedIcon' => 'glyphicon glyphicon-folder-open',
