@@ -1,6 +1,7 @@
 # RoxyMce - Beautiful File manager for Tinymce
 This allow to integrate [TinyMce](https://github.com/tinymce/tinymce) 4 with [Roxy Fileman](http://roxyfileman.com)
 
+# Discontinue this branch.
 User story
 ---
 I'm try to find a good file manager for tinymce for a long time.  
