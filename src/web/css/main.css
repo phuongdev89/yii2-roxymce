@@ -467,3 +467,7 @@ div.thumb {
     max-height: 70px;
     max-width: 120px;
 }
+
+label.btn .fileinput-button {
+    display: none;
+}

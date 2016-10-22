@@ -9,7 +9,7 @@
  * @version 1.0.0
  * @var \yii\web\View $this
  */
-use navatech\roxymce\assets\BootstrapSelectAsset;
+use dosamigos\fileupload\FileUpload;
 use navatech\roxymce\assets\BootstrapTreeviewAsset;
 use navatech\roxymce\assets\FontAwesomeAsset;
 use navatech\roxymce\assets\JqueryDateFormatAsset;
@@ -17,7 +17,6 @@ use navatech\roxymce\assets\RoxyMceAsset;
 use yii\helpers\Url;
 
 FontAwesomeAsset::register($this);
-BootstrapSelectAsset::register($this);
 JqueryDateFormatAsset::register($this);
 BootstrapTreeviewAsset::register($this);
 $roxyMceAsset = RoxyMceAsset::register($this);
@@ -50,9 +49,34 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 			<div class="actions">
 				<div class="row">
 					<div class="col-sm-12">
-						<button type="button" class="btn btn-sm btn-primary" onclick="addFileClick()" title="<?= Yii::t('roxy', 'Upload files') ?>">
+						<label class="btn btn-sm btn-primary" title="<?= Yii::t('roxy', 'Upload files') ?>">
+							<?= FileUpload::widget([
+								'name'          => 'image',
+								'plus'          => true,
+								'url'           => [
+									'media/upload',
+									'id' => 1,
+								],
+								'clientOptions' => [
+									'singleFileUploads' => false,
+								],
+								'options'       => [
+									'accept'   => 'image/*',
+									'multiple' => true,
+								],
+								'clientEvents'  => [
+									'fileuploaddone' => 'function(e, data) {
+                                console.log(e);
+                                console.log(data);
+                            }',
+									'fileuploadfail' => 'function(e, data) {
+                                console.log(e);
+                                console.log(data);
+                            }',
+								],
+							]); ?>
 							<i class="fa fa-plus"></i> <?= Yii::t('roxy', 'Add file') ?>
-						</button>
+						</label>
 						<button type="button" class="btn btn-sm btn-info" onclick="previewFile()" title="<?= Yii::t('roxy', 'Preview selected file') ?>">
 							<i class="fa fa-search"></i> <?= Yii::t('roxy', 'Preview image') ?>
 						</button>

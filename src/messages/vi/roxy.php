@@ -20,7 +20,7 @@ return [
 	'{0} file'                    => '{0} tệp',
 	'List view'                   => 'Danh sách',
 	'Thumbnails view'             => 'Ảnh thu nhỏ',
-	'Upload files'                => 'Tải lên',
+	'Upload files'                => 'Tải tệp lên',
 	'Preview selected file'       => 'Xem trước tệp đã chọn',
 	'Download file'               => 'Tải xuống tệp này',
 	'Create new folder'           => 'Tạo mới thư mục',

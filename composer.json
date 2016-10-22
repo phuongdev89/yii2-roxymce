@@ -31,11 +31,16 @@
 		"ext-mbstring" : "*",
 		"ext-zip" : "*",
 		"navatech/yii2-navatech-base" : "@dev",
+		"rmrevin/yii2-fontawesome" : "~2.15",
 		"bower-asset/tinymce-dist" : "^4.3",
-		"bower-asset/fontawesome" : "^4.0",
 		"bower-asset/jquery-dateFormat" : "^1.0",
 		"bower-asset/bootstrap-select" : "*",
-		"bower-asset/bootstrap-treeview" : "*"
+		"bower-asset/bootstrap-treeview" : "*",
+		"execut/yii2-widget-bootstraptreeview" : "dev-master",
+		"2amigos/yii2-file-upload-widget" : "~1.0"
+	},
+	"conflict" : {
+		"skeeks/yii2-assets-auto-compress" : "1.2.*"
 	},
 	"autoload" : {
 		"psr-4" : {
