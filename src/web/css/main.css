@@ -17,6 +17,126 @@ a {
 .wrapper {
     width: 100%;
     height: 100%;
+    position: relative;
+}
+
+.treeview .list-group-item {
+    border: none;
+    padding: 5px 15px;
+    border-radius: 0;
+}
+
+section.footer {
+    position: relative;
+    width: 100%;
+    border-top: 1px solid #ddd;
+}
+
+section.footer .status {
+    line-height: 40px;
+    margin-left: 10px;
+}
+
+section.body {
+    position: relative;
+    height: 90%;
+}
+
+section.body .actions, section.body .file-body {
+    text-align: left;
+    margin-top: 10px;
+}
+
+section.body .progress {
+    text-align: center;
+    margin-top: 10px;
+}
+
+section.body .left-body {
+    border-right: 1px solid #ddd;
+    height: 100%;
+}
+
+section.body .left-body .folder-list.treeview {
+    margin-top: 10px;
+}
+
+.sort-actions {
+    font-weight: bold;
+    border-bottom: 1px solid #DDDDDD;
+}
+
+.sort-actions .pull-right {
+    padding: 0;
+}
+
+.sort-actions .row {
+    margin: 1px 0;
+}
+
+.file-list-item .col-sm-3 {
+    padding: 0 5px;
+}
+
+.file-list-item .thumb {
+    margin: 5px 0;
+    border: 1px solid #DDDDDD;
+    -webkit-box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.51);
+    -moz-box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.51);
+    box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.51);
+    font-size: 10px;
+}
+
+.file-list-item .thumb.selected, .file-list-item .thumb.selected:hover {
+    background: #9EDBFF;
+
+}
+
+.file-list-item .thumb:hover {
+    background: #FFFFCC;
+    cursor: pointer;
+}
+
+.file-list-item .thumb .file-size, .file-list-item .thumb .file-name {
+    text-align: center;
+    height: 15px;
+    line-height: 15px;
+}
+
+.file-list-item .thumb .file-name {
+    height: 35px;
+    overflow: hidden;
+}
+
+.file-list-item .list {
+    height: 25px;
+    line-height: 25px;
+    margin: 1px 0;
+}
+
+.file-list-item .list.selected, .file-list-item .list.selected:hover {
+    background: #9EDBFF;
+
+}
+
+.file-list-item .list:hover {
+    background: #FFFFCC;
+    cursor: pointer;
+}
+
+.file-list-item .list .file-size, .file-list-item .list .file-date {
+    text-align: right;
+}
+
+.file-list-item .file-preview {
+    padding: 5px 0;
+    height: 80px;
+    text-align: center;
+}
+
+.file-list-item .file-preview img {
+    max-height: 70px;
+    max-width: 120px;
 }
 
 hr {
