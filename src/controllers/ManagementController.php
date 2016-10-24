@@ -11,6 +11,7 @@ use navatech\roxymce\helpers\FileHelper;
 use navatech\roxymce\helpers\FolderHelper;
 use navatech\roxymce\Module;
 use Yii;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 
@@ -48,6 +49,14 @@ class ManagementController extends Controller {
 					$response = [
 						'error'   => 0,
 						'message' => Yii::t('roxy', 'Folder created'),
+						'data'    => [
+							'href' => Url::to([
+								'/roxymce/management/file-list',
+								'folder' => $folder . DIRECTORY_SEPARATOR . $name,
+							]),
+							'text' => $name,
+							'path' => $folder . DIRECTORY_SEPARATOR . $name,
+						],
 					];
 				} else {
 					$response = [
@@ -120,14 +129,22 @@ class ManagementController extends Controller {
 		Yii::$app->response->format = Response::FORMAT_JSON;
 		if ($folder == '') {
 			return [
-				'error'   => 0,
+				'error'   => 1,
 				'message' => Yii::t('roxy', 'Can not rename root folder'),
 			];
 		}
-		if (rename($folder, dirname($folder) . DIRECTORY_SEPARATOR . $name)) {
+		$newFolder = dirname($folder) . DIRECTORY_SEPARATOR . $name;
+		if (rename($folder, $newFolder)) {
 			return [
-				'error'   => 0,
-				'content' => $name,
+				'error' => 0,
+				'data'  => [
+					'href' => Url::to([
+						'/roxymce/management/file-list',
+						'folder' => $newFolder,
+					]),
+					'text' => $name,
+					'path' => $newFolder,
+				],
 			];
 		} else {
 			return [

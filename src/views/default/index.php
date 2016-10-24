@@ -425,75 +425,43 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 	</div>
 </div>
 <script>
-	var data   = [];
-	var nodeId = 0;
+	var nodeId      = 0;
+	var folder_list = $(".folder-list");
+	var currentUrl  = '';
 	$(document).on("ready", function() {
-		showFolderList($(".folder-list").data('url'));
-		$.ajax({
-			type    : "get",
-			cache   : false,
-			dataType: "json",
-			url     : $(".file-list").data('url'),
-			success : function(response) {
-				if(response.error == 0) {
-					$(".progress").fadeOut();
-					data = response.content;
-					showFileList();
-				} else {
-					alert(response.message);
-				}
-			},
-			error   : function() {
-				alert(somethings_went_wrong);
-			}
-		});
+		showFolderList(folder_list.data('url'));
+		showFileList($(".file-list").data('url'));
 	});
 	$(document).on("submit", 'form', function() {
 		return false;
 	});
-	$(document).on('nodeUnselected', '.folder-list', function(e, d) {
-		$(".btn-create-folder").attr('disabled', true);
-		$(".btn-rename-folder").attr('disabled', true);
-		$(".btn-remove-folder").attr('disabled', true);
-	});
 	$(document).on('nodeSelected', '.folder-list', function(e, d) {
 		nodeId = d.nodeId;
-		$(".btn-create-folder").removeAttr('disabled');
-		$(".btn-rename-folder").removeAttr('disabled');
-		$(".btn-remove-folder").removeAttr('disabled');
 		$("#folder-rename").find("input[name='folder']").val(d.path).parent().find("input[name='name']").val(d.text);
 		$("#folder-create").find("input[name='folder']").val(d.path);
-		$.ajax({
-			type    : "get",
-			cache   : false,
-			dataType: "json",
-			url     : d.href,
-			success : function(response) {
-				if(response.error == 0) {
-					$(".progress").fadeOut();
-					data = response.content;
-					showFileList();
-				} else {
-					alert(response.message);
-				}
-			},
-			error   : function() {
-				alert(somethings_went_wrong);
-			}
-		});
+		showFileList(d.href);
 	});
+	/**
+	 * Done
+	 */
 	$(document).on("click", "[data-action='switch_view']", function() {
 		$("[data-action='switch_view']").removeClass('btn-primary');
 		$(".progress").fadeOut();
 		$(this).addClass('btn-primary');
-		showFileList();
+		showFileList(currentUrl);
 	});
+	/**
+	 * Done
+	 */
 	$(document).on("click", ".file-list-item .thumb,.file-list-item .list", function() {
 		$(".file-list-item .thumb, .file-list-item .list").removeClass('selected');
 		$(this).addClass("selected");
 	});
+	/**
+	 * Done
+	 */
 	$(document).on("click", "#folder-create .btn-submit", function() {
-		var node = $("ul.list-group").find("li.node-selected");
+		var node = folder_list.treeview('getSelected');
 		if(node.length != 0) {
 			var th   = $(this);
 			var form = th.closest(".modal").find("form");
@@ -507,9 +475,14 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 					if(response.error == 0) {
 						$('#folder-create').modal('hide');
 						$('#folder-create').find("input[name='name']").val('');
-						nodeId = node.data('nodeid');
-						showFolderList($(".folder-list").data('url'));
-						$(".folder-list").treeview('selectNode', nodeId);
+						var newNode = {
+							text        : response.data.text,
+							href        : response.data.href,
+							path        : response.data.path,
+							icon        : 'glyphicon glyphicon-folder-close',
+							selectedIcon: "glyphicon glyphicon-folder-open"
+						};
+						folder_list.treeview('addNode', [newNode, node]);
 					} else {
 						alert(response.message);
 					}
@@ -524,8 +497,11 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 		}
 		return false;
 	});
+	/**
+	 * Done
+	 */
 	$(document).on("click", "#folder-rename .btn-submit", function() {
-		var node = $("ul.list-group").find("li.node-selected");
+		var node = folder_list.treeview('getSelected');
 		if(node.length != 0) {
 			var th   = $(this);
 			var form = th.closest(".modal").find("form");
@@ -538,8 +514,14 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 				success : function(response) {
 					if(response.error == 0) {
 						$('#folder-rename').modal('hide');
-						nodeId = node.data('nodeid');
-						showFolderList($(".folder-list").data('url'));
+						var newNode = {
+							text        : response.data.text,
+							href        : response.data.href,
+							path        : response.data.path,
+							icon        : 'glyphicon glyphicon-folder-close',
+							selectedIcon: "glyphicon glyphicon-folder-open"
+						};
+						folder_list.treeview('updateNode', [node, newNode]);
 					} else {
 						alert(response.message);
 					}
@@ -554,19 +536,23 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 		}
 		return false;
 	});
+	/**
+	 * Done
+	 */
 	$(document).on("click", ".btn-remove-folder", function() {
-		var node = $(".folder-list").treeview('getNode', nodeId);
-		var conf = confirm(are_you_sure);
+		var node       = folder_list.treeview('getSelected');
+		var parentNode = folder_list.treeview('getParents', node);
+		var conf       = confirm(are_you_sure);
 		if(conf) {
 			$.ajax({
 				type    : "POST",
 				cache   : false,
-				url     : '<?=Url::to(['/roxymce/management/folder-remove'])?>?folder=' + node.path,
+				url     : '<?=Url::to(['/roxymce/management/folder-remove'])?>?folder=' + node[0].path,
 				dataType: "json",
 				success : function(response) {
 					if(response.error == 0) {
-						showFolderList($(".folder-list").data('url'));
-						$(".folder-list").treeview('selectNode', node.parentId);
+						folder_list.treeview('removeNode', [node, {silent: true}]).treeview('selectNode', [parentNode, {silent: true}]);
+						showFileList(parentNode[0].href);
 					} else {
 						alert(response.message);
 					}
@@ -577,34 +563,58 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 			})
 		}
 	});
-	function showFileList() {
+	/**
+	 * Done
+	 */
+	function showFileList(url) {
 		var html = '';
-		$.each(data, function(e, d) {
-			if($("button[data-name='thumb_view']").hasClass('btn-primary')) {
-				html += '<div class="col-sm-3"><div class="thumb">';
-				html += '<div class="file-preview"><img src="' + d.preview + '"></div>';
-				html += '<div class="file-name">' + d.name + '</div>';
-				html += '<div class="file-size">' + d.size + '</div>';
-				html += '</div></div>';
-				$(".sort-actions").hide();
-			} else {
-				html += '<div class="row list">';
-				html += '<div class="col-sm-6 file-name"><img class="icon" src="' + d.icon + '">' + d.name + '</div>';
-				html += '<div class="col-sm-2 file-size">' + d.size + '</div>';
-				html += '<div class="col-sm-4 file-date">' + d.date + '</div>';
-				html += '</div>';
-				$(".sort-actions").show();
+		$(".file-list-item").html(empty_directory);
+		currentUrl = url;
+		$.ajax({
+			type    : "get",
+			cache   : false,
+			dataType: "json",
+			url     : url,
+			success : function(response) {
+				if(response.error == 0) {
+					$(".progress").fadeOut();
+					$.each(response.content, function(e, d) {
+						if($("button[data-name='thumb_view']").hasClass('btn-primary')) {
+							html += '<div class="col-sm-3"><div class="thumb">';
+							html += '<div class="file-preview"><img src="' + d.preview + '"></div>';
+							html += '<div class="file-name">' + d.name + '</div>';
+							html += '<div class="file-size">' + d.size + '</div>';
+							html += '</div></div>';
+							$(".sort-actions").hide();
+						} else {
+							html += '<div class="row list">';
+							html += '<div class="col-sm-6 file-name"><img class="icon" src="' + d.icon + '">' + d.name + '</div>';
+							html += '<div class="col-sm-2 file-size">' + d.size + '</div>';
+							html += '<div class="col-sm-4 file-date">' + d.date + '</div>';
+							html += '</div>';
+							$(".sort-actions").show();
+						}
+					});
+					if(html == '') {
+						html = empty_directory;
+					}
+					$(".file-list-item").html(html);
+				} else {
+					alert(response.message);
+					$(".file-list-item").html(empty_directory);
+				}
+			},
+			error   : function() {
+				alert(somethings_went_wrong);
+				$(".file-list-item").html(empty_directory);
 			}
 		});
-		if(html == '') {
-			html = empty_directory;
-		}
-		$(".file-list-item").html(html);
 	}
-
+	/**
+	 * Done
+	 */
 	function showFolderList(url) {
-		$(".folder-list").treeview('remove');
-		var treeview = null;
+		var folder_list = $(".folder-list");
 		$.ajax({
 			type    : "get",
 			cache   : false,
@@ -613,8 +623,11 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 			success : function(response) {
 				if(response.error == 0) {
 					$(".left-body .progress").fadeOut();
-					var treeview = $(".folder-list").treeview({data: response.content});
-					var node     = treeview.treeview('getNode', nodeId);
+					folder_list.treeview({
+						data           : response.content,
+						preventUnselect: true
+					});
+					var node = folder_list.treeview('getNodes', nodeId);
 					$("#folder-rename").find("input[name='folder']").val(node.path).parent().find("input[name='name']").val(node.text);
 				} else {
 					alert(response.message);
@@ -624,6 +637,6 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 				alert(somethings_went_wrong);
 			}
 		});
-		return treeview;
+		return folder_list;
 	}
 </script>
