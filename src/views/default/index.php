@@ -21,29 +21,93 @@ JqueryDateFormatAsset::register($this);
 BootstrapTreeviewAsset::register($this);
 $roxyMceAsset = RoxyMceAsset::register($this);
 ?>
-<div class="col-sm-12" id="wrapper">
-	<div class="row">
-		<div class="col-sm-4 pnlDirs" id="dirActions">
+<style>
+	body {
+		font-family: Verdana;
+		font-size: 11px;
+		padding: 0;
+		margin: 0;
+		background: #FFF;
+		height: 100%;
+		width: 100%;
+		overflow: hidden;
+	}
+
+	a {
+		text-decoration: none;
+		color: #DD7700;
+	}
+
+	.wrapper {
+		width: 100%;
+		height: 100%;
+		position: relative;
+	}
+
+	.treeview .list-group-item {
+		border: none;
+		padding: 5px 15px;
+		border-radius: 0;
+	}
+
+	section.footer {
+		position: relative;
+		width: 100%;
+		border-top: 1px solid #ddd;
+	}
+
+	section.footer .status {
+		line-height: 40px;
+		margin-left: 10px;
+	}
+
+	section.body {
+		position: relative;
+		height: 90%;
+	}
+
+	section.body .left-body {
+		border-right: 1px solid #ddd;
+		height: 100%;
+	}
+
+	section.body .left-body .actions {
+		text-align: center;
+		margin-top: 10px;
+	}
+
+	section.body .left-body .progress {
+		text-align: center;
+		margin-top: 10px;
+	}
+
+	section.body .left-body .folder-list.treeview {
+		margin-top: 10px;
+	}
+</style>
+<div class="wrapper">
+	<section class="body">
+		<div class="col-sm-4 left-body">
 			<div class="actions">
-				<button type="button" class="btn btn-sm btn-primary" data-toggle="modal" href="#folder-create" title="<?= Yii::t('roxy', 'Create new folder') ?>">
+				<button type="button" class="btn btn-sm btn-primary btn-create-folder" data-toggle="modal" href="#folder-create" title="<?= Yii::t('roxy', 'Create new folder') ?>">
 					<i class="fa fa-plus-square"></i> <?= Yii::t('roxy', 'Create') ?>
 				</button>
-				<button type="button" class="btn btn-sm btn-warning" data-toggle="modal" href="#folder-rename" title="<?= Yii::t('roxy', 'Rename selected folder') ?>">
+				<button type="button" class="btn btn-sm btn-warning btn-rename-folder" data-toggle="modal" href="#folder-rename" title="<?= Yii::t('roxy', 'Rename selected folder') ?>">
 					<i class="fa fa-pencil-square"></i> <?= Yii::t('roxy', 'Rename') ?>
 				</button>
-				<button type="button" class="btn btn-sm btn-danger" onclick="deleteDir()" title="<?= Yii::t('roxy', 'Delete selected folder') ?>">
+				<button type="button" class="btn btn-sm btn-danger btn-remove-folder" onclick="deleteDir()" title="<?= Yii::t('roxy', 'Delete selected folder') ?>">
 					<i class="fa fa-trash"></i> <?= Yii::t('roxy', 'Delete') ?></button>
 			</div>
-			<div id="pnlLoadingDirs" class="progress">
+			<div class="progress">
 				<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
 					<span><?= Yii::t('roxy', 'Loading directory') ?></span><br>
 				</div>
 			</div>
 			<div class="scrollPane folder-list" data-url="<?= Url::to(['/roxymce/management/folder-list']) ?>">
-				<ul id="pnlDirList"></ul>
+				<div class="folder-list-item"></div>
 			</div>
 		</div>
-		<div class="col-sm-8" id="fileActions">
+		<div class="col-sm-8 right-body">
 			<input type="hidden" id="hdViewType" value="list">
 			<input type="hidden" id="hdOrder" value="time_desc">
 			<div class="actions">
@@ -115,8 +179,8 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 					</div>
 				</div>
 			</div>
-			<div class="pnlFiles">
-				<div id="pnlLoading" class="progress">
+			<div class="file-body">
+				<div class="progress">
 					<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
 						<span><?= Yii::t('roxy', 'Loading files') ?></span><br>
 					</div>
@@ -125,26 +189,28 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 					'/roxymce/management/file-list',
 					'type' => 'thumb',
 				]) ?>">
-					<ul id="pnlFileList"></ul>
+					<div class="file-list-item"></div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="row bottomLine">
-		<div class="col-sm-9">
-			<div id="pnlStatus"><?= Yii::t('roxy', 'Status bar') ?></div>
+	</section>
+	<section class="footer">
+		<div class="row bottom">
+			<div class="col-sm-9 pull-left">
+				<div class="status"><?= Yii::t('roxy', 'Status bar') ?> <span class="status-text"></span></div>
+			</div>
+			<div class="col-sm-3 pull-right">
+				<button type="button" class="btn btn-success" onclick="setFile()" title="<?= Yii::t('roxy', 'Select highlighted file') ?>">
+					<i class="fa fa-check"></i> <?= Yii::t('roxy', 'Select') ?>
+				</button>
+				<button type="button" class="btn btn-default" onclick="closeWindow()">
+					<i class="fa fa-ban"></i> <?= Yii::t('roxy', 'Close') ?>
+				</button>
+			</div>
 		</div>
-		<div class="col-sm-3 pull-right">
-			<button type="button" class="btn btn-success" onclick="setFile()" title="<?= Yii::t('roxy', 'Select highlighted file') ?>">
-				<i class="fa fa-check"></i> <?= Yii::t('roxy', 'Select') ?>
-			</button>
-			<button type="button" class="btn btn-default" onclick="closeWindow()">
-				<i class="fa fa-ban"></i> <?= Yii::t('roxy', 'Close') ?>
-			</button>
-		</div>
-	</div>
+	</section>
 </div>
-<iframe name="frmUploadFile" width="0" height="0" style="display:none;border:0;"></iframe>
+
 <div id="dlgAddFile">
 	<form name="addfile" id="frmUpload" method="post" target="frmUploadFile" enctype="multipart/form-data">
 		<input type="hidden" name="d" id="hdDir"/>
@@ -225,14 +291,6 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 		</li>
 	</ul>
 </div>
-<div id="pnlRenameFile" class="dialog">
-	<span class="name"></span><br>
-	<input type="text" id="txtFileName">
-</div>
-<div id="pnlDirName" class="dialog">
-	<span class="name"></span><br>
-	<input type="text" id="txtDirName">
-</div>
 <div class="modal fade" id="folder-create">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -304,10 +362,18 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 	$(document).on("submit", 'form', function() {
 		return false;
 	});
-	$(document).on('nodeSelected', '.pnlDirs .scrollPane', function(e, d) {
-		$("#folder-create").find("input[name='folder']").val(d.path);
-		$("#folder-rename").find("input[name='folder']").val(d.path);
+	$(document).on('nodeUnselected', '.folder-list', function(e, d) {
+		$(".btn-create-folder").attr('disabled', true);
+		$(".btn-rename-folder").attr('disabled', true);
+		$(".btn-remove-folder").attr('disabled', true);
+	});
+	$(document).on('nodeSelected', '.folder-list', function(e, d) {
 		nodeId = d.id;
+		$(".btn-create-folder").removeAttr('disabled');
+		$(".btn-rename-folder").removeAttr('disabled');
+		$(".btn-remove-folder").removeAttr('disabled');
+		$("#folder-create").find("input[name='folder']").val(d.path).parent().find("input[name='name']").val(d.text);
+		$("#folder-rename").find("input[name='folder']").val(d.path).parent().find("input[name='name']").val(d.text);
 		$.ajax({
 			type    : "get",
 			cache   : false,
@@ -402,23 +468,23 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 		var html = '';
 		$.each(data, function(e, d) {
 			if($("button[data-name='thumb_view']").hasClass('btn-primary')) {
-				html += '<li class="col-sm-3 thumb"><div class="thumb">';
+				html += '<div class="col-sm-3"><div class="thumb">';
 				html += '<div class="file-preview"><img src="' + d.preview + '"></div>';
 				html += '<div class="file-name">' + d.name + '</div>';
 				html += '<div class="file-size">' + d.size + '</div>';
-				html += '</div></li>';
+				html += '</div></div>';
 			} else {
-				html += '<li class="list">';
+				html += '<div class="list">';
 				html += '<div class="col-sm-6 file-name"><img class="icon" src="' + d.icon + '">' + d.name + '</div>';
 				html += '<div class="col-sm-2 file-size">' + d.size + '</div>';
 				html += '<div class="col-sm-4 file-date">' + d.date + '</div>';
-				html += '</li>';
+				html += '</div>';
 			}
 		});
 		if(html == '') {
 			html = empty_directory;
 		}
-		$("#pnlFileList").html(html);
+		$(".file-list-item").html(html);
 	}
 
 	function ajax_folder(url) {
@@ -429,8 +495,9 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 			url     : url,
 			success : function(response) {
 				if(response.error == 0) {
-					$("#pnlLoadingDirs").fadeOut();
-					$(".pnlDirs .scrollPane").treeview({data: response.content}).treeview('selectNode', nodeId);
+					$(".left-body .progress").fadeOut();
+					var node = $(".folder-list").treeview({data: response.content}).treeview('getNode', nodeId);
+					$("#folder-rename").find("input[name='folder']").val(node.path).parent().find("input[name='name']").val(node.text);
 				} else {
 					alert(response.message);
 				}
