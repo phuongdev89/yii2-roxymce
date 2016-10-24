@@ -10,7 +10,6 @@
  */
 namespace navatech\roxymce\controllers;
 
-use navatech\roxymce\helpers\FolderHelper;
 use Yii;
 use yii\base\Exception;
 use yii\base\InvalidParamException;
@@ -36,7 +35,8 @@ class DefaultController extends Controller {
 	 * @throws InvalidParamException
 	 */
 	public function actionIndex() {
-		return $this->renderAjax('index');
+		$module = Yii::$app->getModule('roxymce');
+		return $this->renderAjax('index', ['module' => $module]);
 	}
 
 	/**

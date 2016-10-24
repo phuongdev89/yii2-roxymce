@@ -32,41 +32,6 @@ hr {
     position: absolute !important;
 }
 
-.list .file-size, .list .file-date {
-    text-align: right;
-}
-
-.thumb .file-size, .thumb .file-name {
-    text-align: center;
-}
-
-li.list {
-    width: 98%;
-    clear: both;
-}
-
-li.thumb {
-    margin: 5px 0;
-}
-
-div.thumb {
-    border: 1px solid #DDDDDD;
-    -webkit-box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.51);
-    -moz-box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.51);
-    box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.51);
-}
-
-.file-preview {
-    padding: 5px 0;
-    height: 80px;
-    text-align: center;
-}
-
-.file-preview img {
-    max-height: 70px;
-    max-width: 120px;
-}
-
 label.btn .fileinput-button {
     display: none;
 }

@@ -41,5 +41,6 @@ return [
 	'Folder existed'              => 'Thư mục đã tồn tại',
 	'Folder renamed'              => 'Đổi tên thư mục thành công',
 	'Can\'t rename root folder'   => 'Không thể đổi tên thư mục chính',
-	'Please select one folder '   => 'Xin vui lòng chọn một thư mục',
+	'Please select one folder'    => 'Xin vui lòng chọn một thư mục',
+	'Are you sure?'               => 'Bạn có chắc chắn?',
 ];

@@ -7,7 +7,8 @@
  * @date    15/02/2016
  * @time    2:56 CH
  * @version 1.0.0
- * @var \yii\web\View $this
+ * @var \yii\web\View            $this
+ * @var \navatech\roxymce\Module $module
  */
 use dosamigos\fileupload\FileUpload;
 use navatech\roxymce\assets\BootstrapTreeviewAsset;
@@ -66,24 +67,103 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 		height: 90%;
 	}
 
+	section.body .actions, section.body .file-body {
+		text-align: left;
+		margin-top: 10px;
+	}
+
+	section.body .progress {
+		text-align: center;
+		margin-top: 10px;
+	}
+
 	section.body .left-body {
 		border-right: 1px solid #ddd;
 		height: 100%;
 	}
 
-	section.body .left-body .actions {
-		text-align: center;
-		margin-top: 10px;
-	}
-
-	section.body .left-body .progress {
-		text-align: center;
-		margin-top: 10px;
-	}
-
 	section.body .left-body .folder-list.treeview {
 		margin-top: 10px;
 	}
+
+	.sort-actions {
+		font-weight: bold;
+		border-bottom: 1px solid #DDDDDD;
+	}
+
+	.sort-actions .pull-right {
+		padding: 0;
+	}
+
+	.sort-actions .row {
+		margin: 1px 0;
+	}
+
+	.file-list-item .col-sm-3 {
+		padding: 0 5px;
+	}
+
+	.file-list-item .thumb {
+		margin: 5px 0;
+		border: 1px solid #DDDDDD;
+		-webkit-box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.51);
+		-moz-box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.51);
+		box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.51);
+		font-size: 10px;
+	}
+
+	.file-list-item .thumb.selected, .file-list-item .thumb.selected:hover {
+		background: #9EDBFF;
+
+	}
+
+	.file-list-item .thumb:hover {
+		background: #FFFFCC;
+		cursor: pointer;
+	}
+
+	.file-list-item .thumb .file-size, .file-list-item .thumb .file-name {
+		text-align: center;
+		height: 15px;
+		line-height: 15px;
+	}
+
+	.file-list-item .thumb .file-name {
+		height: 35px;
+		overflow: hidden;
+	}
+
+	.file-list-item .list {
+		height: 25px;
+		line-height: 25px;
+		margin: 1px 0;
+	}
+
+	.file-list-item .list.selected, .file-list-item .list.selected:hover {
+		background: #9EDBFF;
+
+	}
+
+	.file-list-item .list:hover {
+		background: #FFFFCC;
+		cursor: pointer;
+	}
+
+	.file-list-item .list .file-size, .file-list-item .list .file-date {
+		text-align: right;
+	}
+
+	.file-list-item .file-preview {
+		padding: 5px 0;
+		height: 80px;
+		text-align: center;
+	}
+
+	.file-list-item .file-preview img {
+		max-height: 70px;
+		max-width: 120px;
+	}
+
 </style>
 <div class="wrapper">
 	<section class="body">
@@ -95,7 +175,7 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 				<button type="button" class="btn btn-sm btn-warning btn-rename-folder" data-toggle="modal" href="#folder-rename" title="<?= Yii::t('roxy', 'Rename selected folder') ?>">
 					<i class="fa fa-pencil-square"></i> <?= Yii::t('roxy', 'Rename') ?>
 				</button>
-				<button type="button" class="btn btn-sm btn-danger btn-remove-folder" onclick="deleteDir()" title="<?= Yii::t('roxy', 'Delete selected folder') ?>">
+				<button type="button" class="btn btn-sm btn-danger btn-remove-folder" title="<?= Yii::t('roxy', 'Delete selected folder') ?>">
 					<i class="fa fa-trash"></i> <?= Yii::t('roxy', 'Delete') ?></button>
 			</div>
 			<div class="progress">
@@ -189,6 +269,14 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 					'/roxymce/management/file-list',
 					'type' => 'thumb',
 				]) ?>">
+					<div class="sort-actions" style="display: <?= $module->defaultView == 'list' ? 'block' : 'none' ?>;">
+						<div class="row">
+							<div class="col-sm-6">
+								<span class="pull-left"><i class="fa fa-long-arrow-up"></i> Name</span></div>
+							<div class="col-sm-2"><span class="pull-right"> Size</span></div>
+							<div class="col-sm-4"><span class="pull-right"> Created at</span></div>
+						</div>
+					</div>
 					<div class="file-list-item"></div>
 				</div>
 			</div>
@@ -197,7 +285,7 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 	<section class="footer">
 		<div class="row bottom">
 			<div class="col-sm-9 pull-left">
-				<div class="status"><?= Yii::t('roxy', 'Status bar') ?> <span class="status-text"></span></div>
+				<!--				<div class="status">--><? //= Yii::t('roxy', 'Status bar') ?><!-- <span class="status-text"></span></div>-->
 			</div>
 			<div class="col-sm-3 pull-right">
 				<button type="button" class="btn btn-success" onclick="setFile()" title="<?= Yii::t('roxy', 'Select highlighted file') ?>">
@@ -291,6 +379,7 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 		</li>
 	</ul>
 </div>
+
 <div class="modal fade" id="folder-create">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -339,7 +428,7 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 	var data   = [];
 	var nodeId = 0;
 	$(document).on("ready", function() {
-		ajax_folder($(".folder-list").data('url'));
+		showFolderList($(".folder-list").data('url'));
 		$.ajax({
 			type    : "get",
 			cache   : false,
@@ -347,9 +436,9 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 			url     : $(".file-list").data('url'),
 			success : function(response) {
 				if(response.error == 0) {
-					$("#pnlLoading").fadeOut();
+					$(".progress").fadeOut();
 					data = response.content;
-					display();
+					showFileList();
 				} else {
 					alert(response.message);
 				}
@@ -368,12 +457,12 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 		$(".btn-remove-folder").attr('disabled', true);
 	});
 	$(document).on('nodeSelected', '.folder-list', function(e, d) {
-		nodeId = d.id;
+		nodeId = d.nodeId;
 		$(".btn-create-folder").removeAttr('disabled');
 		$(".btn-rename-folder").removeAttr('disabled');
 		$(".btn-remove-folder").removeAttr('disabled');
-		$("#folder-create").find("input[name='folder']").val(d.path).parent().find("input[name='name']").val(d.text);
 		$("#folder-rename").find("input[name='folder']").val(d.path).parent().find("input[name='name']").val(d.text);
+		$("#folder-create").find("input[name='folder']").val(d.path);
 		$.ajax({
 			type    : "get",
 			cache   : false,
@@ -381,9 +470,9 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 			url     : d.href,
 			success : function(response) {
 				if(response.error == 0) {
-					$("#pnlLoading").fadeOut();
+					$(".progress").fadeOut();
 					data = response.content;
-					display();
+					showFileList();
 				} else {
 					alert(response.message);
 				}
@@ -395,12 +484,12 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 	});
 	$(document).on("click", "[data-action='switch_view']", function() {
 		$("[data-action='switch_view']").removeClass('btn-primary');
-		$("#pnlLoading").fadeOut();
+		$(".progress").fadeOut();
 		$(this).addClass('btn-primary');
-		display();
+		showFileList();
 	});
-	$(document).on("click", "#pnlFileList li", function() {
-		$("#pnlFileList li").removeClass('selected');
+	$(document).on("click", ".file-list-item .thumb,.file-list-item .list", function() {
+		$(".file-list-item .thumb, .file-list-item .list").removeClass('selected');
 		$(this).addClass("selected");
 	});
 	$(document).on("click", "#folder-create .btn-submit", function() {
@@ -417,8 +506,10 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 				success : function(response) {
 					if(response.error == 0) {
 						$('#folder-create').modal('hide');
+						$('#folder-create').find("input[name='name']").val('');
 						nodeId = node.data('nodeid');
-						ajax_folder($(".folder-list").data('url'));
+						showFolderList($(".folder-list").data('url'));
+						$(".folder-list").treeview('selectNode', nodeId);
 					} else {
 						alert(response.message);
 					}
@@ -448,7 +539,7 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 					if(response.error == 0) {
 						$('#folder-rename').modal('hide');
 						nodeId = node.data('nodeid');
-						ajax_folder($(".folder-list").data('url'));
+						showFolderList($(".folder-list").data('url'));
 					} else {
 						alert(response.message);
 					}
@@ -463,8 +554,30 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 		}
 		return false;
 	});
-
-	function display() {
+	$(document).on("click", ".btn-remove-folder", function() {
+		var node = $(".folder-list").treeview('getNode', nodeId);
+		var conf = confirm(are_you_sure);
+		if(conf) {
+			$.ajax({
+				type    : "POST",
+				cache   : false,
+				url     : '<?=Url::to(['/roxymce/management/folder-remove'])?>?folder=' + node.path,
+				dataType: "json",
+				success : function(response) {
+					if(response.error == 0) {
+						showFolderList($(".folder-list").data('url'));
+						$(".folder-list").treeview('selectNode', node.parentId);
+					} else {
+						alert(response.message);
+					}
+				},
+				error   : function() {
+					alert(somethings_went_wrong);
+				}
+			})
+		}
+	});
+	function showFileList() {
 		var html = '';
 		$.each(data, function(e, d) {
 			if($("button[data-name='thumb_view']").hasClass('btn-primary')) {
@@ -473,12 +586,14 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 				html += '<div class="file-name">' + d.name + '</div>';
 				html += '<div class="file-size">' + d.size + '</div>';
 				html += '</div></div>';
+				$(".sort-actions").hide();
 			} else {
-				html += '<div class="list">';
+				html += '<div class="row list">';
 				html += '<div class="col-sm-6 file-name"><img class="icon" src="' + d.icon + '">' + d.name + '</div>';
 				html += '<div class="col-sm-2 file-size">' + d.size + '</div>';
 				html += '<div class="col-sm-4 file-date">' + d.date + '</div>';
 				html += '</div>';
+				$(".sort-actions").show();
 			}
 		});
 		if(html == '') {
@@ -487,7 +602,9 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 		$(".file-list-item").html(html);
 	}
 
-	function ajax_folder(url) {
+	function showFolderList(url) {
+		$(".folder-list").treeview('remove');
+		var treeview = null;
 		$.ajax({
 			type    : "get",
 			cache   : false,
@@ -496,7 +613,8 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 			success : function(response) {
 				if(response.error == 0) {
 					$(".left-body .progress").fadeOut();
-					var node = $(".folder-list").treeview({data: response.content}).treeview('getNode', nodeId);
+					var treeview = $(".folder-list").treeview({data: response.content});
+					var node     = treeview.treeview('getNode', nodeId);
 					$("#folder-rename").find("input[name='folder']").val(node.path).parent().find("input[name='name']").val(node.text);
 				} else {
 					alert(response.message);
@@ -506,5 +624,6 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 				alert(somethings_went_wrong);
 			}
 		});
+		return treeview;
 	}
 </script>

@@ -21,17 +21,17 @@ class Module extends \navatech\base\Module {
 
 	const VERSION = '2.0.0';
 
-	public $uploadFolder = '@app/web/uploads/images';
+	public $uploadFolder       = '@app/web/uploads/images';
 
-	public $defaultView  = 'thumb';
+	public $defaultView        = 'thumb';
 
-	public $dateFormat   = 'dd/MM/yyyy HH:mm';
+	public $dateFormat         = 'dd/MM/yyyy HH:mm';
 
-	public $openLastDir  = true;
+	public $rememberLastAction = true;
 
-	public $fileOptions  = [];
+	public $fileOptions        = [];
 
-	public $imageOptions = [];
+	public $imageOptions       = [];
 
 	/**
 	 * Initializes the module.

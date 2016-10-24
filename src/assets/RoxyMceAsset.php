@@ -47,6 +47,7 @@ class RoxyMceAsset extends AssetBundle {
 		echo 'var somethings_went_wrong = "' . \Yii::t('roxy', 'Somethings went wrong') . '";';
 		echo 'var empty_directory = "' . \Yii::t('roxy', 'Empty directory') . '";';
 		echo 'var please_select_one_folder = "' . \Yii::t('roxy', 'Please select one folder') . '";';
+		echo 'var are_you_sure = "' . \Yii::t('roxy', 'Are you sure?') . '";';
 		echo '</script>';
 	}
 }

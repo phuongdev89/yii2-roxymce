@@ -26,7 +26,7 @@ class FontAwesomeAsset extends AssetBundle {
 		$this->depends    = [
 			'yii\web\JqueryAsset',
 		];
-		$this->sourcePath = '@bower/fontawesome';
+		$this->sourcePath = '@bower/font-awesome';
 		$this->css        = [
 			'css/font-awesome.min.css',
 		];

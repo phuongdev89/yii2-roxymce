@@ -136,4 +136,25 @@ class ManagementController extends Controller {
 			];
 		}
 	}
+
+	/**
+	 * @param        $folder
+	 * @param string $parentFolder
+	 *
+	 * @return array
+	 */
+	public function actionFolderRemove($folder, $parentFolder = '') {
+		Yii::$app->response->format = Response::FORMAT_JSON;
+		if (rmdir($folder)) {
+			return [
+				'error'   => 0,
+				'content' => $parentFolder,
+			];
+		} else {
+			return [
+				'error'   => 1,
+				'message' => Yii::t('roxy', 'Somethings went wrong'),
+			];
+		}
+	}
 }
