@@ -14,8 +14,6 @@ class BootstrapTreeviewAsset extends AssetBundle {
 
 	public $sourcePath = '@bower/bootstrap-treeview/dist';
 
-//	public $css        = ['bootstrap-treeview.min.css'];
-
 	public $js         = ['bootstrap-treeview.min.js'];
 
 	public $depends    = [

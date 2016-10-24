@@ -35,7 +35,7 @@
 		"bower-asset/jquery-dateFormat" : "^1.0",
 		"bower-asset/bootstrap-select" : "^1.11",
 		"bower-asset/fontawesome" : "^4.6",
-		"execut/yii2-widget-bootstraptreeview" : "@dev",
+		"bower-asset/patternfly-bootstrap-treeview" : "~2.1",
 		"2amigos/yii2-file-upload-widget" : "~1.0"
 	},
 	"conflict" : {
