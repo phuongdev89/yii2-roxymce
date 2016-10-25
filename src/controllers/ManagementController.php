@@ -9,23 +9,34 @@ namespace navatech\roxymce\controllers;
 
 use navatech\roxymce\helpers\FileHelper;
 use navatech\roxymce\helpers\FolderHelper;
+use navatech\roxymce\models\UploadForm;
 use navatech\roxymce\Module;
 use Yii;
+use yii\filters\ContentNegotiator;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
+use yii\web\UploadedFile;
 
 /**
  * @property Module $module
  */
 class ManagementController extends Controller {
 
+	public $enableCsrfValidation = false;
+
 	/**
 	 * {@inheritDoc}
 	 */
-	public function beforeAction($action) {
-		$this->enableCsrfValidation = false;
-		return parent::beforeAction($action);
+	public function behaviors() {
+		$behaviors                      = parent::behaviors();
+		$behaviors['contentNegotiator'] = [
+			'class'   => ContentNegotiator::className(),
+			'formats' => [
+				'application/json' => Response::FORMAT_JSON,
+			],
+		];
+		return $behaviors;
 	}
 
 	/**
@@ -71,7 +82,6 @@ class ManagementController extends Controller {
 				'message' => Yii::t('roxy', 'Invalid directory {0}', [$folder]),
 			];
 		}
-		Yii::$app->response->format = Response::FORMAT_JSON;
 		return $response;
 	}
 
@@ -84,8 +94,7 @@ class ManagementController extends Controller {
 		if ($folder == '') {
 			$folder = Yii::getAlias($this->module->uploadFolder);
 		}
-		Yii::$app->response->format = Response::FORMAT_JSON;
-		$content                    = FolderHelper::folderList($folder);
+		$content = FolderHelper::folderList($folder);
 		return [
 			'error'   => 0,
 			'content' => $content,
@@ -101,8 +110,7 @@ class ManagementController extends Controller {
 		if ($folder == '') {
 			$folder = Yii::getAlias($this->module->uploadFolder);
 		}
-		Yii::$app->response->format = Response::FORMAT_JSON;
-		$content                    = [];
+		$content = [];
 		foreach (FolderHelper::fileList($folder) as $item) {
 			$file      = $folder . DIRECTORY_SEPARATOR . $item;
 			$content[] = [
@@ -126,7 +134,6 @@ class ManagementController extends Controller {
 	 * @return array
 	 */
 	public function actionFolderRename($folder = '', $name) {
-		Yii::$app->response->format = Response::FORMAT_JSON;
 		if ($folder == '') {
 			return [
 				'error'   => 1,
@@ -161,7 +168,6 @@ class ManagementController extends Controller {
 	 * @return array
 	 */
 	public function actionFolderRemove($folder, $parentFolder = '') {
-		Yii::$app->response->format = Response::FORMAT_JSON;
 		if (rmdir($folder)) {
 			return [
 				'error'   => 0,
@@ -173,5 +179,29 @@ class ManagementController extends Controller {
 				'message' => Yii::t('roxy', 'Somethings went wrong'),
 			];
 		}
+	}
+
+	/**
+	 * @param string $folder
+	 *
+	 * @return array
+	 */
+	public function actionFileUpload($folder = '') {
+		if ($folder == '') {
+			$folder = Yii::getAlias($this->module->uploadFolder);
+		}
+		if (is_dir($folder)) {
+			$model       = new UploadForm();
+			$model->file = UploadedFile::getInstance($model, 'file');
+			if ($model->upload($folder)) {
+				return [
+					'error' => 0,
+				];
+			}
+		}
+		return [
+			'error'   => 1,
+			'message' => Yii::t('roxy', 'Somethings went wrong'),
+		];
 	}
 }

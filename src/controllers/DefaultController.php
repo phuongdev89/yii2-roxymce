@@ -10,6 +10,7 @@
  */
 namespace navatech\roxymce\controllers;
 
+use navatech\roxymce\models\UploadForm;
 use Yii;
 use yii\base\Exception;
 use yii\base\InvalidParamException;
@@ -35,8 +36,12 @@ class DefaultController extends Controller {
 	 * @throws InvalidParamException
 	 */
 	public function actionIndex() {
-		$module = Yii::$app->getModule('roxymce');
-		return $this->renderAjax('index', ['module' => $module]);
+		$module     = Yii::$app->getModule('roxymce');
+		$uploadForm = new UploadForm();
+		return $this->renderAjax('index', [
+			'module'     => $module,
+			'uploadForm' => $uploadForm,
+		]);
 	}
 
 	/**

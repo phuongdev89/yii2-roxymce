@@ -106,6 +106,7 @@ section.body .left-body .folder-list.treeview {
 .file-list-item .thumb .file-name {
     height: 35px;
     overflow: hidden;
+    word-break: break-all;
 }
 
 .file-list-item .list {

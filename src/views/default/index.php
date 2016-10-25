@@ -7,23 +7,37 @@
  * @date    15/02/2016
  * @time    2:56 CH
  * @version 1.0.0
- * @var \yii\web\View            $this
- * @var \navatech\roxymce\Module $module
+ * @var View       $this
+ * @var Module     $module
+ * @var UploadForm $uploadForm
  */
-use dosamigos\fileupload\FileUpload;
 use navatech\roxymce\assets\BootstrapTreeviewAsset;
 use navatech\roxymce\assets\FontAwesomeAsset;
-use navatech\roxymce\assets\JqueryDateFormatAsset;
 use navatech\roxymce\assets\RoxyMceAsset;
+use navatech\roxymce\models\UploadForm;
+use navatech\roxymce\Module;
+use navatech\roxymce\widgets\FileUploadWidget;
 use yii\helpers\Url;
+use yii\web\View;
 
 FontAwesomeAsset::register($this);
-JqueryDateFormatAsset::register($this);
 BootstrapTreeviewAsset::register($this);
 $roxyMceAsset = RoxyMceAsset::register($this);
 ?>
 <style>
+	.file-list-item {
+		overflow-y: auto;
+		height: 330px;
+	}
 
+	.list_view .file-list-item {
+		overflow-y: auto;
+		height: 310px;
+	}
+
+	.sort-actions .row:last-child {
+		margin-right: 20px;
+	}
 </style>
 <div class="wrapper">
 	<section class="body">
@@ -54,29 +68,22 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 				<div class="row">
 					<div class="col-sm-12">
 						<label class="btn btn-sm btn-primary" title="<?= Yii::t('roxy', 'Upload files') ?>">
-							<?= FileUpload::widget([
-								'name'          => 'image',
-								'plus'          => true,
-								'url'           => [
-									'media/upload',
-									'id' => 1,
+							<?= FileUploadWidget::widget([
+								'model'        => $uploadForm,
+								'attribute'    => 'file',
+								'plus'         => true,
+								'url'          => [
+									'/roxymce/management/file-upload',
+									'folder' => '',
 								],
-								'clientOptions' => [
-									'singleFileUploads' => false,
-								],
-								'options'       => [
-									'accept'   => 'image/*',
+								'options'      => [
 									'multiple' => true,
 								],
-								'clientEvents'  => [
+								'clientEvents' => [
 									'fileuploaddone' => 'function(e, data) {
-                                console.log(e);
-                                console.log(data);
-                            }',
-									'fileuploadfail' => 'function(e, data) {
-                                console.log(e);
-                                console.log(data);
-                            }',
+										console.log($("#uploadform-file").data("href"));
+		                                showFileList($("#uploadform-file").data("href"));
+                                    }',
 								],
 							]); ?>
 							<i class="fa fa-plus"></i> <?= Yii::t('roxy', 'Add file') ?>
@@ -288,10 +295,17 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 	var nodeId      = 0;
 	var folder_list = $(".folder-list");
 	var currentUrl  = '';
+	/**
+	 * Done
+	 */
 	$(document).on("ready", function() {
 		showFolderList(folder_list.data('url'));
 		showFileList($(".file-list").data('url'));
+		$("#uploadform-file").attr('data-href', $(".file-list").data('url'));
 	});
+	/**
+	 * Done
+	 */
 	$(document).on("submit", 'form', function() {
 		return false;
 	});
@@ -299,6 +313,7 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 		nodeId = d.nodeId;
 		$("#folder-rename").find("input[name='folder']").val(d.path).parent().find("input[name='name']").val(d.text);
 		$("#folder-create").find("input[name='folder']").val(d.path);
+		$("#uploadform-file").attr('data-url', '<?=Url::to(['/roxymce/management/file-upload'])?>?folder=' + d.path).attr('data-href', d.href);
 		showFileList(d.href);
 	});
 	/**
@@ -308,6 +323,7 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 		$("[data-action='switch_view']").removeClass('btn-primary');
 		$(".progress").fadeOut();
 		$(this).addClass('btn-primary');
+		$(".file-body").removeClass("thumb_view list_view").addClass($(this).data('name'));
 		showFileList(currentUrl);
 	});
 	/**
