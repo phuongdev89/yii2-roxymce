@@ -107,17 +107,18 @@ section.body .left-body .folder-list.treeview {
     height: 35px;
     overflow: hidden;
     word-break: break-all;
+    padding: 0 5px;
 }
 
 .file-list-item .list {
     height: 25px;
     line-height: 25px;
     margin: 1px 0;
+    overflow: hidden;
 }
 
 .file-list-item .list.selected, .file-list-item .list.selected:hover {
     background: #9EDBFF;
-
 }
 
 .file-list-item .list:hover {
@@ -162,4 +163,18 @@ section.footer {
     bottom: 0;
     width: 100%;
     border-top: 1px solid #ddd;
+}
+
+.file-list-item {
+    overflow-y: auto;
+    height: 330px;
+}
+
+.list_view .file-list-item {
+    overflow-y: auto;
+    height: 310px;
+}
+
+.sort-actions .row:last-child {
+    margin-right: 20px;
 }

@@ -31,6 +31,7 @@ class RoxyMceAsset extends AssetBundle {
 			'navatech\roxymce\assets\FontAwesomeAsset',
 			'navatech\roxymce\assets\BootstrapTreeviewAsset',
 			'navatech\roxymce\assets\LazyLoadAsset',
+			'navatech\roxymce\assets\LightBoxAsset',
 		];
 		$this->css        = [
 			'css/main.css',

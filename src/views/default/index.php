@@ -20,22 +20,6 @@ use yii\web\View;
 
 RoxyMceAsset::register($this);
 ?>
-<style>
-	.file-list-item {
-		overflow-y: auto;
-		height: 330px;
-		padding-bottom: 100px;
-	}
-
-	.list_view .file-list-item {
-		overflow-y: auto;
-		height: 310px;
-	}
-
-	.sort-actions .row:last-child {
-		margin-right: 20px;
-	}
-</style>
 <div class="wrapper">
 	<section class="body">
 		<div class="col-sm-4 left-body">
@@ -59,9 +43,7 @@ RoxyMceAsset::register($this);
 			</div>
 		</div>
 		<div class="col-sm-8 right-body">
-			<input type="hidden" id="hdViewType" value="list">
-			<input type="hidden" id="hdOrder" value="time_desc">
-			<div class="actions">
+			<div class="actions first-row">
 				<div class="row">
 					<div class="col-sm-12">
 						<label class="btn btn-sm btn-primary" title="<?= Yii::t('roxy', 'Upload files') ?>">
@@ -79,22 +61,22 @@ RoxyMceAsset::register($this);
 							]) ?>
 							<i class="fa fa-plus"></i> <?= Yii::t('roxy', 'Add file') ?>
 						</label>
-						<button type="button" class="btn btn-sm btn-info" onclick="previewFile()" title="<?= Yii::t('roxy', 'Preview selected file') ?>">
+						<a class="btn btn-sm btn-info btn-lightbox" disabled="disabled" title="<?= Yii::t('roxy', 'Preview selected file') ?>">
 							<i class="fa fa-search"></i> <?= Yii::t('roxy', 'Preview image') ?>
-						</button>
-						<button type="button" class="btn btn-sm btn-warning" onclick="renameFile()" title="<?= Yii::t('roxy', 'Rename file') ?>">
+						</a>
+						<button type="button" class="btn btn-sm btn-warning" disabled="disabled" title="<?= Yii::t('roxy', 'Rename file') ?>">
 							<i class="fa fa-pencil"></i> <?= Yii::t('roxy', 'Rename file') ?>
 						</button>
-						<button type="button" class="btn btn-sm btn-success" onclick="downloadFile()" title="<?= Yii::t('roxy', 'Download file') ?>">
+						<button type="button" class="btn btn-sm btn-success" disabled="disabled" title="<?= Yii::t('roxy', 'Download file') ?>">
 							<i class="fa fa-download"></i> <?= Yii::t('roxy', 'Download') ?>
 						</button>
-						<button type="button" class="btn btn-sm btn-danger" onclick="deleteFile()" title="<?= Yii::t('roxy', 'Delete file') ?>">
+						<button type="button" class="btn btn-sm btn-danger" disabled="disabled" title="<?= Yii::t('roxy', 'Delete file') ?>">
 							<i class="fa fa-trash"></i> <?= Yii::t('roxy', 'Delete file') ?>
 						</button>
 					</div>
 				</div>
 			</div>
-			<div class="actions">
+			<div class="actions second-row">
 				<div class="row">
 					<div class="col-sm-4">
 						<button type="button" data-action="switch_view" data-name="list_view" class="btn btn-default <?= Yii::$app->controller->module->defaultView != 'list' ? : 'btn-primary' ?>" title="<?= Yii::t('roxy', 'List view') ?>">
@@ -176,7 +158,7 @@ RoxyMceAsset::register($this);
 			</a>
 		</li>
 		<li>
-			<a href="#" onclick="previewFile()" id="mnuPreview"><i class="fa fa-search"></i> <?= Yii::t('roxy', 'Preview image') ?>
+			<a href="images/image-1.jpg" data-lightbox="preview-alt" data-title="My caption"><i class="fa fa-search"></i> <?= Yii::t('roxy', 'Preview image') ?>
 			</a>
 		</li>
 		<li>
@@ -304,6 +286,7 @@ RoxyMceAsset::register($this);
 		$("#folder-rename").find("input[name='folder']").val(d.path).parent().find("input[name='name']").val(d.text);
 		$("#folder-create").find("input[name='folder']").val(d.path);
 		$("#uploadform-file").attr('data-url', '<?=Url::to(['/roxymce/management/file-upload'])?>?folder=' + d.path).attr('data-href', d.href);
+		$(".first-row button,.first-row a").attr("disabled", "disabled").removeAttr('data-lightbox').removeAttr('href').removeAttr('data-title');
 		showFileList(d.href);
 	});
 	/**
@@ -320,8 +303,19 @@ RoxyMceAsset::register($this);
 	 * Done
 	 */
 	$(document).on("click", ".file-list-item .thumb,.file-list-item .list", function() {
+		var th = $(this);
 		$(".file-list-item .thumb, .file-list-item .list").removeClass('selected');
-		$(this).addClass("selected");
+		th.addClass("selected");
+		$(".first-row button,.first-row a").removeAttr("disabled");
+		$(".first-row a.btn-lightbox").attr('data-lightbox', 'preview').attr("data-title", th.data('title')).attr('href', th.data('url'));
+	});
+
+	$(document).on("click", 'a[data-lightbox="preview"]', function() {
+		var attr = $(this).attr('disabled');
+		console.log(attr);
+		if(typeof attr === typeof undefined || attr === false) {
+			console.log('asdasdasd');
+		}
 	});
 	/**
 	 * Done
@@ -476,14 +470,16 @@ RoxyMceAsset::register($this);
 					$(".progress").fadeOut();
 					$.each(response.content, function(e, d) {
 						if($("button[data-name='thumb_view']").hasClass('btn-primary')) {
-							html += '<div class="col-sm-3"><div class="thumb">';
+							html += '<div class="col-sm-3">';
+							html += '<div class="thumb" data-url="' + d.preview + '" data-title="' + d.name + '">';
 							html += '<div class="file-preview"><img class="lazy" data-original="' + d.preview + '"></div>';
 							html += '<div class="file-name">' + d.name + '</div>';
 							html += '<div class="file-size">' + d.size + '</div>';
-							html += '</div></div>';
+							html += '</div>';
+							html += '</div>';
 							$(".sort-actions").hide();
 						} else {
-							html += '<div class="row list">';
+							html += '<div class="row list" data-url="' + d.preview + '" data-title="' + d.name + '">';
 							html += '<div class="col-sm-6 file-name"><img class="icon" src="' + d.icon + '">' + d.name + '</div>';
 							html += '<div class="col-sm-2 file-size">' + d.size + '</div>';
 							html += '<div class="col-sm-4 file-date">' + d.date + '</div>';
@@ -497,8 +493,7 @@ RoxyMceAsset::register($this);
 					$(".file-list-item").html(html);
 					$("img.lazy").lazyload({
 						container: $(".file-list-item"),
-						effect   : "fadeIn",
-						threshold: 200
+						effect   : "fadeIn"
 					});
 				} else {
 					alert(response.message);
