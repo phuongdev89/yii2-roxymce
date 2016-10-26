@@ -61,7 +61,7 @@ RoxyMceAsset::register($this);
 							]) ?>
 							<i class="fa fa-plus"></i> <?= Yii::t('roxy', 'Add file') ?>
 						</label>
-						<a class="btn btn-sm btn-info btn-lightbox" disabled="disabled" title="<?= Yii::t('roxy', 'Preview selected file') ?>">
+						<a class="btn btn-sm btn-info btn-fancybox" disabled="disabled" title="<?= Yii::t('roxy', 'Preview selected file') ?>">
 							<i class="fa fa-search"></i> <?= Yii::t('roxy', 'Preview image') ?>
 						</a>
 						<button type="button" class="btn btn-sm btn-warning" disabled="disabled" title="<?= Yii::t('roxy', 'Rename file') ?>">
@@ -274,6 +274,7 @@ RoxyMceAsset::register($this);
 	$(document).on("ready", function() {
 		showFolderList(folder_list.data('url'));
 		showFileList($(".file-list").data('url'));
+		$("a#single_image").fancybox();
 	});
 	/**
 	 * Done
@@ -281,12 +282,16 @@ RoxyMceAsset::register($this);
 	$(document).on("submit", 'form', function() {
 		return false;
 	});
+	/**
+	 * Done
+	 */
 	$(document).on('nodeSelected', '.folder-list', function(e, d) {
 		nodeId = d.nodeId;
 		$("#folder-rename").find("input[name='folder']").val(d.path).parent().find("input[name='name']").val(d.text);
 		$("#folder-create").find("input[name='folder']").val(d.path);
 		$("#uploadform-file").attr('data-url', '<?=Url::to(['/roxymce/management/file-upload'])?>?folder=' + d.path).attr('data-href', d.href);
-		$(".first-row button,.first-row a").attr("disabled", "disabled").removeAttr('data-lightbox').removeAttr('href').removeAttr('data-title');
+		$(".first-row button,.first-row a").attr("disabled", "disabled");
+		$(".first-row a.btn-fancybox").removeAttr('href').attr('title', $(".first-row a.btn-fancybox").text());
 		showFileList(d.href);
 	});
 	/**
@@ -297,6 +302,8 @@ RoxyMceAsset::register($this);
 		$(".progress").fadeOut();
 		$(this).addClass('btn-primary');
 		$(".file-body").removeClass("thumb_view list_view").addClass($(this).data('name'));
+		$(".first-row button,.first-row a").attr("disabled", "disabled");
+		$(".first-row a.btn-fancybox").removeAttr('href');
 		showFileList(currentUrl);
 	});
 	/**
@@ -307,15 +314,13 @@ RoxyMceAsset::register($this);
 		$(".file-list-item .thumb, .file-list-item .list").removeClass('selected');
 		th.addClass("selected");
 		$(".first-row button,.first-row a").removeAttr("disabled");
-		$(".first-row a.btn-lightbox").attr('data-lightbox', 'preview').attr("data-title", th.data('title')).attr('href', th.data('url'));
-	});
-
-	$(document).on("click", 'a[data-lightbox="preview"]', function() {
-		var attr = $(this).attr('disabled');
-		console.log(attr);
-		if(typeof attr === typeof undefined || attr === false) {
-			console.log('asdasdasd');
-		}
+		$(".first-row a.btn-fancybox").attr('href', th.data('url')).attr('title', th.data('title'));
+		$("a.btn-fancybox").fancybox({
+			type     : th.data('image') == 1 ? 'image' : 'iframe',
+			padding  : 5,
+			fitToView: true,
+			autoSize : true
+		});
 	});
 	/**
 	 * Done
@@ -423,7 +428,9 @@ RoxyMceAsset::register($this);
 			})
 		}
 	});
-
+	/**
+	 * Done
+	 */
 	$(document).on("change", "input#uploadform-file", function() {
 		var th        = $(this);
 		var file_data = th.prop('files');
@@ -452,7 +459,6 @@ RoxyMceAsset::register($this);
 			});
 		});
 	});
-
 	/**
 	 * Done
 	 */
@@ -471,7 +477,7 @@ RoxyMceAsset::register($this);
 					$.each(response.content, function(e, d) {
 						if($("button[data-name='thumb_view']").hasClass('btn-primary')) {
 							html += '<div class="col-sm-3">';
-							html += '<div class="thumb" data-url="' + d.preview + '" data-title="' + d.name + '">';
+							html += '<div class="thumb" data-url="' + d.url + '" data-title="' + d.name + '" data-image=' + d.is_image + '>';
 							html += '<div class="file-preview"><img class="lazy" data-original="' + d.preview + '"></div>';
 							html += '<div class="file-name">' + d.name + '</div>';
 							html += '<div class="file-size">' + d.size + '</div>';
@@ -479,7 +485,7 @@ RoxyMceAsset::register($this);
 							html += '</div>';
 							$(".sort-actions").hide();
 						} else {
-							html += '<div class="row list" data-url="' + d.preview + '" data-title="' + d.name + '">';
+							html += '<div class="row list" data-url="' + d.url + '" data-title="' + d.name + '" data-image=' + d.is_image + '>';
 							html += '<div class="col-sm-6 file-name"><img class="icon" src="' + d.icon + '">' + d.name + '</div>';
 							html += '<div class="col-sm-2 file-size">' + d.size + '</div>';
 							html += '<div class="col-sm-4 file-date">' + d.date + '</div>';

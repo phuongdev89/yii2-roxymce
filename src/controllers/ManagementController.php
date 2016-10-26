@@ -114,11 +114,13 @@ class ManagementController extends Controller {
 		foreach (FolderHelper::fileList($folder) as $item) {
 			$file      = $folder . DIRECTORY_SEPARATOR . $item;
 			$content[] = [
-				'preview' => FileHelper::filepreview($file),
-				'icon'    => FileHelper::fileicon($file),
-				'name'    => $item,
-				'size'    => FileHelper::filesize(filesize($file), 0),
-				'date'    => date('Y-m-d H:i:s', filemtime($file)),
+				'is_image' => FileHelper::isImage($item),
+				'url'      => FileHelper::fileUrl($file),
+				'preview'  => FileHelper::filePreview($file),
+				'icon'     => FileHelper::fileIcon($file),
+				'name'     => $item,
+				'size'     => FileHelper::fileSize(filesize($file), 0),
+				'date'     => date('Y-m-d H:i:s', filemtime($file)),
 			];
 		}
 		return [
