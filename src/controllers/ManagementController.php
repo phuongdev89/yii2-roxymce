@@ -197,6 +197,13 @@ class ManagementController extends Controller {
 				return [
 					'error' => 0,
 				];
+			} else {
+				if (isset($model->firstErrors['file'])) {
+					return [
+						'error'   => 1,
+						'message' => $model->firstErrors['file'],
+					];
+				}
 			}
 		}
 		return [

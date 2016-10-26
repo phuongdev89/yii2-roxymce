@@ -35,6 +35,7 @@
 		"bower-asset/bootstrap-select" : "^1.11",
 		"bower-asset/fontawesome" : "^4.6",
 		"bower-asset/patternfly-bootstrap-treeview" : "~2.1",
+		"bower-asset/jquery.lazyload" : "~1.9",
 		"2amigos/yii2-file-upload-widget" : "~1.0"
 	},
 	"conflict" : {

@@ -11,23 +11,20 @@
  * @var Module     $module
  * @var UploadForm $uploadForm
  */
-use navatech\roxymce\assets\BootstrapTreeviewAsset;
-use navatech\roxymce\assets\FontAwesomeAsset;
 use navatech\roxymce\assets\RoxyMceAsset;
 use navatech\roxymce\models\UploadForm;
 use navatech\roxymce\Module;
-use navatech\roxymce\widgets\FileUploadWidget;
+use yii\bootstrap\Html;
 use yii\helpers\Url;
 use yii\web\View;
 
-FontAwesomeAsset::register($this);
-BootstrapTreeviewAsset::register($this);
-$roxyMceAsset = RoxyMceAsset::register($this);
+RoxyMceAsset::register($this);
 ?>
 <style>
 	.file-list-item {
 		overflow-y: auto;
 		height: 330px;
+		padding-bottom: 100px;
 	}
 
 	.list_view .file-list-item {
@@ -68,24 +65,18 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 				<div class="row">
 					<div class="col-sm-12">
 						<label class="btn btn-sm btn-primary" title="<?= Yii::t('roxy', 'Upload files') ?>">
-							<?= FileUploadWidget::widget([
-								'model'        => $uploadForm,
-								'attribute'    => 'file',
-								'plus'         => true,
-								'url'          => [
+							<?= Html::activeFileInput($uploadForm, 'file', [
+								'multiple'  => true,
+								'name'      => 'UploadForm[file]',
+								'data-href' => Url::to([
+									'/roxymce/management/file-list',
+									'type' => 'thumb',
+								]),
+								'data-url'  => Url::to([
 									'/roxymce/management/file-upload',
 									'folder' => '',
-								],
-								'options'      => [
-									'multiple' => true,
-								],
-								'clientEvents' => [
-									'fileuploaddone' => 'function(e, data) {
-										console.log($("#uploadform-file").data("href"));
-		                                showFileList($("#uploadform-file").data("href"));
-                                    }',
-								],
-							]); ?>
+								]),
+							]) ?>
 							<i class="fa fa-plus"></i> <?= Yii::t('roxy', 'Add file') ?>
 						</label>
 						<button type="button" class="btn btn-sm btn-info" onclick="previewFile()" title="<?= Yii::t('roxy', 'Preview selected file') ?>">
@@ -301,7 +292,6 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 	$(document).on("ready", function() {
 		showFolderList(folder_list.data('url'));
 		showFileList($(".file-list").data('url'));
-		$("#uploadform-file").attr('data-href', $(".file-list").data('url'));
 	});
 	/**
 	 * Done
@@ -439,6 +429,36 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 			})
 		}
 	});
+
+	$(document).on("change", "input#uploadform-file", function() {
+		var th        = $(this);
+		var file_data = th.prop('files');
+		$.each(file_data, function(a, b) {
+			var form_data = new FormData();
+			form_data.append('UploadForm[file]', b);
+			$.ajax({
+				type       : "post",
+				url        : th.attr('data-url'),
+				cache      : false,
+				data       : form_data,
+				dataType   : "json",
+				processData: false,
+				contentType: false,
+				success    : function(response) {
+					if(response.error == 0) {
+						$(".image-list").append(response.html);
+						showFileList(th.attr('data-href'));
+					} else {
+						alert(response.message);
+					}
+				},
+				error      : function() {
+					alert(somethings_went_wrong);
+				}
+			});
+		});
+	});
+
 	/**
 	 * Done
 	 */
@@ -457,7 +477,7 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 					$.each(response.content, function(e, d) {
 						if($("button[data-name='thumb_view']").hasClass('btn-primary')) {
 							html += '<div class="col-sm-3"><div class="thumb">';
-							html += '<div class="file-preview"><img src="' + d.preview + '"></div>';
+							html += '<div class="file-preview"><img class="lazy" data-original="' + d.preview + '"></div>';
 							html += '<div class="file-name">' + d.name + '</div>';
 							html += '<div class="file-size">' + d.size + '</div>';
 							html += '</div></div>';
@@ -475,6 +495,11 @@ $roxyMceAsset = RoxyMceAsset::register($this);
 						html = empty_directory;
 					}
 					$(".file-list-item").html(html);
+					$("img.lazy").lazyload({
+						container: $(".file-list-item"),
+						effect   : "fadeIn",
+						threshold: 200
+					});
 				} else {
 					alert(response.message);
 					$(".file-list-item").html(empty_directory);

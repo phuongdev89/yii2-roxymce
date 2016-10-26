@@ -28,9 +28,11 @@ class RoxyMceAsset extends AssetBundle {
 			'yii\web\JqueryAsset',
 			'yii\bootstrap\BootstrapAsset',
 			'yii\bootstrap\BootstrapPluginAsset',
+			'navatech\roxymce\assets\FontAwesomeAsset',
+			'navatech\roxymce\assets\BootstrapTreeviewAsset',
+			'navatech\roxymce\assets\LazyLoadAsset',
 		];
 		$this->css        = [
-			//			'css/jquery-ui-1.10.0.custom.css',
 			'css/main.css',
 		];
 		$this->js         = [
@@ -42,7 +44,7 @@ class RoxyMceAsset extends AssetBundle {
 			//			'js/custom.js',
 			//			'js/jquery-ui.js',
 		];
-		$this->jsOptions  = ['position' => View::POS_HEAD];
+//		$this->jsOptions  = ['position' => View::POS_HEAD];
 		echo '<script>';
 		echo 'var somethings_went_wrong = "' . \Yii::t('roxy', 'Somethings went wrong') . '";';
 		echo 'var empty_directory = "' . \Yii::t('roxy', 'Empty directory') . '";';
