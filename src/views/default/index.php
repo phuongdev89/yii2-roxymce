@@ -464,7 +464,8 @@ RoxyMceAsset::register($this);
 	 */
 	function showFileList(url) {
 		var html = '';
-		$(".file-list-item").html(empty_directory);
+		$(".file-list-item").html('');
+		$(".right-body .progress").fadeIn();
 		currentUrl = url;
 		$.ajax({
 			type    : "get",
