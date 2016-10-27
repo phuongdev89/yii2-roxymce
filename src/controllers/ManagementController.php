@@ -213,4 +213,59 @@ class ManagementController extends Controller {
 			'message' => Yii::t('roxy', 'Somethings went wrong'),
 		];
 	}
+
+	/**
+	 * @param string $folder
+	 * @param        $file
+	 * @param        $name
+	 *
+	 * @return array
+	 */
+	public function actionFileRename($folder = '', $file, $name) {
+		if ($folder == '') {
+			return [
+				'error'   => 1,
+				'message' => Yii::t('roxy', 'Can not rename root folder'),
+			];
+		}
+		$oldFile = $folder . DIRECTORY_SEPARATOR . $file;
+		$newFile = $folder . DIRECTORY_SEPARATOR . $name;
+		if (is_file($oldFile) && rename($oldFile, $newFile)) {
+			return [
+				'error' => 0,
+				'data'  => [
+					'href' => Url::to([
+						'/roxymce/management/file-list',
+						'folder' => $folder,
+					]),
+					'name' => $name,
+				],
+			];
+		} else {
+			return [
+				'error'   => 1,
+				'message' => Yii::t('roxy', 'Somethings went wrong'),
+			];
+		}
+	}
+
+	public function actionFileRemove($folder = '', $file) {
+		if ($folder == '') {
+			return [
+				'error'   => 1,
+				'message' => Yii::t('roxy', 'Can not rename root folder'),
+			];
+		}
+		$filePath = $folder . DIRECTORY_SEPARATOR . $file;
+		if (is_file($filePath) && unlink($filePath)) {
+			return [
+				'error' => 0,
+			];
+		} else {
+			return [
+				'error'   => 1,
+				'message' => Yii::t('roxy', 'Somethings went wrong'),
+			];
+		}
+	}
 }

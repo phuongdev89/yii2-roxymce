@@ -24,13 +24,13 @@ RoxyMceAsset::register($this);
 	<section class="body">
 		<div class="col-sm-4 left-body">
 			<div class="actions">
-				<button type="button" class="btn btn-sm btn-primary btn-create-folder" data-toggle="modal" href="#folder-create" title="<?= Yii::t('roxy', 'Create new folder') ?>">
+				<button type="button" class="btn btn-sm btn-primary" data-toggle="modal" href="#folder-create" title="<?= Yii::t('roxy', 'Create new folder') ?>">
 					<i class="fa fa-plus-square"></i> <?= Yii::t('roxy', 'Create') ?>
 				</button>
-				<button type="button" class="btn btn-sm btn-warning btn-rename-folder" data-toggle="modal" href="#folder-rename" title="<?= Yii::t('roxy', 'Rename selected folder') ?>">
+				<button type="button" class="btn btn-sm btn-warning" data-toggle="modal" href="#folder-rename" title="<?= Yii::t('roxy', 'Rename selected folder') ?>">
 					<i class="fa fa-pencil-square"></i> <?= Yii::t('roxy', 'Rename') ?>
 				</button>
-				<button type="button" class="btn btn-sm btn-danger btn-remove-folder" title="<?= Yii::t('roxy', 'Delete selected folder') ?>">
+				<button type="button" class="btn btn-sm btn-danger btn-folder-remove" title="<?= Yii::t('roxy', 'Delete selected folder') ?>">
 					<i class="fa fa-trash"></i> <?= Yii::t('roxy', 'Delete') ?></button>
 			</div>
 			<div class="progress">
@@ -62,15 +62,15 @@ RoxyMceAsset::register($this);
 							<i class="fa fa-plus"></i> <?= Yii::t('roxy', 'Add file') ?>
 						</label>
 						<a class="btn btn-sm btn-info btn-fancybox" disabled="disabled" title="<?= Yii::t('roxy', 'Preview selected file') ?>">
-							<i class="fa fa-search"></i> <?= Yii::t('roxy', 'Preview image') ?>
+							<i class="fa fa-search"></i> <?= Yii::t('roxy', 'Preview') ?>
 						</a>
-						<button type="button" class="btn btn-sm btn-warning" disabled="disabled" title="<?= Yii::t('roxy', 'Rename file') ?>">
+						<button type="button" class="btn btn-sm btn-warning" disabled="disabled" title="<?= Yii::t('roxy', 'Rename file') ?>" data-toggle="modal" href="#file-rename">
 							<i class="fa fa-pencil"></i> <?= Yii::t('roxy', 'Rename file') ?>
 						</button>
-						<button type="button" class="btn btn-sm btn-success" disabled="disabled" title="<?= Yii::t('roxy', 'Download file') ?>">
+						<a class="btn btn-sm btn-success btn-file-download" disabled="disabled" title="<?= Yii::t('roxy', 'Download file') ?>">
 							<i class="fa fa-download"></i> <?= Yii::t('roxy', 'Download') ?>
-						</button>
-						<button type="button" class="btn btn-sm btn-danger" disabled="disabled" title="<?= Yii::t('roxy', 'Delete file') ?>">
+						</a>
+						<button type="button" class="btn btn-sm btn-danger btn-file-remove" disabled="disabled" title="<?= Yii::t('roxy', 'Delete file') ?>">
 							<i class="fa fa-trash"></i> <?= Yii::t('roxy', 'Delete file') ?>
 						</button>
 					</div>
@@ -79,10 +79,10 @@ RoxyMceAsset::register($this);
 			<div class="actions second-row">
 				<div class="row">
 					<div class="col-sm-4">
-						<button type="button" data-action="switch_view" data-name="list_view" class="btn btn-default <?= Yii::$app->controller->module->defaultView != 'list' ? : 'btn-primary' ?>" title="<?= Yii::t('roxy', 'List view') ?>">
+						<button type="button" data-action="switch_view" data-name="list_view" class="btn btn-default <?= $module->defaultView != 'list' ? : 'btn-primary' ?>" title="<?= Yii::t('roxy', 'List view') ?>">
 							<i class="fa fa-list"></i>
 						</button>
-						<button type="button" data-action="switch_view" data-name="thumb_view" class="btn btn-default <?= Yii::$app->controller->module->defaultView != 'thumb' ? : 'btn-primary' ?>" title="<?= Yii::t('roxy', 'Thumbnails view') ?>">
+						<button type="button" data-action="switch_view" data-name="thumb_view" class="btn btn-default <?= $module->defaultView != 'thumb' ? : 'btn-primary' ?>" title="<?= Yii::t('roxy', 'Thumbnails view') ?>">
 							<i class="fa fa-picture-o"></i>
 						</button>
 					</div>
@@ -111,10 +111,10 @@ RoxyMceAsset::register($this);
 				]) ?>">
 					<div class="sort-actions" style="display: <?= $module->defaultView == 'list' ? 'block' : 'none' ?>;">
 						<div class="row">
-							<div class="col-sm-6">
-								<span class="pull-left"><i class="fa fa-long-arrow-up"></i> Name</span></div>
+							<div class="col-sm-6"><span class="pull-left"> Name</span></div>
 							<div class="col-sm-2"><span class="pull-right"> Size</span></div>
-							<div class="col-sm-4"><span class="pull-right"> Created at</span></div>
+							<div class="col-sm-4"><span class="pull-right"><i class="fa fa-long-arrow-down"></i> Created at</span>
+							</div>
 						</div>
 					</div>
 					<div class="file-list-item"></div>
@@ -137,19 +137,6 @@ RoxyMceAsset::register($this);
 			</div>
 		</div>
 	</section>
-</div>
-
-<div id="dlgAddFile">
-	<form name="addfile" id="frmUpload" method="post" target="frmUploadFile" enctype="multipart/form-data">
-		<input type="hidden" name="d" id="hdDir"/>
-		<div class="form"><br/>
-			<input type="file" name="files[]" id="fileUploads" onchange="listUploadFiles(this.files)" multiple="multiple"/>
-			<div id="uploadResult"></div>
-			<div class="uploadFilesList">
-				<div id="uploadFilesList"></div>
-			</div>
-		</div>
-	</form>
 </div>
 <div id="menuFile" class="contextMenu">
 	<ul class="dropdown-menu">
@@ -236,8 +223,8 @@ RoxyMceAsset::register($this);
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('roxy', 'Close') ?></button>
 				<button type="button" class="btn btn-primary btn-submit"><?= Yii::t('roxy', 'Save') ?></button>
+				<button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('roxy', 'Close') ?></button>
 			</div>
 		</div>
 	</div>
@@ -258,8 +245,31 @@ RoxyMceAsset::register($this);
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('roxy', 'Close') ?></button>
 				<button type="button" class="btn btn-primary btn-submit"><?= Yii::t('roxy', 'Save') ?></button>
+				<button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('roxy', 'Close') ?></button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="file-rename">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title"><?= Yii::t('roxy', 'Rename selected file') ?></h4>
+			</div>
+			<div class="modal-body">
+				<form action="<?= Url::to(['/roxymce/management/file-rename']) ?>" method="get" role="form">
+					<input type="hidden" name="folder" value="">
+					<input type="hidden" name="file" value="">
+					<div class="form-group">
+						<input type="text" class="form-control" name="name" id="file_name" placeholder="<?= Yii::t('roxy', 'File\'s name') ?>">
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary btn-submit"><?= Yii::t('roxy', 'Save') ?></button>
+				<button type="button" class="btn btn-default" data-dismiss="modal"><?= Yii::t('roxy', 'Close') ?></button>
 			</div>
 		</div>
 	</div>
@@ -269,7 +279,7 @@ RoxyMceAsset::register($this);
 	var folder_list = $(".folder-list");
 	var currentUrl  = '';
 	/**
-	 * Done
+	 * Event when document loaded
 	 */
 	$(document).on("ready", function() {
 		showFolderList(folder_list.data('url'));
@@ -277,13 +287,14 @@ RoxyMceAsset::register($this);
 		$("a#single_image").fancybox();
 	});
 	/**
-	 * Done
+	 * Event prevent when submit form
 	 */
-	$(document).on("submit", 'form', function() {
+	$(document).on("submit", 'form', function(e) {
+		e.preventDefault();
 		return false;
 	});
 	/**
-	 * Done
+	 * Event when node on treeview selected
 	 */
 	$(document).on('nodeSelected', '.folder-list', function(e, d) {
 		nodeId = d.nodeId;
@@ -292,10 +303,11 @@ RoxyMceAsset::register($this);
 		$("#uploadform-file").attr('data-url', '<?=Url::to(['/roxymce/management/file-upload'])?>?folder=' + d.path).attr('data-href', d.href);
 		$(".first-row button,.first-row a").attr("disabled", "disabled");
 		$(".first-row a.btn-fancybox").removeAttr('href').attr('title', $(".first-row a.btn-fancybox").text());
+		$(".first-row a.btn-file-download").removeAttr('href').attr('title', $(".first-row a.btn-file-download").text());
 		showFileList(d.href);
 	});
 	/**
-	 * Done
+	 * Event switch view
 	 */
 	$(document).on("click", "[data-action='switch_view']", function() {
 		$("[data-action='switch_view']").removeClass('btn-primary');
@@ -307,7 +319,7 @@ RoxyMceAsset::register($this);
 		showFileList(currentUrl);
 	});
 	/**
-	 * Done
+	 * Event on click file
 	 */
 	$(document).on("click", ".file-list-item .thumb,.file-list-item .list", function() {
 		var th = $(this);
@@ -315,15 +327,21 @@ RoxyMceAsset::register($this);
 		th.addClass("selected");
 		$(".first-row button,.first-row a").removeAttr("disabled");
 		$(".first-row a.btn-fancybox").attr('href', th.data('url')).attr('title', th.data('title'));
+		$(".first-row .btn-file-download").attr('href', th.data('url')).attr('target', '_blank');
 		$("a.btn-fancybox").fancybox({
 			type     : th.data('image') == 1 ? 'image' : 'iframe',
 			padding  : 5,
 			fitToView: true,
 			autoSize : true
 		});
+		var node  = folder_list.treeview('getSelected');
+		var modal = $("#file-rename");
+		modal.find("input[name='file']").val(th.data('title'));
+		modal.find("input[name='name']").val(th.data('title'));
+		modal.find("input[name='folder']").val(node[0].path);
 	});
 	/**
-	 * Done
+	 * Event create folder
 	 */
 	$(document).on("click", "#folder-create .btn-submit", function() {
 		var node = folder_list.treeview('getSelected');
@@ -363,7 +381,7 @@ RoxyMceAsset::register($this);
 		return false;
 	});
 	/**
-	 * Done
+	 * Event rename folder
 	 */
 	$(document).on("click", "#folder-rename .btn-submit", function() {
 		var node = folder_list.treeview('getSelected');
@@ -402,9 +420,65 @@ RoxyMceAsset::register($this);
 		return false;
 	});
 	/**
-	 * Done
+	 * Event rename selected file
 	 */
-	$(document).on("click", ".btn-remove-folder", function() {
+	$(document).on("click", "#file-rename .btn-submit", function() {
+		var th   = $(this);
+		var form = th.closest(".modal").find("form");
+		$.ajax({
+			type    : "get",
+			cache   : false,
+			data    : form.serializeArray(),
+			url     : form.attr("action"),
+			dataType: "json",
+			success : function(response) {
+				if(response.error == 0) {
+					var modal = $("#file-rename");
+					modal.find("input[name='file']").val(response.data.name);
+					modal.modal('hide');
+					$(".file-list-item").find('.selected').find('.file-name').find('span').text(response.data.name);
+				} else {
+					alert(response.message);
+				}
+			},
+			error   : function() {
+				alert(somethings_went_wrong);
+			}
+		});
+		return false;
+	});
+	/**
+	 * Event rename selected file
+	 */
+	$(document).on("click", "#file-rename .btn-submit", function() {
+		var th   = $(this);
+		var form = th.closest(".modal").find("form");
+		$.ajax({
+			type    : "get",
+			cache   : false,
+			data    : form.serializeArray(),
+			url     : form.attr("action"),
+			dataType: "json",
+			success : function(response) {
+				if(response.error == 0) {
+					var modal = $("#file-rename");
+					modal.find("input[name='file']").val(response.data.name);
+					modal.modal('hide');
+					$(".file-list-item").find('.selected').find('.file-name').find('span').text(response.data.name);
+				} else {
+					alert(response.message);
+				}
+			},
+			error   : function() {
+				alert(somethings_went_wrong);
+			}
+		});
+		return false;
+	});
+	/**
+	 * Event remove selected folder
+	 */
+	$(document).on("click", ".btn-folder-remove", function() {
 		var node       = folder_list.treeview('getSelected');
 		var parentNode = folder_list.treeview('getParents', node);
 		var conf       = confirm(are_you_sure);
@@ -429,7 +503,42 @@ RoxyMceAsset::register($this);
 		}
 	});
 	/**
-	 * Done
+	 * Event download selected file
+	 */
+	$(document).on("click", ".btn-file-remove", function() {
+		var conf = confirm(are_you_sure);
+		var node = folder_list.treeview('getSelected');
+		var file = $(".btn-fancybox").attr('title');
+		if(conf) {
+			$.ajax({
+				type    : "POST",
+				cache   : false,
+				url     : '<?=Url::to(['/roxymce/management/file-remove'])?>?folder=' + node[0].path + '&file=' + file,
+				dataType: "json",
+				success : function(response) {
+					if(response.error == 0) {
+						var th = $(".file-list-item").find('.selected');
+						if(th.hasClass('list')) {
+							th.fadeOut('normal', function() {
+								$(this).remove();
+							});
+						} else {
+							th.parent().fadeOut('normal', function() {
+								$(this).remove();
+							})
+						}
+					} else {
+						alert(response.message);
+					}
+				},
+				error   : function() {
+					alert(somethings_went_wrong);
+				}
+			});
+		}
+	});
+	/**
+	 * Event upload file
 	 */
 	$(document).on("change", "input#uploadform-file", function() {
 		var th        = $(this);
@@ -460,7 +569,7 @@ RoxyMceAsset::register($this);
 		});
 	});
 	/**
-	 * Done
+	 * Function show file list on current url
 	 */
 	function showFileList(url) {
 		var html = '';
@@ -480,14 +589,14 @@ RoxyMceAsset::register($this);
 							html += '<div class="col-sm-3">';
 							html += '<div class="thumb" data-url="' + d.url + '" data-title="' + d.name + '" data-image=' + d.is_image + '>';
 							html += '<div class="file-preview"><img class="lazy" data-original="' + d.preview + '"></div>';
-							html += '<div class="file-name">' + d.name + '</div>';
+							html += '<div class="file-name"><span>' + d.name + '</span></div>';
 							html += '<div class="file-size">' + d.size + '</div>';
 							html += '</div>';
 							html += '</div>';
 							$(".sort-actions").hide();
 						} else {
 							html += '<div class="row list" data-url="' + d.url + '" data-title="' + d.name + '" data-image=' + d.is_image + '>';
-							html += '<div class="col-sm-6 file-name"><img class="icon" src="' + d.icon + '">' + d.name + '</div>';
+							html += '<div class="col-sm-6 file-name"><img class="icon" src="' + d.icon + '"><span>' + d.name + '</span></div>';
 							html += '<div class="col-sm-2 file-size">' + d.size + '</div>';
 							html += '<div class="col-sm-4 file-date">' + d.date + '</div>';
 							html += '</div>';
@@ -514,7 +623,7 @@ RoxyMceAsset::register($this);
 		});
 	}
 	/**
-	 * Done
+	 * Function show folder list and sub-folder of current url
 	 */
 	function showFolderList(url) {
 		var folder_list = $(".folder-list");

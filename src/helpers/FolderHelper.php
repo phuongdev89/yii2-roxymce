@@ -14,6 +14,18 @@ use yii\helpers\Url;
 
 class FolderHelper {
 
+	const SORT_DATE_ASC  = 1;
+
+	const SORT_DATE_DESC = 2;
+
+	const SORT_NAME_ASC  = 3;
+
+	const SORT_NAME_DESC = 4;
+
+	const SORT_SIZE_ASC  = 5;
+
+	const SORT_SIZE_DESC = 6;
+
 	/**
 	 * @param $path
 	 *
@@ -67,25 +79,37 @@ class FolderHelper {
 	}
 
 	/**
-	 * @param $path
+	 * @param     $path
+	 *
+	 * @param int $sort
 	 *
 	 * @return array
 	 */
-	public static function fileList($path) {
-		$result = array();
-		$dirs   = scandir($path);
-		foreach ($dirs as $key => $value) {
-			if (!in_array($value, array(
-				".",
-				"..",
-			))
-			) {
-				if (!is_dir($path . DIRECTORY_SEPARATOR . $value)) {
-					$result[] = $value;
-				}
+	public static function fileList($path, $sort = self::SORT_DATE_DESC) {
+		$ignored = '.|..|.svn|.htaccess|.ftpquota|robots.txt|.idea|.git';
+		$files   = array();
+		foreach (scandir($path) as $file) {
+			if (in_array($file, explode('|', $ignored)) || is_dir($path . DIRECTORY_SEPARATOR . $file)) {
+				continue;
+			}
+			if (in_array($sort, [
+				self::SORT_DATE_DESC,
+				self::SORT_DATE_ASC,
+			])) {
+				$files[$file] = filemtime($path . '/' . $file);
 			}
 		}
-		return $result;
+		if (in_array($sort, [
+			self::SORT_DATE_DESC,
+			self::SORT_NAME_DESC,
+			self::SORT_SIZE_DESC,
+		])) {
+			arsort($files);
+		} else {
+			asort($files);
+		}
+		$files = array_keys($files);
+		return $files;
 	}
 
 	/**

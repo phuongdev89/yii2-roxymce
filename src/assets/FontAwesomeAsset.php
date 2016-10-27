@@ -23,11 +23,15 @@ class FontAwesomeAsset extends AssetBundle {
 	 */
 	public function init() {
 		parent::init();
-		$this->depends    = [
+		$this->depends = [
 			'yii\web\JqueryAsset',
 		];
-		$this->sourcePath = '@bower/font-awesome';
-		$this->css        = [
+		if (file_exists(\Yii::getAlias('@bower/font-awesome'))) {
+			$this->sourcePath = '@bower/font-awesome';
+		} else {
+			$this->sourcePath = '@bower/fontawesome';
+		}
+		$this->css = [
 			'css/font-awesome.min.css',
 		];
 	}
