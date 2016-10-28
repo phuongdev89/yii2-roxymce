@@ -20,6 +20,23 @@ use yii\web\View;
 
 RoxyMceAsset::register($this);
 ?>
+<style>
+	.context-menu-item span {
+		margin-left: 15px;
+	}
+
+	.context-menu-item {
+		padding: 10px;
+	}
+
+	.context-menu-list {
+		z-index: 9;
+	}
+
+	.context-menu-separator {
+		padding: 0 !important;
+	}
+</style>
 <div class="wrapper">
 	<section class="body">
 		<div class="col-sm-4 left-body">
@@ -64,7 +81,7 @@ RoxyMceAsset::register($this);
 						<a class="btn btn-sm btn-info btn-fancybox" disabled="disabled" title="<?= Yii::t('roxy', 'Preview selected file') ?>">
 							<i class="fa fa-search"></i> <?= Yii::t('roxy', 'Preview') ?>
 						</a>
-						<button type="button" class="btn btn-sm btn-warning" disabled="disabled" title="<?= Yii::t('roxy', 'Rename file') ?>" data-toggle="modal" href="#file-rename">
+						<button type="button" class="btn btn-sm btn-warning btn-file-rename" disabled="disabled" title="<?= Yii::t('roxy', 'Rename file') ?>" data-toggle="modal" href="#file-rename">
 							<i class="fa fa-pencil"></i> <?= Yii::t('roxy', 'Rename file') ?>
 						</button>
 						<a class="btn btn-sm btn-success btn-file-download" disabled="disabled" title="<?= Yii::t('roxy', 'Download file') ?>">
@@ -128,51 +145,15 @@ RoxyMceAsset::register($this);
 				<!--				<div class="status">--><? //= Yii::t('roxy', 'Status bar') ?><!-- <span class="status-text"></span></div>-->
 			</div>
 			<div class="col-sm-3 pull-right">
-				<button type="button" class="btn btn-success" onclick="setFile()" title="<?= Yii::t('roxy', 'Select highlighted file') ?>">
+				<button type="button" class="btn btn-success btn-roxymce-select" disabled title="<?= Yii::t('roxy', 'Select highlighted file') ?>">
 					<i class="fa fa-check"></i> <?= Yii::t('roxy', 'Select') ?>
 				</button>
-				<button type="button" class="btn btn-default" onclick="closeWindow()">
+				<button type="button" class="btn btn-default btn-roxymce-close">
 					<i class="fa fa-ban"></i> <?= Yii::t('roxy', 'Close') ?>
 				</button>
 			</div>
 		</div>
 	</section>
-</div>
-<div id="menuFile" class="contextMenu">
-	<ul class="dropdown-menu">
-		<li>
-			<a href="#" onclick="setFile()" id="mnuSelectFile"><i class="fa fa-check"></i> <?= Yii::t('roxy', 'Select') ?>
-			</a>
-		</li>
-		<li>
-			<a href="images/image-1.jpg" data-lightbox="preview-alt" data-title="My caption"><i class="fa fa-search"></i> <?= Yii::t('roxy', 'Preview image') ?>
-			</a>
-		</li>
-		<li>
-			<a href="#" onclick="downloadFile()" id="mnuDownload"><i class="fa fa-download"></i> <?= Yii::t('roxy', 'Download') ?>
-			</a>
-		</li>
-		<li>
-			<a href="#" onclick="return pasteToFiles(event, this)" class="paste pale" id="mnuFilePaste"><i class="fa fa-clipboard"></i> <?= Yii::t('roxy', 'Paste') ?>
-			</a>
-		</li>
-		<li>
-			<a href="#" onclick="cutFile()" id="mnuFileCut"><i class="fa fa-scissors"></i> <?= Yii::t('roxy', 'Cut') ?>
-			</a>
-		</li>
-		<li>
-			<a href="#" onclick="copyFile()" id="mnuFileCopy"><i class="fa fa-files-o"></i> <?= Yii::t('roxy', 'Copy') ?>
-			</a>
-		</li>
-		<li>
-			<a href="#" onclick="renameFile()" id="mnuRenameFile"><i class="fa fa-pencil"></i> <?= Yii::t('roxy', 'Rename') ?>
-			</a>
-		</li>
-		<li>
-			<a href="#" onclick="deleteFile()" id="mnuDeleteFile"><i class="fa fa-trash"></i> <?= Yii::t('roxy', 'Delete') ?>
-			</a>
-		</li>
-	</ul>
 </div>
 <div id="menuDir" class="contextMenu">
 	<ul class="dropdown-menu">
@@ -304,6 +285,7 @@ RoxyMceAsset::register($this);
 		$(".first-row button,.first-row a").attr("disabled", "disabled");
 		$(".first-row a.btn-fancybox").removeAttr('href').attr('title', $(".first-row a.btn-fancybox").text());
 		$(".first-row a.btn-file-download").removeAttr('href').attr('title', $(".first-row a.btn-file-download").text());
+		$(".btn-roxymce-select").attr('disabled', 'disabled');
 		showFileList(d.href);
 	});
 	/**
@@ -316,6 +298,7 @@ RoxyMceAsset::register($this);
 		$(".file-body").removeClass("thumb_view list_view").addClass($(this).data('name'));
 		$(".first-row button,.first-row a").attr("disabled", "disabled");
 		$(".first-row a.btn-fancybox").removeAttr('href');
+		$(".btn-roxymce-select").attr('disabled', 'disabled');
 		showFileList(currentUrl);
 	});
 	/**
@@ -339,6 +322,7 @@ RoxyMceAsset::register($this);
 		modal.find("input[name='file']").val(th.data('title'));
 		modal.find("input[name='name']").val(th.data('title'));
 		modal.find("input[name='folder']").val(node[0].path);
+		$(".btn-roxymce-select").removeAttr('disabled');
 	});
 	/**
 	 * Event create folder
@@ -569,6 +553,31 @@ RoxyMceAsset::register($this);
 		});
 	});
 	/**
+	 * Event close roxymce
+	 */
+	$(document).on("click", '.btn-roxymce-close', function() {
+		var win = (window.opener ? window.opener : window.parent);
+		win.tinyMCE.activeEditor.windowManager.close();
+	});
+	/**
+	 * Event selected file roxymce
+	 */
+	$(document).on("click", '.btn-roxymce-select', function() {
+		var win;
+		var file                                                = $(".file-list-item").find('.selected');
+		win                                                     = (window.opener ? window.opener : window.parent);
+		win.document.getElementById(getUrlParam('input')).value = file.data('url');
+		if(typeof(win.ImageDialog) != "undefined") {
+			if(win.ImageDialog.getImageData) {
+				win.ImageDialog.getImageData();
+			}
+			if(win.ImageDialog.showPreviewImage) {
+				win.ImageDialog.showPreviewImage(file.data('url'));
+			}
+		}
+		win.tinyMCE.activeEditor.windowManager.close();
+	});
+	/**
 	 * Function show file list on current url
 	 */
 	function showFileList(url) {
@@ -586,19 +595,21 @@ RoxyMceAsset::register($this);
 					$(".progress").fadeOut();
 					$.each(response.content, function(e, d) {
 						if($("button[data-name='thumb_view']").hasClass('btn-primary')) {
-							html += '<div class="col-sm-3">';
+							html += '<div class="item"><div class="col-sm-3">';
 							html += '<div class="thumb" data-url="' + d.url + '" data-title="' + d.name + '" data-image=' + d.is_image + '>';
 							html += '<div class="file-preview"><img class="lazy" data-original="' + d.preview + '"></div>';
 							html += '<div class="file-name"><span>' + d.name + '</span></div>';
 							html += '<div class="file-size">' + d.size + '</div>';
 							html += '</div>';
 							html += '</div>';
+							html += '</div>';
 							$(".sort-actions").hide();
 						} else {
-							html += '<div class="row list" data-url="' + d.url + '" data-title="' + d.name + '" data-image=' + d.is_image + '>';
+							html += '<div class="item"><div class="row list" data-url="' + d.url + '" data-title="' + d.name + '" data-image=' + d.is_image + '>';
 							html += '<div class="col-sm-6 file-name"><img class="icon" src="' + d.icon + '"><span>' + d.name + '</span></div>';
 							html += '<div class="col-sm-2 file-size">' + d.size + '</div>';
 							html += '<div class="col-sm-4 file-date">' + d.date + '</div>';
+							html += '</div>';
 							html += '</div>';
 							$(".sort-actions").show();
 						}
@@ -651,4 +662,96 @@ RoxyMceAsset::register($this);
 		});
 		return folder_list;
 	}
+	var file_cut, file_copy, file_paste;
+	var target                            = null;
+	$(".file-list-item")[0].oncontextmenu = function(e) {
+		target   = $(e.target);
+		var item = target.closest(".item");
+		if(item.length > 0) {
+			item.find(".list, .thumb").trigger('click');
+		} else {
+			target.closest(".file-list-item").find(".list, .thumb").removeClass('selected');
+			$(".first-row button,.first-row a").attr("disabled", "disabled");
+			$(".first-row a.btn-fancybox").removeAttr('href').attr('title', $(".first-row a.btn-fancybox").text());
+			$(".first-row a.btn-file-download").removeAttr('href').attr('title', $(".first-row a.btn-file-download").text());
+			$(".btn-roxymce-select").attr('disabled', 'disabled');
+		}
+		return false;
+	};
+	$.contextMenu({
+		selector: ".file-list-item",
+		items   : {
+			preview  : {
+				name    : '<?=Yii::t('roxymce', 'Preview')?>',
+				icon    : "fa-search",
+				callback: function() {
+					$(".btn-fancybox").trigger('click');
+				},
+				disabled: function() {
+					return target.closest(".item").length == 0;
+				}
+			},
+			download : {
+				name    : '<?=Yii::t('roxymce', 'Download')?>',
+				icon    : "fa-download",
+				callback: function() {
+					$(".btn-file-download").trigger('click');
+				},
+				disabled: function() {
+					return target.closest(".item").length == 0;
+				}
+			},
+			separator: {"type": "cm_separator"},
+			cut      : {
+				name    : '<?=Yii::t('roxymce', 'Cut')?>',
+				icon    : "fa-cut",
+				callback: function() {
+					alert("Comming soon!");
+				},
+				disabled: function() {
+					return target.closest(".item").length == 0;
+				}
+			},
+			copy     : {
+				name    : '<?=Yii::t('roxymce', 'Copy')?>',
+				icon    : "fa-copy",
+				callback: function() {
+					alert("Comming soon!");
+				},
+				disabled: function() {
+					return target.closest(".item").length == 0;
+				}
+			},
+			paste    : {
+				name    : '<?=Yii::t('roxymce', 'Paste')?>',
+				icon    : "fa-copy",
+				callback: function() {
+					alert("Comming soon!");
+				},
+				disabled: function() {
+					return target.closest(".item").length == 0;
+				}
+			},
+			rename   : {
+				name    : '<?=Yii::t('roxymce', 'Rename')?>',
+				icon    : "fa-pencil",
+				callback: function() {
+					$(".btn-file-rename").trigger('click');
+				},
+				disabled: function() {
+					return target.closest(".item").length == 0;
+				}
+			},
+			remove   : {
+				name    : '<?=Yii::t('roxymce', 'Delete')?>',
+				icon    : "fa-trash",
+				callback: function() {
+					$(".btn-file-remove").trigger('click');
+				},
+				disabled: function() {
+					return target.closest(".item").length == 0;
+				}
+			}
+		}
+	});
 </script>

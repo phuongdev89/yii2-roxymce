@@ -35,7 +35,8 @@
 		"bower-asset/fontawesome" : "^4.6",
 		"bower-asset/patternfly-bootstrap-treeview" : "~2.1",
 		"bower-asset/jquery.lazyload" : "~1.9",
-		"bower-asset/fancybox" : "~2.1"
+		"bower-asset/fancybox" : "~2.1",
+		"bower-asset/jQuery-contextMenu" : "~2.3"
 	},
 	"conflict" : {
 		"skeeks/yii2-assets-auto-compress" : "1.2.*"

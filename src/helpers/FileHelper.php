@@ -68,7 +68,7 @@ class FileHelper {
 	 * @return mixed
 	 */
 	public static function fileUrl($path) {
-		return str_replace('\\', '/', str_replace(Yii::$app->basePath, Url::base(true), $path));
+		return str_replace('\\', '/', str_replace(Yii::$app->basePath, Url::base(), $path));
 	}
 
 	/**

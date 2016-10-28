@@ -11,7 +11,6 @@
 namespace navatech\roxymce\assets;
 
 use yii\web\AssetBundle;
-use yii\web\View;
 
 /**
  * {@inheritDoc}
@@ -31,6 +30,7 @@ class RoxyMceAsset extends AssetBundle {
 			'navatech\roxymce\assets\FontAwesomeAsset',
 			'navatech\roxymce\assets\BootstrapTreeviewAsset',
 			'navatech\roxymce\assets\LazyLoadAsset',
+			'navatech\roxymce\assets\ContextMenuAsset',
 			'navatech\roxymce\assets\FancyBoxAsset',
 		];
 		$this->css        = [
@@ -42,10 +42,10 @@ class RoxyMceAsset extends AssetBundle {
 			//			'js/utils.js',
 			//			'js/file.js',
 			//			'js/directory.js',
-			//			'js/custom.js',
+			'js/roxymce.js',
 			//			'js/jquery-ui.js',
 		];
-//		$this->jsOptions  = ['position' => View::POS_HEAD];
+		//		$this->jsOptions  = ['position' => View::POS_HEAD];
 		echo '<script>';
 		echo 'var somethings_went_wrong = "' . \Yii::t('roxy', 'Somethings went wrong') . '";';
 		echo 'var empty_directory = "' . \Yii::t('roxy', 'Empty directory') . '";';
