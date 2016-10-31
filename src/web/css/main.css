@@ -178,3 +178,8 @@ section.footer {
 .sort-actions .row:last-child {
     margin-right: 20px;
 }
+
+.folder-list {
+    overflow-y: auto;
+    height: 370px;
+}
