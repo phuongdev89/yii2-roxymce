@@ -11,6 +11,8 @@
  * @var Module     $module
  * @var UploadForm $uploadForm
  * @var string     $defaultFolder
+ * @var int        $defaultOrder
+ * @var string     $fileListUrl
  */
 use navatech\roxymce\assets\RoxyMceAsset;
 use navatech\roxymce\models\UploadForm;
@@ -46,13 +48,10 @@ RoxyMceAsset::register($this);
 							<?= Html::activeFileInput($uploadForm, 'file', [
 								'multiple'  => true,
 								'name'      => 'UploadForm[file]',
-								'data-href' => Url::to([
-									'/roxymce/management/file-list',
-									'type' => 'thumb',
-								]),
+								'data-href' => $fileListUrl,
 								'data-url'  => Url::to([
 									'/roxymce/management/file-upload',
-									'folder' => '',
+									'folder' => $defaultFolder,
 								]),
 							]) ?>
 							<i class="fa fa-plus"></i> <?= Yii::t('roxy', 'Add file') ?>
@@ -84,29 +83,33 @@ RoxyMceAsset::register($this);
 					</div>
 					<div class="col-sm-8">
 						<div class="form-inline">
-							<div class="input-group input-group-sm">
+							<div class="form-group form-group-sm form-search">
 								<input id="txtSearch" type="text" class="form-control" placeholder="<?= Yii::t('roxy', 'Search for...') ?>">
-								<span class="input-group-btn">
-									    <button class="btn btn-default" type="button"><i class="fa fa-search"></i>
-									    </button>
-									</span>
+								<i class="fa fa-search"></i>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="file-body">
-				<div class="scrollPane file-list" data-url="<?= $defaultFolder ?>">
+				<div class="scrollPane file-list" data-url="<?= $fileListUrl ?>">
 					<div class="sort-actions" style="display: <?= $module->defaultView == 'list' ? 'block' : 'none' ?>;">
 						<div class="row">
 							<div class="col-sm-7">
-								<span class="pull-left"> <?= Yii::t('roxy', 'Name') ?></span>
+								<div class="pull-left" rel="order" data-order="name">
+									<span> <?= Yii::t('roxy', 'Name') ?></span>
+								</div>
 							</div>
 							<div class="col-sm-2">
-								<span class="pull-right"> <?= Yii::t('roxy', 'Size') ?></span>
+								<div class="pull-right" rel="order" data-order="size">
+									<span> <?= Yii::t('roxy', 'Size') ?></span>
+								</div>
 							</div>
 							<div class="col-sm-3">
-								<span class="pull-right"><i class="fa fa-long-arrow-down"></i> <?= Yii::t('roxy', 'Date') ?></span>
+								<div class="pull-right sorted" rel="order" data-order="date">
+									<i class="fa fa-long-arrow-down"></i>
+									<span> <?= Yii::t('roxy', 'Date') ?></span>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -203,3 +206,71 @@ RoxyMceAsset::register($this);
 		</div>
 	</div>
 </div>
+<script>
+	$(document).on('click', '[rel="order"]', function() {
+		$('[rel="order"]').removeClass('sorted').find('i').remove();
+		var html = '<i class="fa fa-long-arrow-down"></i>' + $(this).html();
+		$(this).addClass('sorted').html(html);
+		var order_by  = $(this).data('order');
+		var sort      = 2;
+		var is_sorted = false;
+		var node      = folder_list.treeview('getSelected');
+		if($(this).data('sort') == 'desc') {
+			order_by += '_asc';
+		} else {
+			order_by += '_desc';
+		}
+		switch(order_by) {
+			case 'date_asc':
+				sort = 1;
+				break;
+			case 'date_desc':
+				sort = 2;
+				break;
+			case 'name_asc':
+				sort = 3;
+				break;
+			case 'name_desc':
+				sort = 4;
+				break;
+			case 'size_asc':
+				sort = 5;
+				break;
+			case 'size_desc':
+				sort = 6;
+				break;
+			default:
+				sort = 2;
+				break;
+		}
+		var url = node[0].href;
+		$.each(parseQuery(url), function(a, b) {
+			if(a == 'sort') {
+				is_sorted = a + '=' + b;
+			}
+		});
+		if(is_sorted) {
+			url = node[0].href.replace(is_sorted, 'sort=' + sort);
+		} else {
+			url += '&sort=' + sort;
+		}
+		showFileList(url);
+	});
+	function parseQuery(url) {
+		var vars     = url.split('&');
+		var response = [];
+		for(var i = 0; i < vars.length; i++) {
+			var pair  = vars[i].split('=');
+			var param = decodeURIComponent(pair[0]);
+			if(param.indexOf('?') >= 0) {
+				param = param.split('?')[1];
+			}
+			var value = decodeURIComponent(pair[1]);
+			response.push({
+				name : param,
+				value: value
+			});
+		}
+		return response;
+	}
+</script>

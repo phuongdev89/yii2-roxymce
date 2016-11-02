@@ -123,10 +123,11 @@ class ManagementController extends Controller {
 
 	/**
 	 * @param string $folder
+	 * @param int    $sort
 	 *
 	 * @return array
 	 */
-	public function actionFileList($folder = '') {
+	public function actionFileList($folder = '', $sort = FolderHelper::SORT_DATE_DESC) {
 		if ($folder == '') {
 			$folder = Yii::getAlias($this->module->uploadFolder);
 		}
@@ -136,7 +137,7 @@ class ManagementController extends Controller {
 		 */
 		$module  = Yii::$app->getModule('roxymce');
 		$content = [];
-		foreach (FolderHelper::fileList($folder) as $item) {
+		foreach (FolderHelper::fileList($folder, $sort) as $item) {
 			$file      = $folder . DIRECTORY_SEPARATOR . $item;
 			$content[] = [
 				'is_image' => FileHelper::isImage($item),

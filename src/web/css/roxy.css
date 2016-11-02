@@ -209,3 +209,36 @@ section.footer {
 .progress {
     margin: 10px;
 }
+
+b.highlight {
+    background-color: #f0ad4e;
+    color: #ffffff;
+}
+
+.form-search {
+    position: relative;
+}
+
+.form-search i.fa-search {
+    top: 10px;
+    position: absolute;
+    right: 10px;
+    z-index: 9;
+    opacity: 0.5;
+}
+
+.sort-actions div[rel='order'] {
+    cursor: pointer;
+}
+
+.sort-actions .sorted {
+    color: #428bca;
+}
+
+.sort-actions i {
+    display: none;
+}
+
+.sort-actions .sorted i {
+    display: inline-block;
+}

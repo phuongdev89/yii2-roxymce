@@ -125,19 +125,28 @@ class FolderHelper {
 				self::SORT_DATE_DESC,
 				self::SORT_DATE_ASC,
 			])) {
-				$files[$file] = filemtime($path . '/' . $file);
+				$files[filemtime($path . '/' . $file)] = $file;
+			}
+			if (in_array($sort, [
+				self::SORT_NAME_DESC,
+				self::SORT_NAME_ASC,
+			])) {
+				$files[$file] = $file;
 			}
 		}
+		//		echo '<pre>';
+		//		print_r(scandir($path));
+		//		die;
 		if (in_array($sort, [
 			self::SORT_DATE_DESC,
 			self::SORT_NAME_DESC,
 			self::SORT_SIZE_DESC,
 		])) {
-			arsort($files);
+			krsort($files);
 		} else {
-			asort($files);
+			ksort($files);
 		}
-		$files = array_keys($files);
+		//		$files = array_keys($files);
 		return $files;
 	}
 

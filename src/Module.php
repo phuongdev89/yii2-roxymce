@@ -41,6 +41,11 @@ class Module extends \navatech\base\Module {
 	public $rememberLastFolder = true;
 
 	/**
+	 * @var bool would you want to remember last sort order?
+	 */
+	public $rememberLastOrder = true;
+
+	/**
 	 * @var string default allowed files extension
 	 */
 	public $allowExtension = 'jpeg jpg png gif mov mp3 mp4 avi wmv flv mpeg webm';

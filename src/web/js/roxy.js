@@ -31,6 +31,7 @@ $(document).on('nodeSelected', '.folder-list', function(event, currentNode) {
 	var btn_file_download = $(".btn-file-download");
 	btn_file_download.removeAttr('href').attr('title', btn_file_download.text());
 	$(".btn-roxymce-select").attr('disabled', 'disabled');
+	$('#txtSearch').val('');
 	showFileList(currentNode.href);
 });
 /**
@@ -44,6 +45,7 @@ $(document).on("click", "[data-action='switch_view']", function() {
 	$(".first-row button,.first-row a").attr("disabled", "disabled");
 	$(".btn-file-preview").removeAttr('href');
 	$(".btn-roxymce-select").attr('disabled', 'disabled');
+	$('#txtSearch').val('');
 	showFileList(current_url);
 });
 /**
@@ -323,6 +325,25 @@ $(document).on("click", '.btn-roxymce-select', function() {
 	win.tinyMCE.activeEditor.windowManager.close();
 });
 /**
+ * Event search files
+ */
+$(document).on('keyup', '#txtSearch', function() {
+	var keyword = $(this).val();
+	var items   = $(".file-list-item .item");
+	items.show();
+	$.each(items, function(key, object) {
+		var text = $(object).find('.file-name span').text();
+		if(text.indexOf(keyword) < 0) {
+			$(object).hide();
+		} else {
+			var regex = new RegExp(keyword, 'g');
+			text      = text.replace(regex, '<b class="highlight">' + keyword + '</b>');
+			$(object).find('.file-name span').html(text);
+		}
+	});
+});
+
+/**
  * Re-set contextmenu while right click trigger
  * */
 $(".file-list-item")[0].oncontextmenu = function(e) {
@@ -481,6 +502,7 @@ $.contextMenu({
 function showFileList(url) {
 	var html = '';
 	$(".file-list-item").html('');
+	$('#txtSearch').val('');
 	$(".progress").fadeIn();
 	current_url = url;
 	$.ajax({

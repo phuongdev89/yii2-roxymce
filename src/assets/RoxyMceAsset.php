@@ -43,7 +43,7 @@ class RoxyMceAsset extends AssetBundle {
 			'js/roxy.js',
 		];
 		Yii::$app->view->registerJs('var msg_somethings_went_wrong = "' . Yii::t('roxy', 'Somethings went wrong') . '",
-msg_somethings_went_wrong = "' . Yii::t('roxy', 'Somethings went wrong') . '",
+msg_empty_directory = "' . Yii::t('roxy', 'Empty directory') . '",
 msg_please_select_one_folder = "' . Yii::t('roxy', 'Please select one folder') . '",
 msg_are_you_sure = "' . Yii::t('roxy', 'Are you sure?') . '",
 msg_preview = "' . Yii::t('roxy', 'Preview') . '",
