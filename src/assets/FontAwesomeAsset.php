@@ -1,12 +1,12 @@
 <?php
 /**
  * Created by Navatech.
- * @project RoxyMce
- * @author  Phuong
+ * @project roxymce
+ * @author  Le Phuong
  * @email   phuong17889[at]gmail.com
  * @date    17/02/2016
  * @time    12:09 CH
- * @version 1.0.0
+ * @version 2.0.0
  */
 namespace navatech\roxymce\assets;
 

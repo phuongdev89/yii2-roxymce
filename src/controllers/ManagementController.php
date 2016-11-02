@@ -1,9 +1,12 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: notte
- * Date: 02/08/2016
- * Time: 9:30 SA
+ * Created by Navatech.
+ * @project roxymce
+ * @author  Le Phuong
+ * @email   phuong17889[at]gmail.com
+ * @date    15/02/2016
+ * @time    4:19 CH
+ * @version 2.0.0
  */
 namespace navatech\roxymce\controllers;
 
@@ -12,7 +15,9 @@ use navatech\roxymce\helpers\FolderHelper;
 use navatech\roxymce\models\UploadForm;
 use navatech\roxymce\Module;
 use Yii;
+use yii\base\ErrorException;
 use yii\filters\ContentNegotiator;
+use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
@@ -36,6 +41,19 @@ class ManagementController extends Controller {
 				'application/json' => Response::FORMAT_JSON,
 			],
 		];
+		$behaviors['verbs']             = [
+			'class'   => VerbFilter::className(),
+			'actions' => [
+				'*'           => [
+					'GET',
+					'AJAX',
+				],
+				'file-upload' => [
+					'POST',
+					'AJAX',
+				],
+			],
+		];
 		return $behaviors;
 	}
 
@@ -49,6 +67,7 @@ class ManagementController extends Controller {
 		if ($folder == '') {
 			$folder = Yii::getAlias($this->module->uploadFolder);
 		}
+		$folder = realpath($folder);
 		if (is_dir($folder)) {
 			if (file_exists($folder . DIRECTORY_SEPARATOR . $name)) {
 				$response = [
@@ -94,6 +113,7 @@ class ManagementController extends Controller {
 		if ($folder == '') {
 			$folder = Yii::getAlias($this->module->uploadFolder);
 		}
+		$folder  = realpath($folder);
 		$content = FolderHelper::folderList($folder);
 		return [
 			'error'   => 0,
@@ -110,6 +130,11 @@ class ManagementController extends Controller {
 		if ($folder == '') {
 			$folder = Yii::getAlias($this->module->uploadFolder);
 		}
+		$folder = realpath($folder);
+		/**
+		 * @var Module $module
+		 */
+		$module  = Yii::$app->getModule('roxymce');
 		$content = [];
 		foreach (FolderHelper::fileList($folder) as $item) {
 			$file      = $folder . DIRECTORY_SEPARATOR . $item;
@@ -120,8 +145,11 @@ class ManagementController extends Controller {
 				'icon'     => FileHelper::fileIcon($file),
 				'name'     => $item,
 				'size'     => FileHelper::fileSize(filesize($file), 0),
-				'date'     => date('Y-m-d H:i:s', filemtime($file)),
+				'date'     => date($module->dateFormat, filemtime($file)),
 			];
+		}
+		if ($module->rememberLastFolder) {
+			Yii::$app->cache->set('roxy_last_folder', $folder);
 		}
 		return [
 			'error'   => 0,
@@ -139,9 +167,10 @@ class ManagementController extends Controller {
 		if ($folder == '') {
 			return [
 				'error'   => 1,
-				'message' => Yii::t('roxy', 'Can not rename root folder'),
+				'message' => Yii::t('roxy', 'Can\'t rename root folder'),
 			];
 		}
+		$folder    = realpath($folder);
 		$newFolder = dirname($folder) . DIRECTORY_SEPARATOR . $name;
 		if (rename($folder, $newFolder)) {
 			return [
@@ -170,12 +199,26 @@ class ManagementController extends Controller {
 	 * @return array
 	 */
 	public function actionFolderRemove($folder, $parentFolder = '') {
-		if (rmdir($folder)) {
-			return [
-				'error'   => 0,
-				'content' => $parentFolder,
-			];
-		} else {
+		$folder = realpath($folder);
+		try {
+			if (rmdir($folder)) {
+				return [
+					'error'   => 0,
+					'content' => $parentFolder,
+				];
+			} else {
+				return [
+					'error'   => 1,
+					'message' => Yii::t('roxy', 'Somethings went wrong'),
+				];
+			}
+		} catch (ErrorException $e) {
+			if ($e->getCode() == 2) {
+				return [
+					'error'   => 1,
+					'message' => Yii::t('roxy', 'Please remove all sub-folder before'),
+				];
+			}
 			return [
 				'error'   => 1,
 				'message' => Yii::t('roxy', 'Somethings went wrong'),
@@ -192,6 +235,7 @@ class ManagementController extends Controller {
 		if ($folder == '') {
 			$folder = Yii::getAlias($this->module->uploadFolder);
 		}
+		$folder = realpath($folder);
 		if (is_dir($folder)) {
 			$model       = new UploadForm();
 			$model->file = UploadedFile::getInstance($model, 'file');
@@ -225,9 +269,10 @@ class ManagementController extends Controller {
 		if ($folder == '') {
 			return [
 				'error'   => 1,
-				'message' => Yii::t('roxy', 'Can not rename root folder'),
+				'message' => Yii::t('roxy', 'Can\'t rename this file'),
 			];
 		}
+		$folder  = realpath($folder);
 		$oldFile = $folder . DIRECTORY_SEPARATOR . $file;
 		$newFile = $folder . DIRECTORY_SEPARATOR . $name;
 		if (is_file($oldFile) && rename($oldFile, $newFile)) {
@@ -253,11 +298,98 @@ class ManagementController extends Controller {
 		if ($folder == '') {
 			return [
 				'error'   => 1,
-				'message' => Yii::t('roxy', 'Can not rename root folder'),
+				'message' => Yii::t('roxy', 'Can\'t remove this file'),
 			];
 		}
+		$folder   = realpath($folder);
 		$filePath = $folder . DIRECTORY_SEPARATOR . $file;
 		if (is_file($filePath) && unlink($filePath)) {
+			return [
+				'error' => 0,
+			];
+		} else {
+			return [
+				'error'   => 1,
+				'message' => Yii::t('roxy', 'Somethings went wrong'),
+			];
+		}
+	}
+
+	/**
+	 * This help move file from current directory to everywhere
+	 *
+	 * @param $folder string path of current file
+	 * @param $file   string new path
+	 *
+	 * @return array
+	 */
+	public function actionFileCut($folder, $file) {
+		if ($folder == '') {
+			return [
+				'error'   => 1,
+				'message' => Yii::t('roxy', 'Can\'t cut this file'),
+			];
+		}
+		$folder   = realpath($folder);
+		$filePath = $folder . DIRECTORY_SEPARATOR . $file;
+		if (Yii::$app->session->hasFlash('roxymce_copy')) {
+			Yii::$app->session->removeFlash('roxymce_copy');
+		}
+		Yii::$app->session->setFlash('roxymce_cut', $filePath);
+		return [
+			'error' => 0,
+		];
+	}
+
+	/**
+	 * This help to copy file
+	 *
+	 * @param $folder string path of current file
+	 * @param $file   string new path
+	 *
+	 * @return array
+	 */
+	public function actionFileCopy($folder, $file) {
+		if ($folder == '') {
+			return [
+				'error'   => 1,
+				'message' => Yii::t('roxy', 'Can\'t copy this file'),
+			];
+		}
+		$folder   = realpath($folder);
+		$filePath = $folder . DIRECTORY_SEPARATOR . $file;
+		if (Yii::$app->session->hasFlash('roxymce_cut')) {
+			Yii::$app->session->removeFlash('roxymce_cut');
+		}
+		Yii::$app->session->setFlash('roxymce_copy', $filePath);
+		return [
+			'error' => 0,
+		];
+	}
+
+	/**
+	 * @param $folder
+	 *
+	 * @return array
+	 */
+	public function actionFilePaste($folder) {
+		if ($folder == '') {
+			return [
+				'error'   => 1,
+				'message' => Yii::t('roxy', 'Can\'t past the clipboard'),
+			];
+		}
+		$folder   = realpath($folder);
+		$filePath = null;
+		$return   = false;
+		if (Yii::$app->session->hasFlash('roxymce_cut')) {
+			$filePath = Yii::$app->session->getFlash('roxymce_cut');
+			$return   = rename($filePath, $folder . DIRECTORY_SEPARATOR . basename($filePath));
+		} else if (Yii::$app->session->hasFlash('roxymce_copy')) {
+			$filePath = Yii::$app->session->getFlash('roxymce_copy');
+			$return   = copy($filePath, $folder . DIRECTORY_SEPARATOR . basename($filePath));
+		}
+		if ($return && $filePath != null) {
 			return [
 				'error' => 0,
 			];

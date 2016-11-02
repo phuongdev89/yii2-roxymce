@@ -6,21 +6,15 @@
 		"navatech",
 		"tinymce",
 		"file manager",
-		"roxy",
-		"fileman"
+		"roxy"
 	],
 	"type" : "yii2-extension",
 	"license" : "MIT",
 	"homepage" : "https://navatech.vn",
 	"support" : {
-		"source" : "https://github.com/navatech/yii2-roxymce",
-		"original" : "http://www.roxyfileman.com/"
+		"source" : "https://github.com/navatech/yii2-roxymce"
 	},
 	"authors" : [
-		{
-			"name" : "Lyubomir Arsov",
-			"homepage" : "http://www.roxyfileman.com"
-		},
 		{
 			"name" : "Le Phuong",
 			"email" : "phuong17889@gmail.com"

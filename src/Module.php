@@ -2,11 +2,11 @@
 /**
  * Created by Navatech.
  * @project RoxyMce
- * @author  Phuong
+ * @author  Le Phuong
  * @email   phuong17889[at]gmail.com
  * @date    15/02/2016
  * @time    4:33 CH
- * @version 1.0.0
+ * @version 2.0.0
  */
 namespace navatech\roxymce;
 
@@ -14,24 +14,36 @@ use Yii;
 use yii\base\InvalidParamException;
 
 /**
- * @property array $config List of configure for Roxy Fileman
  * {@inheritDoc}
  */
 class Module extends \navatech\base\Module {
 
-	const VERSION = '2.0.0';
+	/**
+	 * @var string default folder which will be used to upload resource
+	 *             must be start with @
+	 */
+	public $uploadFolder = '@app/web/uploads/images';
 
-	public $uploadFolder       = '@app/web/uploads/images';
+	/**
+	 * @var string default view type
+	 */
+	public $defaultView = 'thumb';
 
-	public $defaultView        = 'thumb';
+	/**
+	 * @var string default display dateFormat
+	 * @see http://php.net/manual/en/function.date.php
+	 */
+	public $dateFormat = 'Y-m-d H:i';
 
-	public $dateFormat         = 'dd/MM/yyyy HH:mm';
+	/**
+	 * @var bool would you want to remember last folder?
+	 */
+	public $rememberLastFolder = true;
 
-	public $rememberLastAction = true;
-
-	public $fileOptions        = [];
-
-	public $imageOptions       = [];
+	/**
+	 * @var string default allowed files extension
+	 */
+	public $allowExtension = 'jpeg jpg png gif mov mp3 mp4 avi wmv flv mpeg webm';
 
 	/**
 	 * Initializes the module.
@@ -45,28 +57,6 @@ class Module extends \navatech\base\Module {
 	 */
 	public function init() {
 		parent::init();
-		$defaultImageOptions = [
-			'maxImageWidth'     => 1000,
-			'maxImageHeight'    => 1000,
-			'thumbViewWidth'    => 100,
-			'thumbViewHeight'   => 100,
-			'previewViewWidth'  => 100,
-			'previewViewHeight' => 100,
-		];
-		$defaultFileOptions  = [
-			'forbidden' => 'zip js jsp jsb mhtml mht xhtml xht php phtml php3 php4 php5 phps shtml jhtml pl sh py cgi exe application gadget hta cpl msc jar vb jse ws wsf wsc wsh ps1 ps2 psc1 psc2 msh msh1 msh2 inf reg scf msp scr dll msi vbs bat com pif cmd vxd cpl htpasswd htaccess',
-			'allowed'   => 'jpeg jpg png gif mov mp3 mp4 avi wmv flv mpeg webm',
-		];
-		foreach ($defaultImageOptions as $defaultImageOptionKey => $defaultImageOption) {
-			if (!isset($this->imageOptions[$defaultImageOptionKey])) {
-				$this->imageOptions[$defaultImageOptionKey] = $defaultImageOption;
-			}
-		}
-		foreach ($defaultFileOptions as $defaultFileOptionKey => $defaultFileOption) {
-			if (!isset($this->fileOptions[$defaultFileOptionKey])) {
-				$this->fileOptions[$defaultFileOptionKey] = $defaultFileOption;
-			}
-		}
 		if (!is_dir(Yii::getAlias($this->uploadFolder))) {
 			mkdir(Yii::getAlias($this->uploadFolder), 0777, true);
 		}

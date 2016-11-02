@@ -1,14 +1,16 @@
 <?php
 /**
  * Created by Navatech.
- * @project yii2-roxymce
- * @author  Phuong
+ * @project roxymce
+ * @author  Le Phuong
  * @email   phuong17889[at]gmail.com
  * @date    15/02/2016
  * @time    4:45 CH
+ * @version 2.0.0
  */
 namespace navatech\roxymce\helpers;
 
+use navatech\roxymce\Module;
 use Yii;
 use yii\helpers\Url;
 
@@ -32,10 +34,24 @@ class FolderHelper {
 	 * @return array|bool
 	 */
 	private static function _folderList($path) {
+		$path = realpath($path);
+		/**@var Module $module */
+		$module   = Yii::$app->getModule('roxymce');
 		$response = null;
 		if (is_dir($path)) {
 			$dirs = glob($path . '/*', GLOB_ONLYDIR);
 			foreach ($dirs as $dir) {
+				$dir   = realpath($dir);
+				$state = [
+					'checked'  => false,
+					'selected' => false,
+				];
+				if ($module->rememberLastFolder && Yii::$app->cache->exists('roxy_last_folder')) {
+					$state = [
+						'checked'  => $dir == realpath(Yii::$app->cache->get('roxy_last_folder')),
+						'selected' => $dir == realpath(Yii::$app->cache->get('roxy_last_folder')),
+					];
+				}
 				$array      = [
 					'text'         => basename($dir),
 					'path'         => $dir,
@@ -46,6 +62,7 @@ class FolderHelper {
 					'icon'         => 'glyphicon glyphicon-folder-close',
 					'selectedIcon' => 'glyphicon glyphicon-folder-open',
 					'nodes'        => self::_folderList($dir),
+					'state'        => $state,
 				];
 				$response[] = $array;
 			}
@@ -59,6 +76,21 @@ class FolderHelper {
 	 * @return array|bool
 	 */
 	public static function folderList($path) {
+		$path = realpath($path);
+		/**@var Module $module */
+		$module = Yii::$app->getModule('roxymce');
+		$state  = [
+			'checked'  => true,
+			'expanded' => true,
+			'selected' => true,
+		];
+		if ($module->rememberLastFolder && Yii::$app->cache->exists('roxy_last_folder')) {
+			$state = [
+				'checked'  => $path == realpath(Yii::$app->cache->get('roxy_last_folder')),
+				'selected' => $path == realpath(Yii::$app->cache->get('roxy_last_folder')),
+				'expanded' => true,
+			];
+		}
 		$response[] = [
 			'text'         => basename($path),
 			'path'         => $path,
@@ -68,11 +100,7 @@ class FolderHelper {
 			]),
 			'icon'         => 'glyphicon glyphicon-folder-close',
 			'selectedIcon' => 'glyphicon glyphicon-folder-open',
-			'state'        => [
-				'checked'  => true,
-				'expanded' => true,
-				'selected' => true,
-			],
+			'state'        => $state,
 			'nodes'        => self::_folderList($path),
 		];
 		return $response;
@@ -86,6 +114,7 @@ class FolderHelper {
 	 * @return array
 	 */
 	public static function fileList($path, $sort = self::SORT_DATE_DESC) {
+		$path    = realpath($path);
 		$ignored = '.|..|.svn|.htaccess|.ftpquota|robots.txt|.idea|.git';
 		$files   = array();
 		foreach (scandir($path) as $file) {

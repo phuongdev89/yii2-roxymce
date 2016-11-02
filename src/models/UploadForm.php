@@ -1,10 +1,12 @@
 <?php
 /**
- * @project yii2-roxymce
+ * Created by Navatech.
+ * @project roxymce
  * @author  Le Phuong
- * @email phuong17889@gmail.com
- * @date    10/25/2016
- * @time    10:43 AM
+ * @email   phuong17889[at]gmail.com
+ * @date    15/02/2016
+ * @time    4:19 CH
+ * @version 2.0.0
  */
 namespace navatech\roxymce\models;
 
@@ -30,7 +32,7 @@ class UploadForm extends Model {
 				['file'],
 				'file',
 				'skipOnEmpty' => true,
-				'extensions'  => implode(',', explode(' ', $module->fileOptions['allowed'])),
+				'extensions'  => implode(',', explode(' ', $module->allowExtension)),
 			],
 		];
 	}

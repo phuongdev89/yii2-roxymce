@@ -1,12 +1,12 @@
 <?php
 /**
  * Created by Navatech.
- * @project yii-basic
- * @author  Phuong
+ * @project roxymce
+ * @author  Le Phuong
  * @email   phuong17889[at]gmail.com
  * @date    15/02/2016
  * @time    10:24 SA
- * @version 1.0.0
+ * @version 2.0.0
  */
 namespace navatech\roxymce\assets;
 

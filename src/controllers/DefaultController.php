@@ -1,21 +1,21 @@
 <?php
 /**
  * Created by Navatech.
- * @project yii2-roxymce
- * @author  Phuong
+ * @project roxymce
+ * @author  Le Phuong
  * @email   phuong17889[at]gmail.com
  * @date    15/02/2016
  * @time    4:19 CH
- * @version 1.0.0
+ * @version 2.0.0
  */
 namespace navatech\roxymce\controllers;
 
 use navatech\roxymce\models\UploadForm;
+use navatech\roxymce\Module;
 use Yii;
-use yii\base\Exception;
 use yii\base\InvalidParamException;
+use yii\helpers\Url;
 use yii\web\Controller;
-use yii\web\Response;
 
 /**
  * {@inheritDoc}
@@ -23,38 +23,25 @@ use yii\web\Response;
 class DefaultController extends Controller {
 
 	/**
-	 * {@inheritDoc}
-	 */
-	public function beforeAction($action) {
-		$this->enableCsrfValidation = false;
-		return parent::beforeAction($action);
-	}
-
-	/**
 	 * Render a view
 	 * @return string
 	 * @throws InvalidParamException
 	 */
 	public function actionIndex() {
-		$module     = Yii::$app->getModule('roxymce');
-		$uploadForm = new UploadForm();
-		return $this->renderAjax('index', [
-			'module'     => $module,
-			'uploadForm' => $uploadForm,
-		]);
-	}
-
-	/**
-	 * Return all default config
-	 * @return mixed
-	 * @throws Exception
-	 */
-	public function actionConfig() {
-		if (Yii::$app->request->isAjax) {
-			Yii::$app->response->format = Response::FORMAT_JSON;
-			return Yii::$app->getModule('roxymce')->config;
-		} else {
-			throw new Exception('Unknown');
+		/**@var Module $module */
+		$module        = Yii::$app->getModule('roxymce');
+		$uploadForm    = new UploadForm();
+		$defaultFolder = Url::to(['/roxymce/management/file-list']);
+		if ($module->rememberLastFolder && Yii::$app->cache->exists('roxy_last_folder')) {
+			$defaultFolder = Url::to([
+				'/roxymce/management/file-list',
+				'folder' => Yii::$app->cache->get('roxy_last_folder'),
+			]);
 		}
+		return $this->renderAjax('index', [
+			'module'        => $module,
+			'uploadForm'    => $uploadForm,
+			'defaultFolder' => $defaultFolder,
+		]);
 	}
 }

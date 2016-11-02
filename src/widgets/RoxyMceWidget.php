@@ -2,11 +2,11 @@
 /**
  * Created by Navatech.
  * @project RoxyMce
- * @author  Phuong
- * @email   notteen[at]gmail.com
+ * @author  Le Phuong
+ * @email   phuong17889[at]gmail.com
  * @date    28/01/2016
  * @time    1:59 SA
- * @version 1.0.0
+ * @version 2.0.0
  */
 namespace navatech\roxymce\widgets;
 
@@ -26,19 +26,41 @@ use yii\web\View;
  */
 class RoxyMceWidget extends Widget {
 
-	/**@var ActiveRecord */
+	/**
+	 * @var ActiveRecord
+	 */
 	public $model;
 
+	/**
+	 * @var string attribute name
+	 */
 	public $attribute;
 
+	/**
+	 * @var string field's name (not required)
+	 */
 	public $name;
 
+	/**
+	 * @var string default value (not required)
+	 */
 	public $value;
 
+	/**
+	 * @var array RoxyMce options
+	 * @see https://github.com/navatech/yii2-roxymce/blob/master/docs/widget.md
+	 */
 	public $options;
 
-	public $htmlOptions = [];
+	/**
+	 * @var array TinyMce options
+	 * @see https://www.tinymce.com/docs/
+	 */
+	public $clientOptions = [];
 
+	/**
+	 * @var string default action of roxymce iframe, change it if you want customize this action
+	 */
 	public $action;
 
 	/**
@@ -71,10 +93,10 @@ class RoxyMceWidget extends Widget {
 				}
 			}
 		}
-		if (!array_key_exists('id', $this->htmlOptions)) {
-			$this->htmlOptions['id'] = $this->id;
+		if (!array_key_exists('id', $this->options)) {
+			$this->options['id'] = $this->id;
 		}
-		$this->options = ArrayHelper::merge($this->options, [
+		$this->clientOptions = ArrayHelper::merge($this->clientOptions, [
 			'selector'     => '#' . $this->id,
 			'plugins'      => [
 				'advlist autolink lists link image charmap print preview hr anchor pagebreak',
@@ -99,23 +121,23 @@ class RoxyMceWidget extends Widget {
 	 */
 	public function run() {
 		$this->view->registerJs('$(function() {
-			tinyMCE.init({' . substr(Json::encode($this->options), 1, - 1) . ',"file_browser_callback": RoxyFileBrowser});
+			tinyMCE.init({' . substr(Json::encode($this->clientOptions), 1, - 1) . ',"file_browser_callback": RoxyFileBrowser});
 		});', View::POS_HEAD);
 		$this->view->registerJs('function RoxyFileBrowser(field_name, url, type, win) {
-			var roxyFileman = "' . $this->action . '";
-			if(roxyFileman.indexOf("?") < 0) {
-				roxyFileman += "?type=" + type;
+			var roxyMce = "' . $this->action . '";
+			if(roxyMce.indexOf("?") < 0) {
+				roxyMce += "?type=" + type;
 			}
 			else {
-				roxyFileman += "&type=" + type;
+				roxyMce += "&type=" + type;
 			}
-			roxyFileman += "&input=" + field_name + "&value=" + win.document.getElementById(field_name).value;
+			roxyMce += "&input=" + field_name + "&value=" + win.document.getElementById(field_name).value;
 			if(tinyMCE.activeEditor.settings.language) {
-				roxyFileman += "&langCode=" + tinyMCE.activeEditor.settings.language;
+				roxyMce += "&langCode=" + tinyMCE.activeEditor.settings.language;
 			}
 			tinyMCE.activeEditor.windowManager.open({
-				file          : roxyFileman,
-				title         : "' . (array_key_exists('title', $this->options) ? $this->options['title'] : 'RoxyMce') . '",
+				file          : roxyMce,
+				title         : "' . (array_key_exists('title', $this->clientOptions) ? $this->clientOptions['title'] : 'RoxyMce') . '",
 				width         : 850,
 				height        : 480,
 				resizable     : "yes",
@@ -129,9 +151,9 @@ class RoxyMceWidget extends Widget {
 			return false;
 		}', View::POS_HEAD);
 		if ($this->model !== null) {
-			echo Html::activeTextarea($this->model, $this->attribute, $this->htmlOptions);
+			return Html::activeTextarea($this->model, $this->attribute, $this->options);
 		} else {
-			echo Html::textarea($this->name, $this->value, $this->htmlOptions);
+			return Html::textarea($this->name, $this->value, $this->options);
 		}
 	}
 }

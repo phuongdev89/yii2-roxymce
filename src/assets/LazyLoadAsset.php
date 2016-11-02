@@ -1,10 +1,12 @@
 <?php
 /**
- * @project basic
+ * Created by Navatech.
+ * @project roxymce
  * @author  Le Phuong
- * @email phuong17889@gmail.com
- * @date    10/26/2016
- * @time    11:34 AM
+ * @email   phuong17889[at]gmail.com
+ * @date    28/10/2016
+ * @time    2:39 CH
+ * @version 2.0.0
  */
 namespace navatech\roxymce\assets;
 

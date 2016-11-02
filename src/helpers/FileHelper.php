@@ -1,9 +1,12 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: phuon
- * Date: 9/21/2016
- * Time: 3:51 PM
+ * Created by Navatech.
+ * @project roxymce
+ * @author  Le Phuong
+ * @email   phuong17889[at]gmail.com
+ * @date    15/02/2016
+ * @time    4:19 CH
+ * @version 2.0.0
  */
 namespace navatech\roxymce\helpers;
 
