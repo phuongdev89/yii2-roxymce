@@ -24,6 +24,6 @@ echo \navatech\roxymce\widgets\RoxyMceWidget::widget([
 ~~~
 [php]
 echo \navatech\roxymce\widgets\RoxyMceWidget::widget([
-	'name' => 'content'
+	'name' => 'Post[content]'
 ]);
 ~~~
