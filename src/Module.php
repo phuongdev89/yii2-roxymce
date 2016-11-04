@@ -48,7 +48,7 @@ class Module extends \navatech\base\Module {
 	/**
 	 * @var string default allowed files extension
 	 */
-	public $allowExtension = 'jpeg jpg png gif mov mp3 mp4 avi wmv flv mpeg webm';
+	public $allowExtension = 'jpeg jpg png gif svg mov mp3 mp4 avi wmv flv mpeg webm';
 
 	/**
 	 * Initializes the module.

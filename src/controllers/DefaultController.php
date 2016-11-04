@@ -14,7 +14,6 @@ use navatech\roxymce\helpers\FolderHelper;
 use navatech\roxymce\models\UploadForm;
 use navatech\roxymce\Module;
 use Yii;
-use yii\base\InvalidParamException;
 use yii\helpers\Url;
 use yii\web\Controller;
 
@@ -25,15 +24,18 @@ class DefaultController extends Controller {
 
 	/**
 	 * Render a view
+	 *
+	 * @param $type
+	 *
 	 * @return string
-	 * @throws InvalidParamException
 	 */
-	public function actionIndex() {
+	public function actionIndex($type) {
 		/**@var Module $module */
 		$module        = Yii::$app->getModule('roxymce');
 		$uploadForm    = new UploadForm();
 		$defaultFolder = '';
 		$defaultOrder  = FolderHelper::SORT_DATE_DESC;
+		Yii::$app->cache->set('roxy_file_type', $type);
 		if ($module->rememberLastFolder && Yii::$app->cache->exists('roxy_last_folder')) {
 			$defaultFolder = Yii::$app->cache->get('roxy_last_folder');
 		}

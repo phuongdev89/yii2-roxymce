@@ -10,6 +10,7 @@
  */
 namespace navatech\roxymce\models;
 
+use navatech\roxymce\helpers\FileHelper;
 use navatech\roxymce\Module;
 use yii\base\Model;
 use yii\web\UploadedFile;
@@ -17,7 +18,7 @@ use yii\web\UploadedFile;
 class UploadForm extends Model {
 
 	/**
-	 * @var UploadedFile
+	 * @var UploadedFile[]
 	 */
 	public $file;
 
@@ -33,6 +34,7 @@ class UploadForm extends Model {
 				'file',
 				'skipOnEmpty' => true,
 				'extensions'  => implode(',', explode(' ', $module->allowExtension)),
+				'maxFiles'    => 20,
 			],
 		];
 	}
@@ -44,11 +46,13 @@ class UploadForm extends Model {
 	 */
 	public function upload($folder) {
 		if ($this->validate()) {
-			$filePath = $folder . DIRECTORY_SEPARATOR . $this->file->baseName . '.' . $this->file->extension;
-			if (file_exists($filePath)) {
-				$filePath = $folder . DIRECTORY_SEPARATOR . $this->file->baseName . '_' . time() . '.' . $this->file->extension;
+			foreach ($this->file as $file) {
+				$filePath = $folder . DIRECTORY_SEPARATOR . FileHelper::removeSign($file->baseName) . '.' . $file->extension;
+				if (file_exists($filePath)) {
+					$filePath = $folder . DIRECTORY_SEPARATOR . FileHelper::removeSign($file->baseName) . '_' . time() . '.' . $file->extension;
+				}
+				$file->saveAs($filePath);
 			}
-			$this->file->saveAs($filePath);
 			return true;
 		} else {
 			return false;

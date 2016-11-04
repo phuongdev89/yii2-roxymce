@@ -123,19 +123,32 @@ class ManagementController extends Controller {
 
 	/**
 	 * @param string $folder
-	 * @param int    $sort
+	 * @param string $sort
 	 *
 	 * @return array
 	 */
-	public function actionFileList($folder = '', $sort = FolderHelper::SORT_DATE_DESC) {
-		if ($folder == '') {
-			$folder = Yii::getAlias($this->module->uploadFolder);
-		}
-		$folder = realpath($folder);
+	public function actionFileList($folder = '', $sort = '') {
 		/**
 		 * @var Module $module
 		 */
-		$module  = Yii::$app->getModule('roxymce');
+		$module = Yii::$app->getModule('roxymce');
+		$folder = realpath($folder);
+		if ($folder == '') {
+			$folder = Yii::getAlias($this->module->uploadFolder);
+		}
+		if ($module->rememberLastFolder) {
+			Yii::$app->cache->set('roxy_last_folder', $folder);
+		}
+		if ($sort == '') {
+			if ($module->rememberLastOrder && Yii::$app->cache->exists('roxy_last_order')) {
+				$sort = Yii::$app->cache->get('roxy_last_order');
+			} else {
+				$sort = FolderHelper::SORT_DATE_DESC;
+			}
+		}
+		if ($module->rememberLastOrder) {
+			Yii::$app->cache->set('roxy_last_order', $sort);
+		}
 		$content = [];
 		foreach (FolderHelper::fileList($folder, $sort) as $item) {
 			$file      = $folder . DIRECTORY_SEPARATOR . $item;
@@ -148,9 +161,6 @@ class ManagementController extends Controller {
 				'size'     => FileHelper::fileSize(filesize($file), 0),
 				'date'     => date($module->dateFormat, filemtime($file)),
 			];
-		}
-		if ($module->rememberLastFolder) {
-			Yii::$app->cache->set('roxy_last_folder', $folder);
 		}
 		return [
 			'error'   => 0,
@@ -200,7 +210,17 @@ class ManagementController extends Controller {
 	 * @return array
 	 */
 	public function actionFolderRemove($folder, $parentFolder = '') {
-		$folder = realpath($folder);
+		$folder           = realpath($folder);
+		$folderProperties = FolderHelper::folderList($folder);
+		if ($folderProperties != null && isset($folderProperties[0]['nodes']) && $folderProperties[0]['nodes'] != null) {
+			return [
+				'error'   => 1,
+				'message' => Yii::t('roxy', 'Please remove all sub-folder before'),
+			];
+		}
+		foreach (FolderHelper::fileList($folder) as $file) {
+			unlink($folder . DIRECTORY_SEPARATOR . $file);
+		}
 		try {
 			if (rmdir($folder)) {
 				return [
@@ -239,7 +259,7 @@ class ManagementController extends Controller {
 		$folder = realpath($folder);
 		if (is_dir($folder)) {
 			$model       = new UploadForm();
-			$model->file = UploadedFile::getInstance($model, 'file');
+			$model->file = UploadedFile::getInstances($model, 'file');
 			if ($model->upload($folder)) {
 				return [
 					'error' => 0,

@@ -33,6 +33,42 @@ class FolderHelper {
 	 *
 	 * @return array|bool
 	 */
+	public static function folderList($path) {
+		$path = realpath($path);
+		/**@var Module $module */
+		$module = Yii::$app->getModule('roxymce');
+		$state  = [
+			'checked'  => true,
+			'expanded' => true,
+			'selected' => true,
+		];
+		if ($module->rememberLastFolder && Yii::$app->cache->exists('roxy_last_folder')) {
+			$state = [
+				'checked'  => $path == realpath(Yii::$app->cache->get('roxy_last_folder')),
+				'selected' => $path == realpath(Yii::$app->cache->get('roxy_last_folder')),
+				'expanded' => true,
+			];
+		}
+		$response[] = [
+			'text'         => basename($path),
+			'path'         => $path,
+			'href'         => Url::to([
+				'/roxymce/management/file-list',
+				'folder' => $path,
+			]),
+			'icon'         => 'glyphicon glyphicon-folder-close',
+			'selectedIcon' => 'glyphicon glyphicon-folder-open',
+			'state'        => $state,
+			'nodes'        => self::_folderList($path),
+		];
+		return $response;
+	}
+
+	/**
+	 * @param $path
+	 *
+	 * @return array|bool
+	 */
 	private static function _folderList($path) {
 		$path = realpath($path);
 		/**@var Module $module */
@@ -71,42 +107,6 @@ class FolderHelper {
 	}
 
 	/**
-	 * @param $path
-	 *
-	 * @return array|bool
-	 */
-	public static function folderList($path) {
-		$path = realpath($path);
-		/**@var Module $module */
-		$module = Yii::$app->getModule('roxymce');
-		$state  = [
-			'checked'  => true,
-			'expanded' => true,
-			'selected' => true,
-		];
-		if ($module->rememberLastFolder && Yii::$app->cache->exists('roxy_last_folder')) {
-			$state = [
-				'checked'  => $path == realpath(Yii::$app->cache->get('roxy_last_folder')),
-				'selected' => $path == realpath(Yii::$app->cache->get('roxy_last_folder')),
-				'expanded' => true,
-			];
-		}
-		$response[] = [
-			'text'         => basename($path),
-			'path'         => $path,
-			'href'         => Url::to([
-				'/roxymce/management/file-list',
-				'folder' => $path,
-			]),
-			'icon'         => 'glyphicon glyphicon-folder-close',
-			'selectedIcon' => 'glyphicon glyphicon-folder-open',
-			'state'        => $state,
-			'nodes'        => self::_folderList($path),
-		];
-		return $response;
-	}
-
-	/**
 	 * @param     $path
 	 *
 	 * @param int $sort
@@ -118,36 +118,48 @@ class FolderHelper {
 		$ignored = '.|..|.svn|.htaccess|.ftpquota|robots.txt|.idea|.git';
 		$files   = array();
 		foreach (scandir($path) as $file) {
-			if (in_array($file, explode('|', $ignored)) || is_dir($path . DIRECTORY_SEPARATOR . $file)) {
+			$filePath = $path . DIRECTORY_SEPARATOR . $file;
+			if (in_array($file, explode('|', $ignored)) || is_dir($filePath)) {
 				continue;
+			}
+			if (Yii::$app->cache->get('roxy_file_type') == 'image') {
+				if (!is_array(getimagesize($filePath))) {
+					continue;
+				}
+			} elseif (Yii::$app->cache->get('roxy_file_type') == 'media') {
+				if (is_array(getimagesize($filePath))) {
+					continue;
+				}
 			}
 			if (in_array($sort, [
 				self::SORT_DATE_DESC,
 				self::SORT_DATE_ASC,
 			])) {
-				$files[filemtime($path . '/' . $file)] = $file;
-			}
-			if (in_array($sort, [
+				$time         = filemtime($filePath);
+				$files[$file] = $time;
+			} elseif (in_array($sort, [
 				self::SORT_NAME_DESC,
 				self::SORT_NAME_ASC,
 			])) {
 				$files[$file] = $file;
+			} elseif (in_array($sort, [
+				self::SORT_SIZE_ASC,
+				self::SORT_SIZE_DESC,
+			])) {
+				$size         = filesize($filePath);
+				$files[$file] = $size;
 			}
 		}
-		//		echo '<pre>';
-		//		print_r(scandir($path));
-		//		die;
 		if (in_array($sort, [
 			self::SORT_DATE_DESC,
 			self::SORT_NAME_DESC,
 			self::SORT_SIZE_DESC,
 		])) {
-			krsort($files);
+			arsort($files);
 		} else {
-			ksort($files);
+			asort($files);
 		}
-		//		$files = array_keys($files);
-		return $files;
+		return array_keys($files);
 	}
 
 	/**

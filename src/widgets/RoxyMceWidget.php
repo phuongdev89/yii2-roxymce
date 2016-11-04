@@ -39,7 +39,7 @@ class RoxyMceWidget extends Widget {
 	/**
 	 * @var string field's name (not required)
 	 */
-	public $name;
+	public $name = 'content';
 
 	/**
 	 * @var string default value (not required)
@@ -93,9 +93,7 @@ class RoxyMceWidget extends Widget {
 				}
 			}
 		}
-		if (!array_key_exists('id', $this->options)) {
-			$this->options['id'] = $this->id;
-		}
+		$this->options['id'] = $this->id;
 		$this->clientOptions = ArrayHelper::merge($this->clientOptions, [
 			'selector'     => '#' . $this->id,
 			'plugins'      => [

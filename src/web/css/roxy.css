@@ -121,6 +121,7 @@ section.body .left-body .folder-list.treeview {
     line-height: 25px;
     margin: 1px 0;
     overflow: hidden;
+    word-break: break-all;
 }
 
 .file-list-item .list.selected, .file-list-item .list.selected:hover {
@@ -173,7 +174,7 @@ section.footer {
 
 .file-list-item {
     overflow-y: auto;
-    height: 330px;
+    height: 320px;
 }
 
 .list_view .file-list-item {
@@ -239,6 +240,10 @@ b.highlight {
     display: none;
 }
 
-.sort-actions .sorted i {
+.sorted[data-sort='asc'] i.fa-long-arrow-up {
+    display: inline-block;
+}
+
+.sorted[data-sort='desc'] i.fa-long-arrow-down {
     display: inline-block;
 }

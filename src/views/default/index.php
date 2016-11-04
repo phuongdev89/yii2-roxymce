@@ -15,6 +15,7 @@
  * @var string     $fileListUrl
  */
 use navatech\roxymce\assets\RoxyMceAsset;
+use navatech\roxymce\helpers\FolderHelper;
 use navatech\roxymce\models\UploadForm;
 use navatech\roxymce\Module;
 use yii\bootstrap\Html;
@@ -47,7 +48,7 @@ RoxyMceAsset::register($this);
 						<label class="btn btn-sm btn-primary" title="<?= Yii::t('roxy', 'Upload files') ?>">
 							<?= Html::activeFileInput($uploadForm, 'file', [
 								'multiple'  => true,
-								'name'      => 'UploadForm[file]',
+								'name'      => 'UploadForm[file][]',
 								'data-href' => $fileListUrl,
 								'data-url'  => Url::to([
 									'/roxymce/management/file-upload',
@@ -96,17 +97,22 @@ RoxyMceAsset::register($this);
 					<div class="sort-actions" style="display: <?= $module->defaultView == 'list' ? 'block' : 'none' ?>;">
 						<div class="row">
 							<div class="col-sm-7">
-								<div class="pull-left" rel="order" data-order="name">
+								<div class="pull-left <?= ($defaultOrder == FolderHelper::SORT_NAME_ASC || $defaultOrder == FolderHelper::SORT_NAME_DESC) ? 'sorted' : '' ?>" rel="order" data-order="name" data-sort="<?= $defaultOrder == FolderHelper::SORT_NAME_ASC ? 'asc' : 'desc' ?>">
+									<i class="fa fa-long-arrow-up"></i>
+									<i class="fa fa-long-arrow-down"></i>
 									<span> <?= Yii::t('roxy', 'Name') ?></span>
 								</div>
 							</div>
 							<div class="col-sm-2">
-								<div class="pull-right" rel="order" data-order="size">
+								<div class="pull-right <?= ($defaultOrder == FolderHelper::SORT_SIZE_ASC || $defaultOrder == FolderHelper::SORT_SIZE_DESC) ? 'sorted' : '' ?>" rel="order" data-order="size" data-sort="<?= $defaultOrder == FolderHelper::SORT_SIZE_ASC ? 'asc' : 'desc' ?>">
+									<i class="fa fa-long-arrow-up"></i>
+									<i class="fa fa-long-arrow-down"></i>
 									<span> <?= Yii::t('roxy', 'Size') ?></span>
 								</div>
 							</div>
 							<div class="col-sm-3">
-								<div class="pull-right sorted" rel="order" data-order="date">
+								<div class="pull-right <?= ($defaultOrder == FolderHelper::SORT_DATE_ASC || $defaultOrder == FolderHelper::SORT_DATE_DESC) ? 'sorted' : '' ?>" rel="order" data-order="date" data-sort="<?= $defaultOrder == FolderHelper::SORT_DATE_ASC ? 'asc' : 'desc' ?>">
+									<i class="fa fa-long-arrow-up"></i>
 									<i class="fa fa-long-arrow-down"></i>
 									<span> <?= Yii::t('roxy', 'Date') ?></span>
 								</div>
@@ -121,12 +127,11 @@ RoxyMceAsset::register($this);
 	<section class="footer">
 		<div class="row bottom">
 			<div class="col-sm-6 pull-left">
-				<div class="progress">
-					<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-						<span><?= Yii::t('roxy', 'Loading') ?></span><br>
+				<div class="progress" style="display: none;">
+					<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+
 					</div>
 				</div>
-				<!--				<div class="status">--><? //= Yii::t('roxy', 'Status bar') ?><!-- <span class="status-text"></span></div>-->
 			</div>
 			<div class="col-sm-3 col-sm-offset-3 pull-right">
 				<button type="button" class="btn btn-success btn-roxymce-select" disabled title="<?= Yii::t('roxy', 'Select highlighted file') ?>">
@@ -207,70 +212,4 @@ RoxyMceAsset::register($this);
 	</div>
 </div>
 <script>
-	$(document).on('click', '[rel="order"]', function() {
-		$('[rel="order"]').removeClass('sorted').find('i').remove();
-		var html = '<i class="fa fa-long-arrow-down"></i>' + $(this).html();
-		$(this).addClass('sorted').html(html);
-		var order_by  = $(this).data('order');
-		var sort      = 2;
-		var is_sorted = false;
-		var node      = folder_list.treeview('getSelected');
-		if($(this).data('sort') == 'desc') {
-			order_by += '_asc';
-		} else {
-			order_by += '_desc';
-		}
-		switch(order_by) {
-			case 'date_asc':
-				sort = 1;
-				break;
-			case 'date_desc':
-				sort = 2;
-				break;
-			case 'name_asc':
-				sort = 3;
-				break;
-			case 'name_desc':
-				sort = 4;
-				break;
-			case 'size_asc':
-				sort = 5;
-				break;
-			case 'size_desc':
-				sort = 6;
-				break;
-			default:
-				sort = 2;
-				break;
-		}
-		var url = node[0].href;
-		$.each(parseQuery(url), function(a, b) {
-			if(a == 'sort') {
-				is_sorted = a + '=' + b;
-			}
-		});
-		if(is_sorted) {
-			url = node[0].href.replace(is_sorted, 'sort=' + sort);
-		} else {
-			url += '&sort=' + sort;
-		}
-		showFileList(url);
-	});
-	function parseQuery(url) {
-		var vars     = url.split('&');
-		var response = [];
-		for(var i = 0; i < vars.length; i++) {
-			var pair  = vars[i].split('=');
-			var param = decodeURIComponent(pair[0]);
-			if(param.indexOf('?') >= 0) {
-				param = param.split('?')[1];
-			}
-			var value = decodeURIComponent(pair[1]);
-			response.push({
-				name : param,
-				value: value
-			});
-		}
-		return response;
-	}
 </script>
