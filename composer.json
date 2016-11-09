@@ -30,7 +30,7 @@
 		"bower-asset/patternfly-bootstrap-treeview" : "~2.1",
 		"bower-asset/jquery.lazyload" : "~1.9",
 		"bower-asset/fancybox" : "~2.1",
-		"bower-asset/jQuery-contextMenu" : "~2.3"
+		"bower-asset/jquery-contextmenu" : "~2.3"
 	},
 	"conflict" : {
 		"skeeks/yii2-assets-auto-compress" : "1.2.*"
@@ -42,5 +42,12 @@
 	},
 	"extra" : {
 		"bootstrap" : "navatech\\roxymce\\Bootstrap"
+		"asset-repositories": [
+			{
+				"name": "bower-asset/jquery-contextmenu",
+				"type": "bower-vcs",
+				"url": "https://github.com/swisnl/jQuery-contextMenu.git"
+			}
+		]
 	}
 }
