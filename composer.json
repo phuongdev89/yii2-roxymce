@@ -41,8 +41,8 @@
 		}
 	},
 	"extra" : {
-		"bootstrap" : "navatech\\roxymce\\Bootstrap"
-		"asset-repositories": [
+		"bootstrap" : "navatech\\roxymce\\Bootstrap",
+		"asset-repositories" : [
 			{
 				"name": "bower-asset/jquery-contextmenu",
 				"type": "bower-vcs",
