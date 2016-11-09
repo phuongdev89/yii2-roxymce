@@ -38,9 +38,11 @@ class RoxyMceAsset extends AssetBundle {
 		];
 		$this->css        = [
 			YII_ENV_DEV ? 'css/roxy.css' : 'css/roxy.min.css',
+			'css/jquery.contextMenu.min.css',
 		];
 		$this->js         = [
 			YII_ENV_DEV ? 'js/roxy.js' : 'js/roxy.min.js',
+			'jquery.contextMenu.min.js',
 		];
 		Yii::$app->view->registerJs('var msg_somethings_went_wrong = "' . Yii::t('roxy', 'Somethings went wrong') . '",
 msg_empty_directory = "' . Yii::t('roxy', 'Empty directory') . '",
