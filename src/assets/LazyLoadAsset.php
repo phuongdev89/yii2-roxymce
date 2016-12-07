@@ -32,7 +32,7 @@ class LazyLoadAsset extends AssetBundle {
 			$this->sourcePath = '@bower/jquery.lazyload';
 		}
 		$this->jsOptions = [
-			'position' => View::POS_END,
+			'position' => View::POS_HEAD,
 		];
 	}
 }

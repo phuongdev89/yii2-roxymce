@@ -9,7 +9,9 @@
  * @version 2.0.0
  */
 namespace navatech\roxymce\assets;
+
 use yii\web\AssetBundle;
+use yii\web\View;
 
 class FancyBoxAsset extends AssetBundle {
 
@@ -19,4 +21,5 @@ class FancyBoxAsset extends AssetBundle {
 
 	public $css        = ['jquery.fancybox.css'];
 
+	public $jsOptions  = ['position' => View::POS_HEAD];
 }

@@ -25,6 +25,13 @@ class Module extends \navatech\base\Module {
 	public $uploadFolder = '@app/web/uploads/images';
 
 	/**
+	 * @var string url of $uploadFolder
+	 *             not include 'http://domain.com'
+	 *             must be start with /
+	 */
+	public $uploadUrl = '/uploads/images';
+
+	/**
 	 * @var string default view type
 	 */
 	public $defaultView = 'thumb';

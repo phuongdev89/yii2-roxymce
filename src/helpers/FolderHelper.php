@@ -123,7 +123,11 @@ class FolderHelper {
 				continue;
 			}
 			if (Yii::$app->cache->get('roxy_file_type') == 'image') {
-				if (!is_array(getimagesize($filePath))) {
+				if (!is_array(getimagesize($filePath)) && !in_array(pathinfo($filePath, PATHINFO_EXTENSION), [
+						'svg',
+						'svgz',
+					])
+				) {
 					continue;
 				}
 			} elseif (Yii::$app->cache->get('roxy_file_type') == 'media') {
