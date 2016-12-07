@@ -97,14 +97,13 @@ class RoxyMceWidget extends Widget {
 		$this->clientOptions = ArrayHelper::merge($this->clientOptions, [
 			'selector'     => '#' . $this->id,
 			'plugins'      => [
-				'advlist autolink lists link image charmap print preview hr anchor pagebreak',
-				'searchreplace wordcount visualblocks visualchars code fullscreen',
-				'insertdatetime media nonbreaking save table contextmenu directionality',
-				'emoticons template paste textcolor colorpicker textpattern imagetools',
+				'advlist autolink autosave autoresize link image lists charmap print preview hr anchor pagebreak spellchecker',
+				'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+				'table contextmenu directionality emoticons template textcolor paste fullpage textcolor colorpicker textpattern'
 			],
 			'theme'        => 'modern',
-			'toolbar1'     => 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
-			'toolbar2'     => 'print preview media | forecolor backcolor emoticons',
+			'toolbar1'     => 'newdocument fullpage | undo redo | styleselect formatselect fontselect fontsizeselect',
+			'toolbar2'     => 'print preview media | forecolor backcolor emoticons | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media code',
 			'image_advtab' => true,
 		]);
 		if ($this->action === null) {
