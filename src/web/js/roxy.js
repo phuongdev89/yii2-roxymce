@@ -279,6 +279,7 @@ $(document).on("change", "input#uploadform-file", function() {
 $(document).on("click", '.btn-roxymce-close', function() {
 	var win = (window.opener ? window.opener : window.parent);
 	win.tinyMCE.activeEditor.windowManager.close();
+	closeDialog(getUrlParam('dialog'));
 });
 /**
  * Event selected file roxymce
@@ -287,16 +288,17 @@ $(document).on("click", '.btn-roxymce-select', function() {
 	var win     = (window.opener ? window.opener : window.parent);
 	var file    = $(".file-list-item").find('.selected');
 	var input   = win.document.getElementById(getUrlParam('input'));
-	input.value = file.data('url');
+	input.value = file.attr('data-url');
 	if(typeof(win.ImageDialog) != "undefined") {
 		if(win.ImageDialog.getImageData) {
 			win.ImageDialog.getImageData();
 		}
 		if(win.ImageDialog.showPreviewImage()) {
-			win.ImageDialog.showPreviewImage(file.data('url'));
+			win.ImageDialog.showPreviewImage(file.attr('data-url'));
 		}
 	}
 	win.tinyMCE.activeEditor.windowManager.close();
+	closeDialog(getUrlParam('dialog'));
 });
 /**
  * Event search files
@@ -686,4 +688,22 @@ function reloadActionButton() {
 	var btn_file_download = $(".btn-file-download");
 	btn_file_download.removeAttr('href').attr('title', btn_file_download.text());
 	$(".btn-roxymce-select").attr('disabled', 'disabled');
+}
+function closeDialog(dialog) {
+	switch(dialog) {
+		case 'fancybox':
+			parent.$.fancybox.close();
+			$.fancybox.close();
+			break;
+		case 'modal':
+			//TODO
+			break;
+		case 'colorbox':
+			//TODO
+			break;
+		case 'iframe':
+			//TODO
+			break;
+	}
+
 }

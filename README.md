@@ -15,8 +15,9 @@ Or add to `require` section of `composer.json` then run `composer update`
 
 Configure & Usage
 ---
-* #### [Config module](docs/module.md)
-* #### [Widget usage](docs/widget.md)
+*  [Config module](docs/module.md)
+*  [Widget usage](docs/widget.md)
+*  [Without TinyMce](docs/without.md)
 
 Screenshot
 ---
