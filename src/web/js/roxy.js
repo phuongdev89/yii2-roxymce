@@ -279,7 +279,7 @@ $(document).on("change", "input#uploadform-file", function() {
 $(document).on("click", '.btn-roxymce-close', function() {
 	var win = (window.opener ? window.opener : window.parent);
 	win.tinyMCE.activeEditor.windowManager.close();
-	closeDialog(getUrlParam('dialog'));
+	closeDialog(getUrlParam('fancybox'));
 });
 /**
  * Event selected file roxymce
@@ -298,7 +298,7 @@ $(document).on("click", '.btn-roxymce-select', function() {
 		}
 	}
 	win.tinyMCE.activeEditor.windowManager.close();
-	closeDialog(getUrlParam('dialog'));
+	closeDialog(getUrlParam('fancybox'));
 });
 /**
  * Event search files
