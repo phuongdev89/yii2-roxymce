@@ -2,7 +2,8 @@ Module configure
 ---
 ### Property
 
-* `uploadFolder` the directory where stored file. Default is `@app/web/uploads/images`. If folder not existed, roxy will auto-create it.
+* `uploadFolder` the directory where stored files. Default is `@app/web/uploads/images`. If folder not existed, roxy will auto-create it.
+* `uploadUrl` the url which can get folder link. Default is `/uploads/images`. If you are using `yii2-advanced` should include scheme (`http://frontend.domain.com/uploads/images`).
 * `defaultView` display type. Default is `thumb`
 * `dateFormat` Datetime format. Default is `Y-m-d H:i`. See: http://php.net/manual/en/function.date.php
 * `rememberLastFolder` would you want to remember last folder? Default is `true`

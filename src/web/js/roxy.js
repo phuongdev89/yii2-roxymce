@@ -5,7 +5,7 @@ var file_cut, file_copy, target = null;
 /**
  * Event when document loaded
  */
-$(document).on("ready", function() {
+$(function() {
 	showFolderList(folder_list.data('url'));
 	showFileList($(".file-list").data('url'));
 	$("a#single_image").fancybox();
@@ -47,7 +47,7 @@ $(document).on("click", ".file-list-item .thumb,.file-list-item .list", function
 	$(".first-row button,.first-row a").removeAttr("disabled");
 	$(".btn-file-download").attr('href', th.data('url')).attr('target', '_blank');
 	$(".btn-file-preview").attr('href', th.data('url')).attr('title', th.data('title')).fancybox({
-		type     : th.data('image') == 1 ? 'image' : 'iframe',
+		type     : th.data('image') === 1 ? 'image' : 'iframe',
 		padding  : 5,
 		fitToView: true,
 		autoSize : true
@@ -64,7 +64,7 @@ $(document).on("click", ".file-list-item .thumb,.file-list-item .list", function
  */
 $(document).on("click", "#folder-create .btn-submit", function() {
 	var node = folder_list.treeview('getSelected');
-	if(node.length != 0) {
+	if(node.length !== 0) {
 		var th   = $(this);
 		var form = th.closest(".modal").find("form");
 		$.ajax({
@@ -74,7 +74,7 @@ $(document).on("click", "#folder-create .btn-submit", function() {
 			url     : form.attr("action"),
 			dataType: "json",
 			success : function(response) {
-				if(response.error == 0) {
+				if(response.error === 0) {
 					var modal_create = $('#folder-create');
 					modal_create.modal('hide');
 					modal_create.find("input[name='name']").val('');
@@ -105,7 +105,7 @@ $(document).on("click", "#folder-create .btn-submit", function() {
  */
 $(document).on("click", "#folder-rename .btn-submit", function() {
 	var node = folder_list.treeview('getSelected');
-	if(node.length != 0) {
+	if(node.length !== 0) {
 		var th   = $(this);
 		var form = th.closest(".modal").find("form");
 		$.ajax({
@@ -115,7 +115,7 @@ $(document).on("click", "#folder-rename .btn-submit", function() {
 			url     : form.attr("action"),
 			dataType: "json",
 			success : function(response) {
-				if(response.error == 0) {
+				if(response.error === 0) {
 					$('#folder-rename').modal('hide');
 					var newNode = {
 						text        : response.data.text,
@@ -153,7 +153,7 @@ $(document).on("click", "#file-rename .btn-submit", function() {
 		url     : form.attr("action"),
 		dataType: "json",
 		success : function(response) {
-			if(response.error == 0) {
+			if(response.error === 0) {
 				var modal = $("#file-rename");
 				modal.find("input[name='file']").val(response.data.name);
 				modal.modal('hide');
@@ -182,7 +182,7 @@ $(document).on("click", ".btn-folder-remove", function() {
 			url     : url_folder_remove + '?folder=' + node[0].path,
 			dataType: "json",
 			success : function(response) {
-				if(response.error == 0) {
+				if(response.error === 0) {
 					folder_list.treeview('removeNode', [node, {silent: true}]).treeview('selectNode', [parentNode, {silent: true}]);
 					current_url = parentNode.href;
 					reloadTreeview(parentNode);
@@ -211,7 +211,7 @@ $(document).on("click", ".btn-file-remove", function() {
 			url     : url_file_remove + '?folder=' + node[0].path + '&file=' + file,
 			dataType: "json",
 			success : function(response) {
-				if(response.error == 0) {
+				if(response.error === 0) {
 					var th = $(".file-list-item").find('.selected');
 					if(th.hasClass('list')) {
 						th.fadeOut('normal', function() {
@@ -261,7 +261,7 @@ $(document).on("change", "input#uploadform-file", function() {
 		processData: false,
 		contentType: false,
 		success    : function(response) {
-			if(response.error == 0) {
+			if(response.error === 0) {
 				$(".image-list").append(response.html);
 				showFileList(th.attr('data-href'));
 			} else {
@@ -278,8 +278,10 @@ $(document).on("change", "input#uploadform-file", function() {
  */
 $(document).on("click", '.btn-roxymce-close', function() {
 	var win = (window.opener ? window.opener : window.parent);
-	win.tinyMCE.activeEditor.windowManager.close();
-	closeDialog(getUrlParam('fancybox'));
+	if(win.tinyMCE) {
+		win.tinyMCE.activeEditor.windowManager.close();
+	}
+	closeDialog(getUrlParam('dialog'));
 });
 /**
  * Event selected file roxymce
@@ -289,7 +291,7 @@ $(document).on("click", '.btn-roxymce-select', function() {
 	var file    = $(".file-list-item").find('.selected');
 	var input   = win.document.getElementById(getUrlParam('input'));
 	input.value = file.attr('data-url');
-	if(typeof(win.ImageDialog) != "undefined") {
+	if(typeof(win.ImageDialog) !== "undefined") {
 		if(win.ImageDialog.getImageData) {
 			win.ImageDialog.getImageData();
 		}
@@ -297,8 +299,10 @@ $(document).on("click", '.btn-roxymce-select', function() {
 			win.ImageDialog.showPreviewImage(file.attr('data-url'));
 		}
 	}
-	win.tinyMCE.activeEditor.windowManager.close();
-	closeDialog(getUrlParam('fancybox'));
+	if(win.tinyMCE) {
+		win.tinyMCE.activeEditor.windowManager.close();
+	}
+	closeDialog(getUrlParam('dialog'));
 });
 /**
  * Event search files
@@ -327,7 +331,7 @@ $(document).on('click', '[rel="order"]', function() {
 	var sort      = 2;
 	var is_sorted = false;
 	var node      = folder_list.treeview('getSelected');
-	if($(this).attr('data-sort') == 'desc') {
+	if($(this).attr('data-sort') === 'desc') {
 		$(this).addClass('sorted').attr('data-sort', 'asc');
 		order_by += '_asc';
 	} else {
@@ -359,7 +363,7 @@ $(document).on('click', '[rel="order"]', function() {
 	}
 	var url = node[0].href;
 	$.each(parseQuery(url), function(a, b) {
-		if(a == 'sort') {
+		if(a === 'sort') {
 			is_sorted = a + '=' + b;
 		}
 	});
@@ -402,7 +406,7 @@ $.contextMenu({
 				$(".btn-file-preview").trigger('click');
 			},
 			disabled: function() {
-				return target.closest(".item").length == 0;
+				return target.closest(".item").length === 0;
 			}
 		},
 		download : {
@@ -412,7 +416,7 @@ $.contextMenu({
 				$(".btn-file-download").trigger('click');
 			},
 			disabled: function() {
-				return target.closest(".item").length == 0;
+				return target.closest(".item").length === 0;
 			}
 		},
 		separator: {"type": "cm_separator"},
@@ -428,7 +432,7 @@ $.contextMenu({
 					dataType: "json",
 					url     : url_file_cut + '?folder=' + node[0].path + '&file=' + file,
 					success : function(response) {
-						if(response.error == 0) {
+						if(response.error === 0) {
 							file_copy = false;
 							file_cut  = true;
 						} else {
@@ -441,7 +445,7 @@ $.contextMenu({
 				});
 			},
 			disabled: function() {
-				return target.closest(".item").length == 0;
+				return target.closest(".item").length === 0;
 			}
 		},
 		copy     : {
@@ -456,7 +460,7 @@ $.contextMenu({
 					dataType: "json",
 					url     : url_file_copy + '?folder=' + node[0].path + '&file=' + file,
 					success : function(response) {
-						if(response.error == 0) {
+						if(response.error === 0) {
 							file_cut  = false;
 							file_copy = true;
 						} else {
@@ -469,7 +473,7 @@ $.contextMenu({
 				});
 			},
 			disabled: function() {
-				return target.closest(".item").length == 0;
+				return target.closest(".item").length === 0;
 			}
 		},
 		paste    : {
@@ -477,14 +481,13 @@ $.contextMenu({
 			icon    : "fa-clipboard",
 			callback: function() {
 				var node = folder_list.treeview('getSelected');
-				var file = $(".btn-file-preview").attr('title');
 				$.ajax({
 					type    : "get",
 					cache   : false,
 					dataType: "json",
 					url     : url_file_paste + '?folder=' + node[0].path,
 					success : function(response) {
-						if(response.error == 0) {
+						if(response.error === 0) {
 							file_copy = false;
 							file_cut  = false;
 							showFileList(node[0].href);
@@ -508,7 +511,7 @@ $.contextMenu({
 				$(".btn-file-rename").trigger('click');
 			},
 			disabled: function() {
-				return target.closest(".item").length == 0;
+				return target.closest(".item").length === 0;
 			}
 		},
 		remove   : {
@@ -518,11 +521,12 @@ $.contextMenu({
 				$(".btn-file-remove").trigger('click');
 			},
 			disabled: function() {
-				return target.closest(".item").length == 0;
+				return target.closest(".item").length === 0;
 			}
 		}
 	}
 });
+
 /**
  * Function show file list on current url
  */
@@ -537,7 +541,7 @@ function showFileList(url) {
 		dataType: "json",
 		url     : url,
 		success : function(response) {
-			if(response.error == 0) {
+			if(response.error === 0) {
 				$.each(response.content, function(e, d) {
 					if($("button[data-name='thumb_view']").hasClass('btn-primary')) {
 						html += '<div class="item"><div class="col-sm-3">';
@@ -559,7 +563,7 @@ function showFileList(url) {
 						$(".sort-actions").show();
 					}
 				});
-				if(html == '') {
+				if(html === '') {
 					html = msg_empty_directory;
 				}
 				var file_list_item = $(".file-list-item");
@@ -579,34 +583,38 @@ function showFileList(url) {
 		}
 	});
 }
+
 /**
  * Function show folder list and sub-folder of current url
  */
 function showFolderList(url) {
-	var folder_list = $(".folder-list");
 	$.ajax({
 		type    : "GET",
 		cache   : false,
 		dataType: "json",
 		url     : url,
 		success : function(response) {
-			if(response.error == 0) {
+			if(response.error === 0) {
 				folder_list.treeview({
 					data           : response.content,
 					preventUnselect: true
 				});
-				var node = folder_list.treeview('getNodes', node_id);
-				$("#folder-rename").find("input[name='folder']").val(node.path).parent().find("input[name='name']").val(node.text);
+				var node         = folder_list.treeview('getNodes', node_id);
+				var folderRename = $("#folder-rename");
+				folderRename.find("input[name='folder']").val(node.path);
+				folderRename.find("input#folder_name").val(node.text);
 			} else {
 				alert(response.message);
 			}
-		},
+		}
+		,
 		error   : function() {
 			alert(msg_somethings_went_wrong);
 		}
 	});
 	return folder_list;
 }
+
 /**
  * Function return url for tinymce
  * */
@@ -620,7 +628,7 @@ function getUrlParam(varName, url) {
 		url = url.split('&');
 		for(var i = 0; i < url.length; i++) {
 			var tmp = url[i].split('=');
-			if(tmp[0] && tmp[1] && tmp[0] == varName) {
+			if(tmp[0] && tmp[1] && tmp[0] === varName) {
 				ret = tmp[1];
 				break;
 			}
@@ -629,6 +637,7 @@ function getUrlParam(varName, url) {
 
 	return ret;
 }
+
 /**
  * Function parse url to array query
  * */
@@ -649,6 +658,7 @@ function parseQuery(url) {
 	}
 	return response;
 }
+
 /**
  * Function progress upload
  * */
@@ -667,6 +677,7 @@ function progress(e) {
 		}
 	}
 }
+
 /**
  * Function reload treeview
  * */
@@ -678,6 +689,7 @@ function reloadTreeview(currentNode) {
 	$('#txtSearch').val('');
 	reloadActionButton();
 }
+
 /**
  * Function reload action buttons
  * */
@@ -689,6 +701,7 @@ function reloadActionButton() {
 	btn_file_download.removeAttr('href').attr('title', btn_file_download.text());
 	$(".btn-roxymce-select").attr('disabled', 'disabled');
 }
+
 function closeDialog(dialog) {
 	switch(dialog) {
 		case 'fancybox':
@@ -696,14 +709,8 @@ function closeDialog(dialog) {
 			$.fancybox.close();
 			break;
 		case 'modal':
-			//TODO
-			break;
-		case 'colorbox':
-			//TODO
-			break;
-		case 'iframe':
-			//TODO
+			var modalId = parent.$('.modal-roxy').attr('id');
+			parent.$('#' + modalId).modal('hide');
 			break;
 	}
-
 }
