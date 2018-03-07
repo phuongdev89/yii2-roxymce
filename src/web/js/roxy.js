@@ -159,12 +159,12 @@ $(document).on("click", "#file-rename .btn-submit", function() {
 				modal.modal('hide');
 				var selectedFile = $(".file-list-item").find('.selected');
 				selectedFile.find('.file-name').find('span').text(response.data.name);
-                                var currentUrl = selectedFile.data('url');
-                                var newUrl = currentUrl.substring(0, currentUrl.lastIndexOf("/") + 1)+response.data.name;
-                                selectedFile.data('title', response.data.name);
-                                selectedFile.data('url', newUrl);
-                                selectedFile.find('img').data('original', newUrl).attr('src', newUrl);
-                                $(".btn-file-download").attr('href', newUrl);
+				var currentUrl = selectedFile.data('url');
+				var newUrl = currentUrl.substring(0, currentUrl.lastIndexOf("/") + 1)+response.data.name;
+				selectedFile.data('title', response.data.name);
+				selectedFile.data('url', newUrl);
+				selectedFile.find('img').data('original', newUrl).attr('src', newUrl);
+				$(".btn-file-download").attr('href', newUrl);
 			} else {
 				alert(response.message);
 			}
