@@ -157,7 +157,14 @@ $(document).on("click", "#file-rename .btn-submit", function() {
 				var modal = $("#file-rename");
 				modal.find("input[name='file']").val(response.data.name);
 				modal.modal('hide');
-				$(".file-list-item").find('.selected').find('.file-name').find('span').text(response.data.name);
+				var selectedFile = $(".file-list-item").find('.selected');
+				selectedFile.find('.file-name').find('span').text(response.data.name);
+                                var currentUrl = selectedFile.data('url');
+                                var newUrl = currentUrl.substring(0, currentUrl.lastIndexOf("/") + 1)+response.data.name;
+                                selectedFile.data('title', response.data.name);
+                                selectedFile.data('url', newUrl);
+                                selectedFile.children('img').data('original', newUrl);
+                                $(".btn-file-download").attr('href', newUrl);
 			} else {
 				alert(response.message);
 			}
