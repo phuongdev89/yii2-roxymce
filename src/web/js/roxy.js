@@ -163,7 +163,7 @@ $(document).on("click", "#file-rename .btn-submit", function() {
                                 var newUrl = currentUrl.substring(0, currentUrl.lastIndexOf("/") + 1)+response.data.name;
                                 selectedFile.data('title', response.data.name);
                                 selectedFile.data('url', newUrl);
-                                selectedFile.find('img').data('original', newUrl);
+                                selectedFile.find('img').data('original', newUrl).attr('src', newUrl);
                                 $(".btn-file-download").attr('href', newUrl);
 			} else {
 				alert(response.message);
