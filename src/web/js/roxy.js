@@ -291,7 +291,7 @@ $(document).on("click", '.btn-roxymce-close', function() {
 	closeDialog(getUrlParam('dialog'));
 });
 /**
- * Event doubleclick file
+ * Event doubleclick selected file
  */
 $(document).on("dblclick", ".file-list-item .thumb,.file-list-item .list", function() {
    $('.btn-roxymce-select').click();
