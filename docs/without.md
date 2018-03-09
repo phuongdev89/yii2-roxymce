@@ -13,8 +13,7 @@ In this case, you can use roxymce without TinyMCE intergrated. Just use with fan
 ### Example
 
 #### With Fancybox
-~~~
-[php]
+```php
 <?php
 use navatech\roxymce\assets\BootstrapTreeviewAsset;
 use navatech\roxymce\assets\FancyBoxAsset;
@@ -37,11 +36,10 @@ BootstrapTreeviewAsset::register($this);
 <script>
 	$('.fancybox').fancybox();
 </script>
-~~~
+```
 
 #### With Bootstrap modal
-~~~
-[php]
+```php
 <?php
 use navatech\roxymce\assets\BootstrapTreeviewAsset;
 use navatech\roxymce\assets\FancyBoxAsset;
@@ -74,4 +72,4 @@ BootstrapTreeviewAsset::register($this);
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-~~~
+```

@@ -12,7 +12,7 @@ Module configure
 
 ### Example
 Add to config file:
-```
+```php
 	'modules' => [
 		'roxymce' => [
 			'class' => 'navatech\roxymce\Module',
