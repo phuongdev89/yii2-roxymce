@@ -291,6 +291,12 @@ $(document).on("click", '.btn-roxymce-close', function() {
 	closeDialog(getUrlParam('dialog'));
 });
 /**
+ * Event doubleclick selected file
+ */
+$(document).on("dblclick", ".file-list-item .thumb,.file-list-item .list", function() {
+   $('.btn-roxymce-select').click();
+});
+/**
  * Event selected file roxymce
  */
 $(document).on("click", '.btn-roxymce-select', function() {
