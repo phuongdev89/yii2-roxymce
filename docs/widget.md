@@ -13,17 +13,15 @@ Widget Usage
 ### Example
 In your view file, call roxymce widget
 #### Include ActiveRecord Model
-~~~
-[php]
+```php
 echo \navatech\roxymce\widgets\RoxyMceWidget::widget([
 	'model'     => app\models\Post::findOne(1),
 	'attribute' => 'content',
 ]);
-~~~
+```
 #### Sample HTML without ActiveRecord Model
-~~~
-[php]
+```php
 echo \navatech\roxymce\widgets\RoxyMceWidget::widget([
 	'name' => 'Post[content]'
 ]);
-~~~
+```
