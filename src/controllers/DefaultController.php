@@ -42,7 +42,7 @@ class DefaultController extends Controller {
 			$defaultOrder = Yii::$app->cache->get('roxy_last_order');
 		}
 		$fileListUrl = Url::to([
-			'/roxymce/management/file-list',
+			'management/file-list',
 			'folder' => $defaultFolder,
 			'sort'   => $defaultOrder,
 		]);

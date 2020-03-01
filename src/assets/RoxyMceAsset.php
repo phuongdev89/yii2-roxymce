@@ -54,12 +54,12 @@ msg_copy = "' . Yii::t('roxy', 'Copy') . '",
 msg_paste = "' . Yii::t('roxy', 'Paste') . '",
 msg_rename = "' . Yii::t('roxy', 'Rename') . '",
 msg_delete = "' . Yii::t('roxy', 'Delete') . '",
-url_folder_remove = "' . Url::to(['/roxymce/management/folder-remove']) . '",
-url_file_upload = "' . Url::to(['/roxymce/management/file-upload']) . '",
-url_file_cut = "' . Url::to(['/roxymce/management/file-cut']) . '",
-url_file_copy = "' . Url::to(['/roxymce/management/file-copy']) . '",
-url_file_paste = "' . Url::to(['/roxymce/management/file-paste']) . '",
-url_file_remove = "' . Url::to(['/roxymce/management/file-remove']) . '";
+url_folder_remove = "' . Url::to(['management/folder-remove']) . '",
+url_file_upload = "' . Url::to(['management/file-upload']) . '",
+url_file_cut = "' . Url::to(['management/file-cut']) . '",
+url_file_copy = "' . Url::to(['management/file-copy']) . '",
+url_file_paste = "' . Url::to(['management/file-paste']) . '",
+url_file_remove = "' . Url::to(['management/file-remove']) . '";
 		', View::POS_HEAD);
 	}
 }

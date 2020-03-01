@@ -86,7 +86,7 @@ class ManagementController extends Controller
                         'message' => Yii::t('roxy', 'Folder created'),
                         'data' => [
                             'href' => Url::to([
-                                '/roxymce/management/file-list',
+                                'management/file-list',
                                 'folder' => $folder . DIRECTORY_SEPARATOR . $name,
                             ]),
                             'text' => $name,
@@ -196,7 +196,7 @@ class ManagementController extends Controller
                 'error' => 0,
                 'data' => [
                     'href' => Url::to([
-                        '/roxymce/management/file-list',
+                        'management/file-list',
                         'folder' => $newFolder,
                     ]),
                     'text' => $name,
@@ -312,7 +312,7 @@ class ManagementController extends Controller
                 'error' => 0,
                 'data' => [
                     'href' => Url::to([
-                        '/roxymce/management/file-list',
+                        'management/file-list',
                         'folder' => $folder,
                     ]),
                     'name' => $name,

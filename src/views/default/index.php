@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
 								'name'      => 'UploadForm[file][]',
 								'data-href' => $fileListUrl,
 								'data-url'  => Url::to([
-									'/roxymce/management/file-upload',
+									'management/file-upload',
 									'folder' => $defaultFolder,
 								]),
 							]) ?>
@@ -133,7 +133,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				<h4 class="modal-title"><?= Yii::t('roxy', 'Create new folder') ?></h4>
 			</div>
 			<div class="modal-body">
-				<form action="<?= Url::to(['/roxymce/management/folder-create']) ?>" method="get" role="form">
+				<form action="<?= Url::to(['management/folder-create']) ?>" method="get" role="form">
 					<input type="hidden" name="folder" value="">
 					<div class="form-group">
 						<input type="text" class="form-control" name="name" id="folder_name" placeholder="<?= Yii::t('roxy', 'Folder\'s name') ?>">
