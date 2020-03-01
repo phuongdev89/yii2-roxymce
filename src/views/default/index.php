@@ -23,6 +23,10 @@ use yii\helpers\Url;
 use yii\web\View;
 
 RoxyMceAsset::register($this);
+
+$this->title = Yii::t('roxy', 'File manager');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('roxy', 'Files'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="wrapper">
 	<section class="body">

@@ -13,7 +13,7 @@ use yii\web\View;
 
 class ContextMenuAsset extends AssetBundle {
 
-	public $sourcePath = '@vendor/navatech/yii2-roxymce/src/web';
+	public $sourcePath = '@vendor/janki1/yii2-roxymce/src/web';
 
 	public $css        = [
 		'css/jquery.contextMenu.min.css',

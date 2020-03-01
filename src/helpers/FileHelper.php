@@ -72,10 +72,10 @@ class FileHelper {
 	 */
 	public static function fileUrl($path) {
 		/**@var Module $module */
-		$module    = Yii::$app->getModule('roxymce');
+                $module = Yii::$app->controller->module;
 		$uploadUrl = str_replace('\\', '/', Yii::getAlias($module->uploadFolder));
 		$path      = Yii::getAlias(str_replace('\\', '/', $path));
-		return str_replace('\\', '/', str_replace($uploadUrl, $module->uploadUrl, $path));
+		return str_replace('\\', '/', str_replace(realpath($uploadUrl), $module->uploadUrl, $path));
 	}
 
 	/**

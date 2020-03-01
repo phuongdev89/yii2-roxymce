@@ -36,7 +36,7 @@ class FolderHelper {
 	public static function folderList($path) {
 		$path = realpath($path);
 		/**@var Module $module */
-		$module = Yii::$app->getModule('roxymce');
+                $module = Yii::$app->controller->module;
 		$state  = [
 			'checked'  => true,
 			'expanded' => true,
@@ -59,7 +59,7 @@ class FolderHelper {
 			'icon'         => 'glyphicon glyphicon-folder-close',
 			'selectedIcon' => 'glyphicon glyphicon-folder-open',
 			'state'        => $state,
-			'nodes'        => self::_folderList($path),
+			'nodes'        => self::_folderList($path, $module),
 		];
 		return $response;
 	}
@@ -72,7 +72,7 @@ class FolderHelper {
 	private static function _folderList($path) {
 		$path = realpath($path);
 		/**@var Module $module */
-		$module   = Yii::$app->getModule('roxymce');
+                $module = Yii::$app->controller->module;
 		$response = null;
 		if (is_dir($path)) {
 			$dirs = glob($path . '/*', GLOB_ONLYDIR);
@@ -97,7 +97,7 @@ class FolderHelper {
 					]),
 					'icon'         => 'glyphicon glyphicon-folder-close',
 					'selectedIcon' => 'glyphicon glyphicon-folder-open',
-					'nodes'        => self::_folderList($dir),
+					'nodes'        => self::_folderList($dir, $module),
 					'state'        => $state,
 				];
 				$response[] = $array;
@@ -164,13 +164,5 @@ class FolderHelper {
 			asort($files);
 		}
 		return array_keys($files);
-	}
-
-	/**
-	 * @return string
-	 */
-	public static function rootFolderName() {
-		$rootFolder = Yii::getAlias(Yii::$app->getModule('roxymce')->uploadFolder);
-		return basename($rootFolder);
 	}
 }

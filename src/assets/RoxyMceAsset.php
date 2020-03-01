@@ -26,7 +26,7 @@ class RoxyMceAsset extends AssetBundle {
 	 */
 	public function init() {
 		parent::init();
-		$this->sourcePath = '@vendor/navatech/yii2-roxymce/src/web';
+		$this->sourcePath = '@vendor/janki1/yii2-roxymce/src/web';
 		$this->depends    = [
 			'yii\web\JqueryAsset',
 			'yii\bootstrap\BootstrapAsset',

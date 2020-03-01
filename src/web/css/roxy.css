@@ -1,6 +1,4 @@
 body {
-    font-family: Verdana;
-    font-size: 11px;
     padding: 0;
     margin: 0;
     background: #FFF;
@@ -13,11 +11,6 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-}
-
-a {
-    text-decoration: none;
-    color: #DD7700;
 }
 
 .wrapper {

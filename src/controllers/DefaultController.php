@@ -29,7 +29,7 @@ class DefaultController extends Controller {
 	 *
 	 * @return string
 	 */
-	public function actionIndex($type) {
+	public function actionIndex($type = '') {
 		/**@var Module $module */
 		$uploadForm    = new UploadForm();
 		$defaultFolder = '';
