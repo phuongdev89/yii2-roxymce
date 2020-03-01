@@ -28,8 +28,6 @@ $this->title = Yii::t('roxy', 'File manager');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('roxy', 'Files'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="wrapper">
-	<section class="body">
 		<div class="col-sm-4 left-body">
 			<div class="actions">
 				<button type="button" class="btn btn-sm btn-primary" data-toggle="modal" href="#folder-create" title="<?= Yii::t('roxy', 'Create new folder') ?>">
@@ -127,27 +125,6 @@ $this->params['breadcrumbs'][] = $this->title;
 				</div>
 			</div>
 		</div>
-	</section>
-	<section class="footer">
-		<div class="row bottom">
-			<div class="col-sm-6 pull-left">
-				<div class="progress" style="display: none;">
-					<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-
-					</div>
-				</div>
-			</div>
-			<div class="col-sm-3 col-sm-offset-3 pull-right">
-				<button type="button" class="btn btn-success btn-roxymce-select" disabled title="<?= Yii::t('roxy', 'Select highlighted file') ?>">
-					<i class="fa fa-check"></i> <?= Yii::t('roxy', 'Select') ?>
-				</button>
-				<button type="button" class="btn btn-default btn-roxymce-close">
-					<i class="fa fa-ban"></i> <?= Yii::t('roxy', 'Close') ?>
-				</button>
-			</div>
-		</div>
-	</section>
-</div>
 <div class="modal fade" id="folder-create">
 	<div class="modal-dialog">
 		<div class="modal-content">
