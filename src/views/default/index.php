@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				<button type="button" class="btn btn-sm btn-danger btn-folder-remove" title="<?= Yii::t('roxy', 'Delete selected folder') ?>">
 					<i class="fa fa-trash"></i> <?= Yii::t('roxy', 'Delete') ?></button>
 			</div>
-			<div class="scrollPane folder-list" data-url="<?= Url::to(['/roxymce/management/folder-list']) ?>">
+			<div class="scrollPane folder-list" data-url="<?= Url::to(['management/folder-list']) ?>">
 				<div class="folder-list-item"></div>
 			</div>
 		</div>
