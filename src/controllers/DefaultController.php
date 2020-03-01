@@ -31,15 +31,14 @@ class DefaultController extends Controller {
 	 */
 	public function actionIndex($type) {
 		/**@var Module $module */
-		$module        = Yii::$app->getModule('roxymce');
 		$uploadForm    = new UploadForm();
 		$defaultFolder = '';
 		$defaultOrder  = FolderHelper::SORT_DATE_DESC;
 		Yii::$app->cache->set('roxy_file_type', $type);
-		if ($module->rememberLastFolder && Yii::$app->cache->exists('roxy_last_folder')) {
+		if ($this->module->rememberLastFolder && Yii::$app->cache->exists('roxy_last_folder')) {
 			$defaultFolder = Yii::$app->cache->get('roxy_last_folder');
 		}
-		if ($module->rememberLastOrder && Yii::$app->cache->exists('roxy_last_order')) {
+		if ($this->module->rememberLastOrder && Yii::$app->cache->exists('roxy_last_order')) {
 			$defaultOrder = Yii::$app->cache->get('roxy_last_order');
 		}
 		$fileListUrl = Url::to([
@@ -47,8 +46,8 @@ class DefaultController extends Controller {
 			'folder' => $defaultFolder,
 			'sort'   => $defaultOrder,
 		]);
-		return $this->renderAjax('index', [
-			'module'        => $module,
+		return $this->render('index', [
+			'module'        => $this->module,
 			'uploadForm'    => $uploadForm,
 			'fileListUrl'   => $fileListUrl,
 			'defaultOrder'  => $defaultOrder,

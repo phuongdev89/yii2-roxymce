@@ -1,45 +1,51 @@
 {
-	"name" : "navatech/yii2-roxymce",
-	"description" : "Integrate tinymce + roxy manager to yii2",
-	"keywords" : [
-		"yii2",
-		"navatech",
-		"tinymce",
-		"file manager",
-		"roxy"
-	],
-	"type" : "yii2-extension",
-	"license" : "MIT",
-	"homepage" : "https://navatech.vn",
-	"support" : {
-		"source" : "https://github.com/navatech/yii2-roxymce"
-	},
-	"authors" : [
-		{
-			"name" : "Le Phuong",
-			"email" : "phuong17889@gmail.com"
-		}
-	],
-	"require" : {
-		"ext-gd" : "*",
-		"ext-mbstring" : "*",
-		"ext-zip" : "*",
-		"navatech/yii2-navatech-base" : "1.0.0.2",
-		"bower-asset/tinymce" : "^4.3",
-		"bower-asset/fontawesome" : "^4.6",
-		"bower-asset/patternfly-bootstrap-treeview" : "~2.1",
-		"bower-asset/jquery.lazyload" : "~1.9",
-		"bower-asset/fancybox" : "~2.1"
-	},
-	"conflict" : {
-		"skeeks/yii2-assets-auto-compress" : "1.2.*"
-	},
-	"autoload" : {
-		"psr-4" : {
-			"navatech\\roxymce\\" : "src"
-		}
-	},
-	"extra" : {
-		"bootstrap" : "navatech\\roxymce\\Bootstrap"
-	}
+    "name": "navatech/yii2-roxymce",
+    "description": "Integrate tinymce + roxy manager to yii2",
+    "keywords": [
+        "yii2",
+        "navatech",
+        "tinymce",
+        "file manager",
+        "roxy"
+    ],
+    "type": "yii2-extension",
+    "license": "MIT",
+    "homepage": "https://navatech.vn",
+    "support": {
+        "source": "https://github.com/navatech/yii2-roxymce"
+    },
+    "authors": [
+        {
+            "name": "Le Phuong",
+            "email": "phuong17889@gmail.com"
+        }
+    ],
+    "require": {
+        "ext-gd": "*",
+        "ext-mbstring": "*",
+        "ext-zip": "*",
+        "navatech/yii2-navatech-base": "1.0.0.2",
+        "bower-asset/tinymce": "^4.3",
+        "bower-asset/fontawesome": "^4.6",
+        "bower-asset/patternfly-bootstrap-treeview": "~2.1",
+        "bower-asset/jquery.lazyload": "~1.9",
+        "bower-asset/fancybox": "~2.1"
+    },
+    "conflict": {
+        "skeeks/yii2-assets-auto-compress": "1.2.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "navatech\\roxymce\\": "src"
+        }
+    },
+    "extra": {
+        "bootstrap": "navatech\\roxymce\\Bootstrap"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
 }
