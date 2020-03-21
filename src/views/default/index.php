@@ -155,7 +155,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				<h4 class="modal-title"><?= Yii::t('roxy', 'Rename selected folder') ?></h4>
 			</div>
 			<div class="modal-body">
-				<form action="<?= Url::to(['/roxymce/management/folder-rename']) ?>" method="get" role="form">
+				<form action="<?= Url::to(['management/folder-rename']) ?>" method="get" role="form">
 					<input type="hidden" name="folder" value="">
 					<div class="form-group">
 						<input type="text" class="form-control" name="name" id="folder_name" placeholder="<?= Yii::t('roxy', 'Folder\'s name') ?>">
@@ -177,7 +177,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				<h4 class="modal-title"><?= Yii::t('roxy', 'Rename selected file') ?></h4>
 			</div>
 			<div class="modal-body">
-				<form action="<?= Url::to(['/roxymce/management/file-rename']) ?>" method="get" role="form">
+				<form action="<?= Url::to(['management/file-rename']) ?>" method="get" role="form">
 					<input type="hidden" name="folder" value="">
 					<input type="hidden" name="file" value="">
 					<div class="form-group">
