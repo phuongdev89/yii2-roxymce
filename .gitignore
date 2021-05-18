@@ -1,4 +1,5 @@
 .idea
 vendor
 composer.lock
-/nbproject/
+# netbeans project files
+nbproject
