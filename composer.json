@@ -12,12 +12,16 @@
     "license": "MIT",
     "homepage": "https://navatech.vn",
     "support": {
-        "source": "https://github.com/janki/yii2-roxymce"
+        "source": "https://github.com/janki1/yii2-roxymce"
     },
     "authors": [
         {
             "name": "Le Phuong",
             "email": "phuong17889@gmail.com"
+        },
+        {
+            "name": "Ján Janki Úskoba",
+            "email": "jan.uskoba@gmail.com"
         }
     ],
     "require": {
@@ -36,7 +40,7 @@
     },
     "autoload": {
         "psr-4": {
-            "navatech\\roxymce\\": "src"
+            "janki1\\roxymce\\": "src"
         }
     },
     "extra": {
