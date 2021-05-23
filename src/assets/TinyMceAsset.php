@@ -7,8 +7,10 @@
  * @date    15/02/2016
  * @time    10:24 SA
  * @version 2.0.0
+ * 
+ * @author Ján Janki Úskoba <jan.uskoba[at]gmail.com>
  */
-namespace navatech\roxymce\assets;
+namespace janki1\roxymce\assets;
 
 use yii\web\AssetBundle;
 use yii\web\View;

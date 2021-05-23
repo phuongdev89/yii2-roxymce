@@ -8,14 +8,16 @@
  * @date    15/02/2016
  * @time    4:19 CH
  * @version 2.0.0
+ * 
+ * @author Ján Janki Úskoba <jan.uskoba[at]gmail.com>
  */
 
-namespace navatech\roxymce\controllers;
+namespace janki1\roxymce\controllers;
 
-use navatech\roxymce\helpers\FileHelper;
-use navatech\roxymce\helpers\FolderHelper;
-use navatech\roxymce\models\UploadForm;
-use navatech\roxymce\Module;
+use janki1\roxymce\helpers\FileHelper;
+use janki1\roxymce\helpers\FolderHelper;
+use janki1\roxymce\models\UploadForm;
+use janki1\roxymce\Module;
 use Yii;
 use yii\base\ErrorException;
 use yii\filters\ContentNegotiator;

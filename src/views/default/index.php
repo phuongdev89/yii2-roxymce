@@ -14,10 +14,10 @@
  * @var int        $defaultOrder
  * @var string     $fileListUrl
  */
-use navatech\roxymce\assets\RoxyMceAsset;
-use navatech\roxymce\helpers\FolderHelper;
-use navatech\roxymce\models\UploadForm;
-use navatech\roxymce\Module;
+use janki1\roxymce\assets\RoxyMceAsset;
+use janki1\roxymce\helpers\FolderHelper;
+use janki1\roxymce\models\UploadForm;
+use janki1\roxymce\Module;
 use yii\bootstrap\Html;
 use yii\helpers\Url;
 use yii\web\View;
@@ -67,6 +67,9 @@ $this->params['breadcrumbs'][] = $this->title;
 						</button>
 						<a class="btn btn-sm btn-success btn-file-download" disabled="disabled" title="<?= Yii::t('roxy', 'Download file') ?>">
 							<i class="fa fa-download"></i> <?= Yii::t('roxy', 'Download') ?>
+						</a>
+                                                <a class="btn btn-sm btn-success btn-file-copy-url" disabled="disabled" title="<?= Yii::t('roxy', 'Copy URL') ?>">
+							<i class="fa fa-link"></i> <?= Yii::t('roxy', 'Copy URL') ?>
 						</a>
 						<button type="button" class="btn btn-sm btn-danger btn-file-remove" disabled="disabled" title="<?= Yii::t('roxy', 'Delete file') ?>">
 							<i class="fa fa-trash"></i> <?= Yii::t('roxy', 'Delete file') ?>

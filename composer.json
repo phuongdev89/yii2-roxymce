@@ -12,7 +12,7 @@
     "license": "MIT",
     "homepage": "https://navatech.vn",
     "support": {
-        "source": "https://github.com/navatech/yii2-roxymce"
+        "source": "https://github.com/janki/yii2-roxymce"
     },
     "authors": [
         {
@@ -40,7 +40,7 @@
         }
     },
     "extra": {
-        "bootstrap": "navatech\\roxymce\\Bootstrap"
+        "bootstrap": "janki\\roxymce\\Bootstrap"
     },
     "repositories": [
         {

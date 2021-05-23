@@ -46,12 +46,23 @@ $(document).on("click", ".file-list-item .thumb,.file-list-item .list", function
 	th.addClass("selected");
 	$(".first-row button,.first-row a").removeAttr("disabled");
 	$(".btn-file-download").attr('href', th.data('url')).attr('target', '_blank');
-	$(".btn-file-preview").attr('href', th.data('url')).attr('title', th.data('title')).fancybox({
-		type     : th.data('image') === 1 ? 'image' : 'iframe',
-		padding  : 5,
-		fitToView: true,
+	$(".btn-file-copy-url").attr('data-href', th.data('url'));
+        if (th.data('image')) {
+            $(".btn-file-preview").attr('href', th.data('url')).attr('title', th.data('title')).fancybox({
+                fitToView: true,
 		autoSize : true
-	});
+            });
+        } else {
+            $(".btn-file-preview").attr('href', th.data('url')).attr('title', th.data('title')).fancybox({
+                    openEffect: 'elastic',
+                    closeEffect: 'elastic',
+                    autoSize: true,
+                    type: 'iframe',
+                    iframe: {
+                        preload: false // fixes issue with iframe and IE
+                    }
+            });
+        }
 	var node  = folder_list.treeview('getSelected');
 	var modal = $("#file-rename");
 	modal.find("input[name='file']").val(th.data('title'));
@@ -175,6 +186,15 @@ $(document).on("click", "#file-rename .btn-submit", function() {
 	});
 	return false;
 });
+
+/**
+ * Event remove selected folder
+ */
+$(document).on("click", ".btn-file-copy-url", function() {
+    var text = $(this).attr('data-href');
+    copyTextToClipboard(text);
+});
+
 /**
  * Event remove selected folder
  */
@@ -400,8 +420,11 @@ $(".file-list-item")[0].oncontextmenu = function(e) {
 		$(".first-row button,.first-row a").attr("disabled", "disabled");
 		var btn_file_preview = $(".btn-file-preview");
 		btn_file_preview.removeAttr('href').attr('title', btn_file_preview.text());
+                $.fancybox.destroy();
 		var btn_file_download = $(".btn-file-download");
 		btn_file_download.removeAttr('href').attr('title', btn_file_download.text());
+		var btn_file_copy_url = $(".btn-file-copy-url");
+		btn_file_copy_url.removeAttr('data-href').attr('title', btn_file_copy_url.text());
 		$(".btn-roxymce-select").attr('disabled', 'disabled');
 	}
 	return false;
@@ -427,6 +450,16 @@ $.contextMenu({
 			icon    : "fa-download",
 			callback: function() {
 				$(".btn-file-download").trigger('click');
+			},
+			disabled: function() {
+				return target.closest(".item").length === 0;
+			}
+		},
+		copyUrl : {
+			name    : msg_copyUrl,
+			icon    : "fa-link",
+			callback: function() {
+                            $(".btn-file-copy-url").trigger('click');
 			},
 			disabled: function() {
 				return target.closest(".item").length === 0;
@@ -539,6 +572,42 @@ $.contextMenu({
 		}
 	}
 });
+
+function fallbackCopyTextToClipboard(text) {
+    var textArea = document.createElement("textarea");
+    textArea.value = text;
+
+    // Avoid scrolling to bottom
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+        var successful = document.execCommand('copy');
+        var msg = successful ? 'successful' : 'unsuccessful';
+        console.log('Fallback: Copying text command was ' + msg);
+    } catch (err) {
+        console.error('Fallback: Oops, unable to copy', err);
+    }
+
+    document.body.removeChild(textArea);
+}
+
+function copyTextToClipboard(text) {
+    if (!navigator.clipboard) {
+        fallbackCopyTextToClipboard(text);
+        return;
+    }
+    navigator.clipboard.writeText(text).then(function() {
+        console.log('Async: Copying to clipboard was successful!');
+    }, function(err) {
+        console.error('Async: Could not copy text: ', err);
+    });
+}
 
 /**
  * Function show file list on current url

@@ -7,6 +7,7 @@ return [
 	'Preview'                             => 'Náhľad',
 	'Rename file'                         => 'Premenovať súbor',
 	'Download'                            => 'Stiahnuť',
+	'Copy URL'                            => 'Kopírovať URL',
 	'Delete file'                         => 'Vymazať súbor',
 	'Name'                                => 'Názov',
 	'Size'                                => 'Veľkosť',

@@ -7,9 +7,11 @@
  * @date    15/02/2016
  * @time    10:24 SA
  * @version 2.0.0
+ * 
+ * @author Ján Janki Úskoba <jan.uskoba[at]gmail.com>
  */
 
-namespace navatech\roxymce\assets;
+namespace janki1\roxymce\assets;
 
 use Yii;
 use yii\helpers\Url;
@@ -31,11 +33,11 @@ class RoxyMceAsset extends AssetBundle {
 			'yii\web\JqueryAsset',
 			'yii\bootstrap\BootstrapAsset',
 			'yii\bootstrap\BootstrapPluginAsset',
-			'navatech\roxymce\assets\FontAwesomeAsset',
-			'navatech\roxymce\assets\BootstrapTreeviewAsset',
-			'navatech\roxymce\assets\LazyLoadAsset',
-			'navatech\roxymce\assets\FancyBoxAsset',
-			'navatech\roxymce\assets\ContextMenuAsset',
+			'janki1\roxymce\assets\FontAwesomeAsset',
+			'janki1\roxymce\assets\BootstrapTreeviewAsset',
+			'janki1\roxymce\assets\LazyLoadAsset',
+			'janki1\roxymce\assets\FancyBoxAsset',
+			'janki1\roxymce\assets\ContextMenuAsset',
 		];
 		$this->css        = [
 			YII_ENV_DEV ? 'css/roxy.css' : 'css/roxy.min.css',
@@ -49,6 +51,7 @@ msg_please_select_one_folder = "' . Yii::t('roxy', 'Please select one folder') .
 msg_are_you_sure = "' . Yii::t('roxy', 'Are you sure?') . '",
 msg_preview = "' . Yii::t('roxy', 'Preview') . '",
 msg_download = "' . Yii::t('roxy', 'Download') . '",
+msg_copyUrl = "' . Yii::t('roxy', 'Copy URL') . '",
 msg_cut = "' . Yii::t('roxy', 'Cut') . '",
 msg_copy = "' . Yii::t('roxy', 'Copy') . '",
 msg_paste = "' . Yii::t('roxy', 'Paste') . '",

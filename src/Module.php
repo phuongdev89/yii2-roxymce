@@ -7,8 +7,10 @@
  * @date    15/02/2016
  * @time    4:33 CH
  * @version 2.0.0
+ * 
+ * @author Ján Janki Úskoba <jan.uskoba[at]gmail.com>
  */
-namespace navatech\roxymce;
+namespace janki1\roxymce;
 
 use Yii;
 use yii\base\InvalidParamException;
@@ -16,7 +18,7 @@ use yii\base\InvalidParamException;
 /**
  * {@inheritDoc}
  */
-class Module extends \navatech\base\Module {
+class Module extends \janki1\base\Module {
 
 	/**
 	 * @var string default folder which will be used to upload resource

@@ -7,10 +7,12 @@
  * @date    15/02/2016
  * @time    4:19 CH
  * @version 2.0.0
+ * 
+ * @author Ján Janki Úskoba <jan.uskoba[at]gmail.com>
  */
-namespace navatech\roxymce\helpers;
+namespace janki1\roxymce\helpers;
 
-use navatech\roxymce\Module;
+use janki1\roxymce\Module;
 use Yii;
 use yii\base\InvalidConfigException;
 

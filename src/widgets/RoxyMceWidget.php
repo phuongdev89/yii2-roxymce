@@ -7,10 +7,12 @@
  * @date    28/01/2016
  * @time    1:59 SA
  * @version 2.0.0
+ * 
+ * @author Ján Janki Úskoba <jan.uskoba[at]gmail.com>
  */
-namespace navatech\roxymce\widgets;
+namespace janki1\roxymce\widgets;
 
-use navatech\roxymce\assets\TinyMceAsset;
+use janki1\roxymce\assets\TinyMceAsset;
 use yii\base\InvalidParamException;
 use yii\base\Widget;
 use yii\bootstrap\Html;
@@ -48,7 +50,7 @@ class RoxyMceWidget extends Widget {
 
 	/**
 	 * @var array RoxyMce options
-	 * @see https://github.com/navatech/yii2-roxymce/blob/master/docs/widget.md
+	 * @see https://github.com/janki1/yii2-roxymce/blob/master/docs/widget.md
 	 */
 	public $options;
 

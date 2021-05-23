@@ -7,8 +7,10 @@
  * @date    05/07/2016
  * @time    11:50 PM
  * @version 2.0.0
+ * 
+ * @author Ján Janki Úskoba <jan.uskoba[at]gmail.com>
  */
-namespace navatech\roxymce;
+namespace janki1\roxymce;
 
 use Yii;
 use yii\base\Application;
@@ -25,7 +27,7 @@ class Bootstrap implements BootstrapInterface {
 	public function bootstrap($app) {
 		if (!isset($app->get('i18n')->translations['roxy*'])) {
 			$app->get('i18n')->translations['roxy*'] = [
-				'class'          => PhpMessageSource::className(),
+				'class'          => PhpMessageSource::class,
 				'basePath'       => __DIR__ . '/messages',
 				'sourceLanguage' => 'en-US',
 			];

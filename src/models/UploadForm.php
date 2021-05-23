@@ -7,11 +7,13 @@
  * @date    15/02/2016
  * @time    4:19 CH
  * @version 2.0.0
+ * 
+ * @author Ján Janki Úskoba <jan.uskoba[at]gmail.com>
  */
-namespace navatech\roxymce\models;
+namespace janki1\roxymce\models;
 
-use navatech\roxymce\helpers\FileHelper;
-use navatech\roxymce\Module;
+use janki1\roxymce\helpers\FileHelper;
+use janki1\roxymce\Module;
 use yii\base\Model;
 use yii\web\UploadedFile;
 
