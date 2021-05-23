@@ -40,7 +40,7 @@
         }
     },
     "extra": {
-        "bootstrap": "janki\\roxymce\\Bootstrap"
+        "bootstrap": "janki1\roxymce\\Bootstrap"
     },
     "repositories": [
         {
