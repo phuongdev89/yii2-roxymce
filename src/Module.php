@@ -19,6 +19,12 @@ use yii\base\InvalidParamException;
  * {@inheritDoc}
  */
 class Module extends \navatech\base\Module {
+    
+        /**
+         * Header string
+         * @var string
+         */
+        public $title = 'File Manager';
 
 	/**
 	 * @var string default folder which will be used to upload resource
