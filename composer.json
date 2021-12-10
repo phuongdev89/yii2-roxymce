@@ -24,7 +24,7 @@
 		"ext-gd" : "*",
 		"ext-mbstring" : "*",
 		"ext-zip" : "*",
-		"navatech/yii2-navatech-base" : "1.0.0.2",
+		"navatech/yii2-navatech-base" : "@dev",
 		"bower-asset/tinymce" : "^4.3",
 		"bower-asset/fontawesome" : "^4.6",
 		"bower-asset/patternfly-bootstrap-treeview" : "~2.1",
