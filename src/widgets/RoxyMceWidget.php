@@ -8,6 +8,7 @@
  * @time    1:59 SA
  * @version 2.0.0
  */
+
 namespace navatech\roxymce\widgets;
 
 use navatech\roxymce\assets\TinyMceAsset;
@@ -64,6 +65,40 @@ class RoxyMceWidget extends Widget {
 	public $action;
 
 	/**
+	 * @var string function callback of setup.
+	 * @see   https://www.tiny.cloud/docs-4x/demo/custom-toolbar-menu-button/
+	 */
+	public $setup = null;
+
+	/**
+	 * @var array function callback of setup.
+	 * @see     https://www.tiny.cloud/docs-4x/demo/custom-toolbar-menu-button/
+	 * @example menu: {    custom: { title: 'Custom Menu', items: 'undo redo myCustomMenuItem' }}
+	 */
+	public $menu = null;
+
+	/**
+	 * @var array function callback of setup.
+	 * @see     https://www.tiny.cloud/docs-4x/demo/custom-toolbar-menu-button/
+	 * @example menu: 'mybutton'
+	 */
+	public $toolbar1 = null;
+
+	/**
+	 * @var array function callback of setup.
+	 * @see     https://www.tiny.cloud/docs-4x/demo/custom-toolbar-menu-button/
+	 * @example menu: 'mybutton'
+	 */
+	public $toolbar2 = null;
+
+	/**
+	 * @var array function callback of setup.
+	 * @see     https://www.tiny.cloud/docs-4x/demo/custom-toolbar-menu-button/
+	 * @example menu: 'mybutton'
+	 */
+	public $toolbar3 = null;
+
+	/**
 	 * Initializes the object.
 	 * This method is invoked at the end of the constructor after the object is initialized with the
 	 * given configuration.
@@ -99,13 +134,35 @@ class RoxyMceWidget extends Widget {
 			'plugins'      => [
 				'advlist autolink autosave autoresize link image lists charmap print preview hr anchor pagebreak spellchecker',
 				'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-				'table contextmenu directionality emoticons template textcolor paste fullpage textcolor colorpicker textpattern'
+				'table contextmenu directionality emoticons template textcolor paste fullpage textcolor colorpicker textpattern',
 			],
 			'theme'        => 'modern',
 			'toolbar1'     => 'newdocument fullpage | undo redo | styleselect formatselect fontselect fontsizeselect',
 			'toolbar2'     => 'print preview media | forecolor backcolor emoticons | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media code',
 			'image_advtab' => true,
 		]);
+		if ($this->menu != null) {
+			$menu_bar = [];
+			foreach ($this->menu as $menu_name => $menu_config) {
+				$menu_bar[] = $menu_name;
+				if (isset($menu_config['items'])) {
+					$menu_config['items'] = implode(' ', $menu_config['items']);
+				} else {
+					$menu_config['items'] = '';
+				}
+				$this->clientOptions['menu'][$menu_name] = $menu_config;
+			}
+			$this->clientOptions['menubar'] = implode(' ', $menu_bar);
+		}
+		if ($this->toolbar1 != null) {
+			$this->clientOptions['toolbar1'] .= ' | ' . trim(implode(' ', $this->toolbar1));
+		}
+		if ($this->toolbar2 != null) {
+			$this->clientOptions['toolbar2'] .= ' | ' . trim(implode(' ', $this->toolbar2));
+		}
+		if ($this->toolbar3 != null) {
+			$this->clientOptions['toolbar3'] = implode(' ', $this->toolbar3);
+		}
 		if ($this->action === null) {
 			$this->action = Url::to(['roxymce/default']);
 		}
@@ -118,7 +175,7 @@ class RoxyMceWidget extends Widget {
 	 */
 	public function run() {
 		$this->view->registerJs('$(function() {
-			tinyMCE.init({' . substr(Json::encode($this->clientOptions), 1, - 1) . ',"file_browser_callback": RoxyFileBrowser});
+			tinyMCE.init({' . substr(Json::encode($this->clientOptions), 1, - 1) . ', "setup": ' . $this->setup . ', "file_browser_callback": RoxyFileBrowser});
 		});', View::POS_HEAD);
 		$this->view->registerJs('function RoxyFileBrowser(field_name, url, type, win) {
 			var roxyMce = "' . $this->action . '";
