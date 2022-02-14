@@ -80,6 +80,14 @@ class RoxyMceWidget extends Widget {
 	public $menu = null;
 
 	/**
+	 * @var array function callback of setup.
+	 * @see     https://www.tiny.cloud/docs/ui-components/menuitems/
+	 * @since   3.0
+	 * @example menu: 'mybutton'
+	 */
+	public $toolbar3 = null;
+
+	/**
 	 * Initializes the object.
 	 * This method is invoked at the end of the constructor after the object is initialized with the
 	 * given configuration.
@@ -113,18 +121,29 @@ class RoxyMceWidget extends Widget {
 		$this->clientOptions = ArrayHelper::merge($this->clientOptions, [
 			'selector'     => '#' . $this->id,
 			'plugins'      => [
-				'advlist autolink autosave autoresize link image lists charmap print preview hr anchor pagebreak spellchecker',
+				'advlist autolink autosave autoresize link image lists charmap print preview hr anchor pagebreak',
 				'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-				'table contextmenu directionality emoticons template textcolor paste fullpage textcolor colorpicker textpattern',
+				'table directionality emoticons template paste textpattern',
 			],
-			'theme'        => 'modern',
-			'toolbar1'     => 'newdocument fullpage | undo redo | styleselect formatselect fontselect fontsizeselect',
+			'toolbar1'     => 'newdocument | undo redo | styleselect formatselect fontselect fontsizeselect',
 			'toolbar2'     => 'print preview media | forecolor backcolor emoticons | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media code',
 			'image_advtab' => true,
 		]);
 		if ($this->menu != null) {
-			$this->clientOptions['menu']    = $this->menu;
-			$this->clientOptions['menubar'] = md5(time());
+			$menu_bar = [];
+			foreach ($this->menu as $menu_name => $menu_config) {
+				$menu_bar[] = $menu_name;
+				if (isset($menu_config['items'])) {
+					$menu_config['items'] = implode(' ', $menu_config['items']);
+				} else {
+					$menu_config['items'] = '';
+				}
+				$this->clientOptions['menu'][$menu_name] = $menu_config;
+			}
+			$this->clientOptions['menubar'] = implode(' ', $menu_bar);
+		}
+		if ($this->toolbar3 != null) {
+			$this->clientOptions['toolbar3'] = implode(' ', $this->toolbar3);
 		}
 		if ($this->action === null) {
 			$this->action = Url::to(['roxymce/default']);
@@ -137,24 +156,21 @@ class RoxyMceWidget extends Widget {
 	 * @throws InvalidParamException
 	 */
 	public function run() {
-		if ($this->setup != null) {
-			$this->view->registerJs('$(function() {
-			tinyMCE.init({' . substr(Json::encode($this->clientOptions), 1, - 1) . ', "setup": ' . $this->setup . ', "file_browser_callback": RoxyFileBrowser});
+		$this->view->registerJs('$(function() {
+			tinyMCE.init({' . substr(Json::encode($this->clientOptions), 1, - 1) . ', "setup": ' . $this->setup . ', "file_picker_types": "file image media","file_picker_callback": RoxyFileBrowser});
 		});', View::POS_HEAD);
-		} else {
-			$this->view->registerJs('$(function() {
-			tinyMCE.init({' . substr(Json::encode($this->clientOptions), 1, - 1) . ',"file_browser_callback": RoxyFileBrowser});
-		});', View::POS_HEAD);
-		}
-		$this->view->registerJs('function RoxyFileBrowser(field_name, url, type, win) {
+		//todo sửa chỗ này
+		$this->view->registerJs('function RoxyFileBrowser(callback, value, meta) {
+			alert("Coming soon"); return false;
+			var win = tinyMCE.activeEditor.getWin();
+			console.log(meta);
 			var roxyMce = "' . $this->action . '";
 			if(roxyMce.indexOf("?") < 0) {
-				roxyMce += "?type=" + type;
+				roxyMce += "?type=" + meta.filetype;
+			} else {
+				roxyMce += "&type=" + meta.filetype;
 			}
-			else {
-				roxyMce += "&type=" + type;
-			}
-			roxyMce += "&input=" + field_name + "&value=" + win.document.getElementById(field_name).value;
+			roxyMce += "&input=" + meta.filename + "&value=a";
 			if(tinyMCE.activeEditor.settings.language) {
 				roxyMce += "&langCode=" + tinyMCE.activeEditor.settings.language;
 			}
@@ -169,7 +185,7 @@ class RoxyMceWidget extends Widget {
 				close_previous: "no"
 			}, {
 				window: win,
-				input : field_name
+				input : meta.filename
 			});
 			return false;
 		}', View::POS_HEAD);
