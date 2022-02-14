@@ -8,6 +8,7 @@
  * @time    1:59 SA
  * @version 2.0.0
  */
+
 namespace navatech\roxymce\widgets;
 
 use navatech\roxymce\assets\TinyMceAsset;
@@ -64,6 +65,21 @@ class RoxyMceWidget extends Widget {
 	public $action;
 
 	/**
+	 * @var string function callback of setup.
+	 * @see   https://www.tiny.cloud/docs/ui-components/menuitems/
+	 * @since 3.0
+	 */
+	public $setup = null;
+
+	/**
+	 * @var array function callback of setup.
+	 * @see     https://www.tiny.cloud/docs/ui-components/menuitems/
+	 * @since   3.0
+	 * @example menu: {    custom: { title: 'Custom Menu', items: 'undo redo myCustomMenuItem' }}
+	 */
+	public $menu = null;
+
+	/**
 	 * Initializes the object.
 	 * This method is invoked at the end of the constructor after the object is initialized with the
 	 * given configuration.
@@ -99,13 +115,17 @@ class RoxyMceWidget extends Widget {
 			'plugins'      => [
 				'advlist autolink autosave autoresize link image lists charmap print preview hr anchor pagebreak spellchecker',
 				'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-				'table contextmenu directionality emoticons template textcolor paste fullpage textcolor colorpicker textpattern'
+				'table contextmenu directionality emoticons template textcolor paste fullpage textcolor colorpicker textpattern',
 			],
 			'theme'        => 'modern',
 			'toolbar1'     => 'newdocument fullpage | undo redo | styleselect formatselect fontselect fontsizeselect',
 			'toolbar2'     => 'print preview media | forecolor backcolor emoticons | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media code',
 			'image_advtab' => true,
 		]);
+		if ($this->menu != null) {
+			$this->clientOptions['menu']    = $this->menu;
+			$this->clientOptions['menubar'] = md5(time());
+		}
 		if ($this->action === null) {
 			$this->action = Url::to(['roxymce/default']);
 		}
@@ -117,9 +137,15 @@ class RoxyMceWidget extends Widget {
 	 * @throws InvalidParamException
 	 */
 	public function run() {
-		$this->view->registerJs('$(function() {
+		if ($this->setup != null) {
+			$this->view->registerJs('$(function() {
+			tinyMCE.init({' . substr(Json::encode($this->clientOptions), 1, - 1) . ', "setup": ' . $this->setup . ', "file_browser_callback": RoxyFileBrowser});
+		});', View::POS_HEAD);
+		} else {
+			$this->view->registerJs('$(function() {
 			tinyMCE.init({' . substr(Json::encode($this->clientOptions), 1, - 1) . ',"file_browser_callback": RoxyFileBrowser});
 		});', View::POS_HEAD);
+		}
 		$this->view->registerJs('function RoxyFileBrowser(field_name, url, type, win) {
 			var roxyMce = "' . $this->action . '";
 			if(roxyMce.indexOf("?") < 0) {
