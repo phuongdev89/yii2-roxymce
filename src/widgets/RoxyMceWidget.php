@@ -68,7 +68,7 @@ class RoxyMceWidget extends Widget {
 	 * @var string function callback of setup.
 	 * @see   https://www.tiny.cloud/docs-4x/demo/custom-toolbar-menu-button/
 	 */
-	public $setup = null;
+	public $setup = '{}';
 
 	/**
 	 * @var array function callback of setup.
