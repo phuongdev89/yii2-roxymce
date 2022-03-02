@@ -68,7 +68,7 @@ class RoxyMceWidget extends Widget {
 	 * @var string function callback of setup.
 	 * @see   https://www.tiny.cloud/docs-4x/demo/custom-toolbar-menu-button/
 	 */
-	public $setup = '{}';
+	public $setup = null;
 
 	/**
 	 * @var array function callback of setup.
@@ -174,9 +174,15 @@ class RoxyMceWidget extends Widget {
 	 * @throws InvalidParamException
 	 */
 	public function run() {
-		$this->view->registerJs('$(function() {
+		if ($this->setup != null) {
+			$this->view->registerJs('$(function() {
 			tinyMCE.init({' . substr(Json::encode($this->clientOptions), 1, - 1) . ', "setup": ' . $this->setup . ', "file_browser_callback": RoxyFileBrowser});
 		});', View::POS_HEAD);
+		} else {
+			$this->view->registerJs('$(function() {
+			tinyMCE.init({' . substr(Json::encode($this->clientOptions), 1, - 1) . ', "file_browser_callback": RoxyFileBrowser});
+		});', View::POS_HEAD);
+		}
 		$this->view->registerJs('function RoxyFileBrowser(field_name, url, type, win) {
 			var roxyMce = "' . $this->action . '";
 			if(roxyMce.indexOf("?") < 0) {
