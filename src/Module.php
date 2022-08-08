@@ -7,7 +7,7 @@
  * @date    15/02/2016
  * @time    4:33 CH
  * @version 2.0.0
- * 
+ *
  * @author Ján Janki Úskoba <jan.uskoba[at]gmail.com>
  */
 namespace janki1\roxymce;
@@ -19,7 +19,8 @@ use yii\base\InvalidParamException;
 /**
  * {@inheritDoc}
  */
-class Module extends BaseModule {
+class Module extends BaseModule
+{
     
     /**
      * User role see https://www.yiiframework.com/doc/api/2.0/yii-filters-accessrule#$roles-detail
@@ -76,12 +77,13 @@ class Module extends BaseModule {
      * If you override this method, please make sure you call the parent implementation.
      * @throws InvalidParamException
      */
-    public function init() {
+    public function init()
+    {
         parent::init();
         if (!is_dir(Yii::getAlias($this->uploadFolder))) {
             mkdir(Yii::getAlias($this->uploadFolder), 0777, true);
         }
-        if(!Yii::$app->cache->exists('roxy_last_order')) {
+        if (!Yii::$app->cache->exists('roxy_last_order')) {
             Yii::$app->cache->set('roxy_last_folder', Yii::getAlias($this->uploadFolder));
         }
     }

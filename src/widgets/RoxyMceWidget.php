@@ -7,7 +7,7 @@
  * @date    28/01/2016
  * @time    1:59 SA
  * @version 2.0.0
- * 
+ *
  * @author Ján Janki Úskoba <jan.uskoba[at]gmail.com>
  */
 namespace janki1\roxymce\widgets;
@@ -26,7 +26,8 @@ use yii\web\View;
  * This is RoxyMce widget, call <?=RoxyMceWidget::widget([])?>
  * {@inheritDoc}
  */
-class RoxyMceWidget extends Widget {
+class RoxyMceWidget extends Widget
+{
 
     /**
      * @var ActiveRecord
@@ -71,7 +72,8 @@ class RoxyMceWidget extends Widget {
      * given configuration.
      * @throws InvalidParamException
      */
-    public function init() {
+    public function init()
+    {
         parent::init();
         TinyMceAsset::register($this->view);
         if ($this->id === null) {
@@ -118,7 +120,8 @@ class RoxyMceWidget extends Widget {
      * @return string the result of widget execution to be outputted.
      * @throws InvalidParamException
      */
-    public function run() {
+    public function run()
+    {
         $this->view->registerJs('$(function() {
                 tinyMCE.init({' . substr(Json::encode($this->clientOptions), 1, - 1) . ',"file_browser_callback": RoxyFileBrowser});
         });', View::POS_HEAD);

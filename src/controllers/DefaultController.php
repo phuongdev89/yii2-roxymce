@@ -7,7 +7,7 @@
  * @date    15/02/2016
  * @time    4:19 CH
  * @version 2.0.0
- * 
+ *
  * @author Ján Janki Úskoba <jan.uskoba[at]gmail.com>
  */
 namespace janki1\roxymce\controllers;
@@ -24,8 +24,8 @@ use yii\filters\AccessControl;
 /**
  * {@inheritDoc}
  */
-class DefaultController extends Controller {
-
+class DefaultController extends Controller
+{
     public function behaviors(): array
     {
         return ArrayHelper::merge(parent::behaviors(), [
@@ -47,7 +47,8 @@ class DefaultController extends Controller {
      *
      * @return string
      */
-    public function actionIndex($type = '') {
+    public function actionIndex($type = '')
+    {
         /**@var Module $module */
         $uploadForm    = new UploadForm();
         $defaultFolder = '';
