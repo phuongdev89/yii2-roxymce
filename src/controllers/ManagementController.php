@@ -8,7 +8,7 @@
  * @date    15/02/2016
  * @time    4:19 CH
  * @version 2.0.0
- * 
+ *
  * @author Ján Janki Úskoba <jan.uskoba[at]gmail.com>
  */
 
@@ -26,29 +26,35 @@ use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\web\UploadedFile;
+use yii\helpers\ArrayHelper;
+use yii\filters\AccessControl;
 
 /**
  * @property Module $module
  */
 class ManagementController extends Controller
 {
-
     public $enableCsrfValidation = false;
-
-    /**
-     * {@inheritDoc}
-     */
-    public function behaviors()
+    
+    public function behaviors(): array
     {
-        $behaviors = parent::behaviors();
-        $behaviors['contentNegotiator'] = [
-            'class' => ContentNegotiator::class,
-            'formats' => [
-                'application/json' => Response::FORMAT_JSON,
+        return ArrayHelper::merge(parent::behaviors(), [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'roles' => $this->module->role
+                    ]
+                ]
             ],
-        ];
-        $behaviors['verbs'] = [
-            'class' => VerbFilter::class,
+            'contentNegotiator' => [
+                'class' => ContentNegotiator::class,
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
             'actions' => [
                 '*' => [
                     'GET',
@@ -59,8 +65,8 @@ class ManagementController extends Controller
                     'AJAX',
                 ],
             ],
-        ];
-        return $behaviors;
+            ]
+        ]);
     }
 
     /**
@@ -423,7 +429,7 @@ class ManagementController extends Controller
         if (Yii::$app->session->hasFlash('roxymce_cut')) {
             $filePath = Yii::$app->session->getFlash('roxymce_cut');
             $return = rename($filePath, $folder . DIRECTORY_SEPARATOR . basename($filePath));
-        } else if (Yii::$app->session->hasFlash('roxymce_copy')) {
+        } elseif (Yii::$app->session->hasFlash('roxymce_copy')) {
             $filePath = Yii::$app->session->getFlash('roxymce_copy');
             $return = copy($filePath, $folder . DIRECTORY_SEPARATOR . basename($filePath));
         }
@@ -438,5 +444,4 @@ class ManagementController extends Controller
             ];
         }
     }
-
 }

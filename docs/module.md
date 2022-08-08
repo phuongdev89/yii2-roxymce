@@ -2,6 +2,7 @@ Module configure
 ---
 ### Property
 
+* 'role' array|null Allowed user roles to access this module. Default only logged user. See https://www.yiiframework.com/doc/api/2.0/yii-filters-accessrule#$roles-detail
 * `uploadFolder` the directory where stored files. Default is `@app/web/uploads/images`. If folder not existed, roxy will auto-create it.
 * `uploadUrl` the url which can get folder link. Default is `/uploads/images`. If you are using `yii2-advanced` should include scheme (`http://frontend.domain.com/uploads/images`).
 * `defaultView` display type. Default is `thumb`
