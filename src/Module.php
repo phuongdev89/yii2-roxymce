@@ -19,9 +19,14 @@ use yii\base\InvalidParamException;
 /**
  * {@inheritDoc}
  */
-class Module extends BaseModule
-{
+class Module extends BaseModule {
     
+    /**
+     * Header string
+     * @var string
+     */
+    public $title = 'File Manager';
+
     /**
      * User role see https://www.yiiframework.com/doc/api/2.0/yii-filters-accessrule#$roles-detail
      * @var string
