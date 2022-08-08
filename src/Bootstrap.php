@@ -19,19 +19,19 @@ use yii\i18n\PhpMessageSource;
 
 class Bootstrap implements BootstrapInterface {
 
-	/**
-	 * Bootstrap method to be called during application bootstrap stage.
-	 *
-	 * @param Application $app the application currently running
-	 */
-	public function bootstrap($app) {
-		if (!isset($app->get('i18n')->translations['roxy*'])) {
-			$app->get('i18n')->translations['roxy*'] = [
-				'class'          => PhpMessageSource::class,
-				'basePath'       => __DIR__ . '/messages',
-				'sourceLanguage' => 'en-US',
-			];
-		}
-		Yii::setAlias('roxymce', __DIR__);
-	}
+    /**
+     * Bootstrap method to be called during application bootstrap stage.
+     *
+     * @param Application $app the application currently running
+     */
+    public function bootstrap($app) {
+        if (!isset($app->get('i18n')->translations['roxy*'])) {
+            $app->get('i18n')->translations['roxy*'] = [
+                'class'          => PhpMessageSource::class,
+                'basePath'       => __DIR__ . '/messages',
+                'sourceLanguage' => 'en-US',
+            ];
+        }
+        Yii::setAlias('roxymce', __DIR__);
+    }
 }

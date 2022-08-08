@@ -26,29 +26,35 @@ use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\web\UploadedFile;
+use yii\helpers\ArrayHelper;
+use yii\filters\AccessControl;
 
 /**
  * @property Module $module
  */
 class ManagementController extends Controller
 {
-
     public $enableCsrfValidation = false;
-
-    /**
-     * {@inheritDoc}
-     */
-    public function behaviors()
+    
+    public function behaviors(): array
     {
-        $behaviors = parent::behaviors();
-        $behaviors['contentNegotiator'] = [
-            'class' => ContentNegotiator::class,
-            'formats' => [
-                'application/json' => Response::FORMAT_JSON,
+        return ArrayHelper::merge(parent::behaviors(), [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'roles' => $this->module->role
+                    ]
+                ]
             ],
-        ];
-        $behaviors['verbs'] = [
-            'class' => VerbFilter::class,
+            'contentNegotiator' => [
+                'class' => ContentNegotiator::class,
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
             'actions' => [
                 '*' => [
                     'GET',
@@ -59,8 +65,8 @@ class ManagementController extends Controller
                     'AJAX',
                 ],
             ],
-        ];
-        return $behaviors;
+            ]
+        ]);
     }
 
     /**
