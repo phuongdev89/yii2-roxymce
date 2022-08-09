@@ -72,7 +72,12 @@ class Module extends BaseModule
      * @var string default allowed files extension
      */
     public $allowExtension = 'jpeg jpg png gif svg mov mp3 mp4 avi wmv flv mpeg webm ogg';
-
+    
+    /**
+     * @var bool check mime type of uploaded files
+     */
+    public $checkMimeType = true;
+    
     /**
      * Initializes the module.
      *
