@@ -39,6 +39,7 @@ class UploadForm extends Model
                             'skipOnEmpty' => true,
                             'extensions'  => implode(',', explode(' ', $module->allowExtension)),
                             'maxFiles'    => 20,
+                            'checkExtensionByMimeType' => $module->checkMimeType
                     ],
             ];
     }
