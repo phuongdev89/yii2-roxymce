@@ -43,6 +43,7 @@ class ManagementController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
+                        'allow' => true,
                         'roles' => $this->module->role
                     ]
                 ]

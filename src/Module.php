@@ -28,10 +28,10 @@ class Module extends BaseModule {
     public $title = 'File Manager';
 
     /**
-     * User role see https://www.yiiframework.com/doc/api/2.0/yii-filters-accessrule#$roles-detail
-     * @var string
+     * User roles see https://www.yiiframework.com/doc/api/2.0/yii-filters-accessrule#$roles-detail
+     * @var array
      */
-    public $role = ['@'];
+    public $roles = ['@'];
 
     /**
      * @var string default folder which will be used to upload resource
