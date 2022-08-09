@@ -19,7 +19,8 @@ use yii\base\InvalidParamException;
 /**
  * {@inheritDoc}
  */
-class Module extends BaseModule {
+class Module extends BaseModule
+{
     
     /**
      * Header string
