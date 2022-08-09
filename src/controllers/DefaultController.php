@@ -33,6 +33,7 @@ class DefaultController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
+                        'allow' => true,
                         'roles' => $this->module->role
                     ]
                 ]
