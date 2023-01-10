@@ -15,7 +15,7 @@ Add to config file:
 ```php
 	'modules' => [
 		'roxymce' => [
-			'class' => 'navatech\roxymce\Module',
+			'class' => 'phuongdev89\roxymce\Module',
 			'uploadFolder' => '@frontend/web/uploads/images',
 			'uploadUrl' => '/uploads/images',
 		],

@@ -15,10 +15,10 @@ In this case, you can use roxymce without TinyMCE intergrated. Just use with fan
 #### With Fancybox
 ```php
 <?php
-use navatech\roxymce\assets\BootstrapTreeviewAsset;
-use navatech\roxymce\assets\FancyBoxAsset;
-use navatech\roxymce\assets\FontAwesomeAsset;
-use navatech\roxymce\assets\LazyLoadAsset;
+use phuongdev89\roxymce\assets\BootstrapTreeviewAsset;
+use phuongdev89\roxymce\assets\FancyBoxAsset;
+use phuongdev89\roxymce\assets\FontAwesomeAsset;
+use phuongdev89\roxymce\assets\LazyLoadAsset;
 use yii\helpers\Url;
 
 FontAwesomeAsset::register($this);
@@ -41,10 +41,10 @@ BootstrapTreeviewAsset::register($this);
 #### With Bootstrap modal
 ```php
 <?php
-use navatech\roxymce\assets\BootstrapTreeviewAsset;
-use navatech\roxymce\assets\FancyBoxAsset;
-use navatech\roxymce\assets\FontAwesomeAsset;
-use navatech\roxymce\assets\LazyLoadAsset;
+use phuongdev89\roxymce\assets\BootstrapTreeviewAsset;
+use phuongdev89\roxymce\assets\FancyBoxAsset;
+use phuongdev89\roxymce\assets\FontAwesomeAsset;
+use phuongdev89\roxymce\assets\LazyLoadAsset;
 use yii\helpers\Url;
 
 FontAwesomeAsset::register($this);

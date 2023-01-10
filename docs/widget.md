@@ -14,14 +14,14 @@ Widget Usage
 In your view file, call roxymce widget
 #### Include ActiveRecord Model
 ```php
-echo \navatech\roxymce\widgets\RoxyMceWidget::widget([
+echo \phuongdev89\roxymce\widgets\RoxyMceWidget::widget([
 	'model'     => app\models\Post::findOne(1),
 	'attribute' => 'content',
 ]);
 ```
 #### Sample HTML without ActiveRecord Model
 ```php
-echo \navatech\roxymce\widgets\RoxyMceWidget::widget([
+echo \phuongdev89\roxymce\widgets\RoxyMceWidget::widget([
 	'name' => 'Post[content]'
 ]);
 ```

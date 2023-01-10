@@ -1,9 +1,9 @@
 <?php
 /**
- * Created by Navatech.
+ * Created by phuongdev89.
  * @project RoxyMce
  * @author  Phuong
- * @email   phuong17889[at]gmail.com
+ * @email   phuongdev89@gmail.com
  * @date    15/02/2016
  * @time    2:56 CH
  * @version 2.0.0
@@ -14,10 +14,10 @@
  * @var int        $defaultOrder
  * @var string     $fileListUrl
  */
-use navatech\roxymce\assets\RoxyMceAsset;
-use navatech\roxymce\helpers\FolderHelper;
-use navatech\roxymce\models\UploadForm;
-use navatech\roxymce\Module;
+use phuongdev89\roxymce\assets\RoxyMceAsset;
+use phuongdev89\roxymce\helpers\FolderHelper;
+use phuongdev89\roxymce\models\UploadForm;
+use phuongdev89\roxymce\Module;
 use yii\bootstrap\Html;
 use yii\helpers\Url;
 use yii\web\View;
