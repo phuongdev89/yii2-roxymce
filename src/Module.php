@@ -13,7 +13,7 @@
 namespace janki1\roxymce;
 
 use Yii;
-use navatech\base\Module as BaseModule;
+use phuong17889\base\Module as BaseModule;
 use yii\base\InvalidParamException;
 
 /**
