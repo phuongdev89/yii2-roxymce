@@ -99,11 +99,25 @@ class FileHelper
             IMAGETYPE_GIF,
         );
         $detectedType = exif_imagetype($path);
-        if (in_array($detectedType, $allowedTypes)) {
+        $isSvg = false;
+        if ($detectedType === false) {
+            $isSvg = static::isSvg($path);
+        }
+        if (in_array($detectedType, $allowedTypes) || $isSvg) {
             return self::fileUrl($path);
         } else {
             return self::fileIcon($path, true);
         }
+    }
+
+    /**
+     * Returns true if file has mime type svg
+     * @param string $filePath
+     * @return bool
+     */
+    public static function isSvg(string $filePath) : bool
+    {
+        return 'image/svg+xml' === mime_content_type($filePath);
     }
 
     /**
