@@ -13,6 +13,7 @@
 namespace janki1\roxymce\controllers;
 
 use janki1\roxymce\helpers\FolderHelper;
+use janki1\roxymce\models\ImageToWebP;
 use janki1\roxymce\models\UploadForm;
 use janki1\roxymce\Module;
 use Yii;
@@ -52,6 +53,7 @@ class DefaultController extends Controller
     {
         /**@var Module $module */
         $uploadForm    = new UploadForm();
+        $imageToWebP    = new ImageToWebP();
         $defaultFolder = '';
         $defaultOrder  = FolderHelper::SORT_DATE_DESC;
         Yii::$app->cache->set('roxy_file_type', $type);
@@ -69,6 +71,7 @@ class DefaultController extends Controller
         return $this->render('index', [
             'module'        => $this->module,
             'uploadForm'    => $uploadForm,
+            'imageToWebP'  => $imageToWebP,
             'fileListUrl'   => $fileListUrl,
             'defaultOrder'  => $defaultOrder,
             'defaultFolder' => $defaultFolder,

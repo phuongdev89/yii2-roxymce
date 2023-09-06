@@ -12,6 +12,7 @@
  */
 namespace janki1\roxymce\helpers;
 
+use yii\helpers\Url;
 use janki1\roxymce\Module;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -29,19 +30,7 @@ class FileHelper
      */
     public static function fileSize($bytes, $decimals = 2)
     {
-        $size   = array(
-            'B',
-            'kB',
-            'MB',
-            'GB',
-            'TB',
-            'PB',
-            'EB',
-            'ZB',
-            'YB',
-        );
-        $factor = (int) floor((strlen($bytes) - 1) / 3);
-        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . $size[$factor];
+        return Yii::$app->formatter->asShortSize($bytes, $decimals);
     }
 
     /**
@@ -81,7 +70,8 @@ class FileHelper
         $module = Yii::$app->controller->module;
         $uploadUrl = str_replace('\\', '/', Yii::getAlias($module->uploadFolder));
         $path      = Yii::getAlias(str_replace('\\', '/', $path));
-        return str_replace('\\', '/', str_replace(realpath($uploadUrl), $module->uploadUrl, $path));
+        $url =  str_replace('\\', '/', str_replace(realpath($uploadUrl), $module->uploadUrl, $path));
+        return Url::to($url, $module->urlSchema);
     }
 
     /**
@@ -97,6 +87,7 @@ class FileHelper
             IMAGETYPE_PNG,
             IMAGETYPE_JPEG,
             IMAGETYPE_GIF,
+            IMAGETYPE_WEBP
         );
         $detectedType = exif_imagetype($path);
         $isSvg = false;

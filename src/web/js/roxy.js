@@ -265,12 +265,23 @@ $(document).on("click", ".btn-file-remove", function() {
  * Event upload file
  */
 $(document).on("change", "input#uploadform-file", function() {
+	uploadFiles('UploadForm', this);
+});
+/**
+ * Event upload file and convert to webP
+ */
+$(document).on("change", "input#imagetowebp-file", function() {
+	uploadFiles('ImageToWebP', this);
+});
+
+function uploadFiles(modelName, el)
+{
 	$(".progress").show();
-	var th        = $(this);
+	var th        = $(el);
 	var file_data = th.prop('files');
 	var form_data = new FormData();
 	$.each(file_data, function(index, file) {
-		form_data.append('UploadForm[file][]', file);
+		form_data.append(modelName+'[file][]', file);
 	});
 	$.ajax({
 		type       : "POST",
@@ -299,7 +310,8 @@ $(document).on("change", "input#uploadform-file", function() {
 			alert(msg_somethings_went_wrong);
 		}
 	});
-});
+}
+
 /**
  * Event close roxymce
  */

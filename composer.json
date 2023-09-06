@@ -28,6 +28,7 @@
         "ext-gd": "*",
         "ext-mbstring": "*",
         "ext-zip": "*",
+        "yiisoft/yii2": "~2",
         "bower-asset/tinymce": "^4.3",
         "bower-asset/fontawesome": "^4.6",
         "bower-asset/patternfly-bootstrap-treeview": "~2.1",
@@ -50,5 +51,10 @@
             "type": "composer",
             "url": "https://asset-packagist.org"
         }
-    ]
+    ],
+    "config": {
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true
+        }
+    }
 }

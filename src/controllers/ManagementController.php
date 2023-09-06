@@ -16,9 +16,11 @@ namespace janki1\roxymce\controllers;
 
 use janki1\roxymce\helpers\FileHelper;
 use janki1\roxymce\helpers\FolderHelper;
+use janki1\roxymce\models\ImageToWebP;
 use janki1\roxymce\models\UploadForm;
 use janki1\roxymce\Module;
 use Yii;
+use yii\base\Model;
 use yii\base\ErrorException;
 use yii\filters\ContentNegotiator;
 use yii\filters\VerbFilter;
@@ -62,6 +64,10 @@ class ManagementController extends Controller
                     'AJAX',
                 ],
                 'file-upload' => [
+                    'POST',
+                    'AJAX',
+                ],
+                'image-as-webp' => [
                     'POST',
                     'AJAX',
                 ],
@@ -278,19 +284,45 @@ class ManagementController extends Controller
         $folder = realpath($folder);
         if (is_dir($folder)) {
             $model = new UploadForm();
-            $model->file = UploadedFile::getInstances($model, 'file');
-            if ($model->upload($folder)) {
+            return $this->processUpload($model, $folder);
+        }
+        return [
+            'error' => 1,
+            'message' => Yii::t('roxy', 'Somethings went wrong'),
+        ];
+    }
+
+    /**
+     * @param Model $model
+     * @param string $folder
+     * @return array|int[]
+     */
+    private function processUpload(Model $model, string $folder) : array
+    {
+        $model->file = UploadedFile::getInstances($model, 'file');
+        if ($model->upload($folder)) {
+            return [
+                'error' => 0,
+            ];
+        } else {
+            if (isset($model->firstErrors['file'])) {
                 return [
-                    'error' => 0,
+                    'error' => 1,
+                    'message' => $model->firstErrors['file'],
                 ];
-            } else {
-                if (isset($model->firstErrors['file'])) {
-                    return [
-                        'error' => 1,
-                        'message' => $model->firstErrors['file'],
-                    ];
-                }
             }
+        }
+    }
+
+    public function actionImageAsWebp($folder = '')
+    {
+        if ($folder == '') {
+            $folder = Yii::getAlias($this->module->uploadFolder);
+        }
+        $folder = realpath($folder);
+        if (is_dir($folder)) {
+            $model = new ImageToWebP();
+            return $this->processUpload($model, $folder);
         }
         return [
             'error' => 1,
