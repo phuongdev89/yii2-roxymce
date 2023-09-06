@@ -77,6 +77,11 @@ class Module extends BaseModule
      * @var bool check mime type of uploaded files
      */
     public $checkMimeType = true;
+
+    /**
+     * @var string which schema should use form copy URL
+     */
+    public string $urlSchema = 'https';
     
     /**
      * Initializes the module.

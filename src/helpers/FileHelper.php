@@ -87,6 +87,7 @@ class FileHelper
             IMAGETYPE_PNG,
             IMAGETYPE_JPEG,
             IMAGETYPE_GIF,
+            IMAGETYPE_WEBP
         );
         $detectedType = exif_imagetype($path);
         $isSvg = false;
