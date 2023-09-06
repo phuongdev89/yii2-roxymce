@@ -47,18 +47,49 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="actions first-row">
         <div class="row">
             <div class="col-sm-12">
-                <label class="btn btn-sm btn-primary" title="<?= Yii::t('roxy', 'Upload files') ?>">
-                    <?= Html::activeFileInput($uploadForm, 'file', [
-                            'multiple'  => true,
-                            'name'      => 'UploadForm[file][]',
-                            'data-href' => $fileListUrl,
-                            'data-url'  => Url::to([
-                                    'management/file-upload',
-                                    'folder' => $defaultFolder,
-                            ]),
-                    ]) ?>
-                    <i class="fa fa-plus"></i> <?= Yii::t('roxy', 'Add file') ?>
-                </label>
+                <div class="btn-group">
+                    <button
+                            class="btn btn-sm btn-primary dropdown-toggle"
+                            title="<?= Yii::t('roxy', 'Upload files') ?>"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                    >
+                        Upload
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <label class="" title="<?= Yii::t('roxy', 'Upload files') ?>">
+                                <?= Html::activeFileInput($uploadForm, 'file', [
+                                    'multiple'  => true,
+                                    'name'      => 'UploadForm[file][]',
+                                    'data-href' => $fileListUrl,
+                                    'data-url'  => Url::to([
+                                        'management/file-upload',
+                                        'folder' => $defaultFolder,
+                                    ]),
+                                ]) ?>
+                                <i class="fa fa-plus"></i> <?= Yii::t('roxy', 'Add file') ?>
+                            </label>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li>
+                            <label class="" title="<?= Yii::t('roxy', 'Upload as WebP') ?>">
+                                <?= Html::activeFileInput($uploadForm, 'file', [
+                                    'multiple'  => true,
+                                    'name'      => 'UploadForm[imageAsWebP][]',
+                                    'data-href' => $fileListUrl,
+                                    'data-url'  => Url::to([
+                                        'management/image-as-webp',
+                                        'folder' => $defaultFolder,
+                                    ]),
+                                ]) ?>
+                                <i class="fa fa-plus"></i> <?= Yii::t('roxy', 'Image as WebP') ?>
+                            </label>
+
+                        </li>
+                    </ul>
+                </div>
                 <a class="btn btn-sm btn-info btn-file-preview" disabled="disabled" title="<?= Yii::t('roxy', 'Preview selected file') ?>">
                     <i class="fa fa-search"></i> <?= Yii::t('roxy', 'Preview') ?>
                 </a>
