@@ -75,7 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <li role="separator" class="divider"></li>
                         <li>
                             <label class="" title="<?= Yii::t('roxy', 'Upload as WebP') ?>">
-                                <?= Html::activeFileInput($uploadForm, 'file', [
+                                <?= Html::activeFileInput($imageToWebP, 'file', [
                                     'multiple'  => true,
                                     'name'      => 'UploadForm[imageAsWebP][]',
                                     'data-href' => $fileListUrl,
