@@ -44,7 +44,7 @@ $(document).on("click", ".file-list-item .thumb,.file-list-item .list", function
 	var th = $(this);
 	$(".file-list-item .thumb, .file-list-item .list").removeClass('selected');
 	th.addClass("selected");
-	disableButtons();
+	$(".first-row button,.first-row a").removeAttr("disabled");
 	$(".btn-file-download").attr('href', th.data('url')).attr('target', '_blank');
 	$(".btn-file-copy-url").attr('data-href', th.data('url'));
 	if (th.data('image')) {
@@ -276,6 +276,7 @@ $(document).on("change", "input#imagetowebp-file", function() {
 
 function uploadFiles(modelName, el)
 {
+	console.log(modelName);
 	$(".progress").show();
 	var th        = $(el);
 	var file_data = th.prop('files');
@@ -283,6 +284,7 @@ function uploadFiles(modelName, el)
 	$.each(file_data, function(index, file) {
 		form_data.append(modelName+'[file][]', file);
 	});
+	console.log(form_data);
 	$.ajax({
 		type       : "POST",
 		url        : th.attr('data-url'),
@@ -680,8 +682,8 @@ function showFileList(url) {
 
 function disableButtons()
 {
-	$(".first-row button:not(.file-upload),.first-row a").attr("disabled", "disabled");
-	// $(".file-upload").removeAttr('disabled');
+	$(".first-row button, .first-row a").attr("disabled", "disabled");
+	$(".file-upload").removeAttr('disabled');
 }
 
 /**
@@ -786,6 +788,7 @@ function reloadTreeview(currentNode) {
 	$("#folder-rename").find("input[name='folder']").val(currentNode.path).parent().find("input[name='name']").val(currentNode.text);
 	$("#folder-create").find("input[name='folder']").val(currentNode.path);
 	$("#uploadform-file").attr('data-url', url_file_upload + '?folder=' + currentNode.path).attr('data-href', currentNode.href);
+	$("#imagetowebp-file").attr('data-url', url_webp_upload + '?folder=' + currentNode.path).attr('data-href', currentNode.href);
 	$('#txtSearch').val('');
 	reloadActionButton();
 }
