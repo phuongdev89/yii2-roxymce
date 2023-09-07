@@ -31,7 +31,7 @@ $(document).on("click", "[data-action='switch_view']", function() {
 	$("[data-action='switch_view']").removeClass('btn-primary');
 	$(this).addClass('btn-primary');
 	$(".file-body").removeClass("thumb_view list_view").addClass($(this).data('name'));
-	$(".first-row button,.first-row a").attr("disabled", "disabled");
+	disableButtons();
 	$(".btn-file-preview").removeAttr('href');
 	$(".btn-roxymce-select").attr('disabled', 'disabled');
 	$('#txtSearch').val('');
@@ -44,25 +44,25 @@ $(document).on("click", ".file-list-item .thumb,.file-list-item .list", function
 	var th = $(this);
 	$(".file-list-item .thumb, .file-list-item .list").removeClass('selected');
 	th.addClass("selected");
-	$(".first-row button,.first-row a").removeAttr("disabled");
+	disableButtons();
 	$(".btn-file-download").attr('href', th.data('url')).attr('target', '_blank');
 	$(".btn-file-copy-url").attr('data-href', th.data('url'));
-        if (th.data('image')) {
-            $(".btn-file-preview").attr('href', th.data('url')).attr('title', th.data('title')).fancybox({
-                fitToView: true,
-		autoSize : true
-            });
-        } else {
-            $(".btn-file-preview").attr('href', th.data('url')).attr('title', th.data('title')).fancybox({
-                    openEffect: 'elastic',
-                    closeEffect: 'elastic',
-                    autoSize: true,
-                    type: 'iframe',
-                    iframe: {
-                        preload: false // fixes issue with iframe and IE
-                    }
-            });
-        }
+	if (th.data('image')) {
+		$(".btn-file-preview").attr('href', th.data('url')).attr('title', th.data('title')).fancybox({
+			fitToView: true,
+			autoSize : true
+		});
+	} else {
+		$(".btn-file-preview").attr('href', th.data('url')).attr('title', th.data('title')).fancybox({
+			openEffect: 'elastic',
+			closeEffect: 'elastic',
+			autoSize: true,
+			type: 'iframe',
+			iframe: {
+				preload: false // fixes issue with iframe and IE
+			}
+		});
+	}
 	var node  = folder_list.treeview('getSelected');
 	var modal = $("#file-rename");
 	modal.find("input[name='file']").val(th.data('title'));
@@ -191,8 +191,8 @@ $(document).on("click", "#file-rename .btn-submit", function() {
  * Event remove selected folder
  */
 $(document).on("click", ".btn-file-copy-url", function() {
-    var text = $(this).attr('data-href');
-    copyTextToClipboard(text);
+	var text = $(this).attr('data-href');
+	copyTextToClipboard(text);
 });
 
 /**
@@ -326,7 +326,7 @@ $(document).on("click", '.btn-roxymce-close', function() {
  * Event doubleclick selected file
  */
 $(document).on("dblclick", ".file-list-item .thumb,.file-list-item .list", function() {
-   $('.btn-roxymce-select').click();
+	$('.btn-roxymce-select').click();
 });
 /**
  * Event selected file roxymce
@@ -429,10 +429,10 @@ $(".file-list-item")[0].oncontextmenu = function(e) {
 		item.find(".list, .thumb").trigger('click');
 	} else {
 		target.closest(".file-list-item").find(".list, .thumb").removeClass('selected');
-		$(".first-row button,.first-row a").attr("disabled", "disabled");
+		disableButtons();
 		var btn_file_preview = $(".btn-file-preview");
 		btn_file_preview.removeAttr('href').attr('title', btn_file_preview.text());
-                $.fancybox.destroy();
+		$.fancybox.destroy();
 		var btn_file_download = $(".btn-file-download");
 		btn_file_download.removeAttr('href').attr('title', btn_file_download.text());
 		var btn_file_copy_url = $(".btn-file-copy-url");
@@ -471,7 +471,7 @@ $.contextMenu({
 			name    : msg_copyUrl,
 			icon    : "fa-link",
 			callback: function() {
-                            $(".btn-file-copy-url").trigger('click');
+				$(".btn-file-copy-url").trigger('click');
 			},
 			disabled: function() {
 				return target.closest(".item").length === 0;
@@ -586,39 +586,39 @@ $.contextMenu({
 });
 
 function fallbackCopyTextToClipboard(text) {
-    var textArea = document.createElement("textarea");
-    textArea.value = text;
+	var textArea = document.createElement("textarea");
+	textArea.value = text;
 
-    // Avoid scrolling to bottom
-    textArea.style.top = "0";
-    textArea.style.left = "0";
-    textArea.style.position = "fixed";
+	// Avoid scrolling to bottom
+	textArea.style.top = "0";
+	textArea.style.left = "0";
+	textArea.style.position = "fixed";
 
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
+	document.body.appendChild(textArea);
+	textArea.focus();
+	textArea.select();
 
-    try {
-        var successful = document.execCommand('copy');
-        var msg = successful ? 'successful' : 'unsuccessful';
-        console.log('Fallback: Copying text command was ' + msg);
-    } catch (err) {
-        console.error('Fallback: Oops, unable to copy', err);
-    }
+	try {
+		var successful = document.execCommand('copy');
+		var msg = successful ? 'successful' : 'unsuccessful';
+		console.log('Fallback: Copying text command was ' + msg);
+	} catch (err) {
+		console.error('Fallback: Oops, unable to copy', err);
+	}
 
-    document.body.removeChild(textArea);
+	document.body.removeChild(textArea);
 }
 
 function copyTextToClipboard(text) {
-    if (!navigator.clipboard) {
-        fallbackCopyTextToClipboard(text);
-        return;
-    }
-    navigator.clipboard.writeText(text).then(function() {
-        console.log('Async: Copying to clipboard was successful!');
-    }, function(err) {
-        console.error('Async: Could not copy text: ', err);
-    });
+	if (!navigator.clipboard) {
+		fallbackCopyTextToClipboard(text);
+		return;
+	}
+	navigator.clipboard.writeText(text).then(function() {
+		console.log('Async: Copying to clipboard was successful!');
+	}, function(err) {
+		console.error('Async: Could not copy text: ', err);
+	});
 }
 
 /**
@@ -676,6 +676,12 @@ function showFileList(url) {
 			$(".file-list-item").html(msg_empty_directory);
 		}
 	});
+}
+
+function disableButtons()
+{
+	$(".first-row button:not(.file-upload),.first-row a").attr("disabled", "disabled");
+	// $(".file-upload").removeAttr('disabled');
 }
 
 /**
@@ -788,7 +794,7 @@ function reloadTreeview(currentNode) {
  * Function reload action buttons
  * */
 function reloadActionButton() {
-	$(".first-row button,.first-row a").attr("disabled", "disabled");
+	disableButtons();
 	var btn_file_preview = $(".btn-file-preview");
 	btn_file_preview.removeAttr('href').attr('title', btn_file_preview.text());
 	var btn_file_download = $(".btn-file-download");
