@@ -71,7 +71,7 @@ class Module extends BaseModule
     /**
      * @var string default allowed files extension
      */
-    public $allowExtension = 'jpeg jpg png gif svg mov mp3 mp4 avi wmv flv mpeg webm ogg';
+    public $allowExtension = 'jpeg jpg png gif svg mov mp3 mp4 avi wmv flv mpeg webm ogg webp';
     
     /**
      * @var bool check mime type of uploaded files
@@ -82,6 +82,11 @@ class Module extends BaseModule
      * @var string which schema should use form copy URL
      */
     public string $urlSchema = 'https';
+
+    /**
+     * @var bool Set true for convert file names to unicode string
+     */
+    public bool $normalizeFileName = true;
     
     /**
      * Initializes the module.
