@@ -680,8 +680,8 @@ function showFileList(url) {
 
 function disableButtons()
 {
-	$(".first-row button:not(.file-upload),.first-row a").attr("disabled", "disabled");
-	// $(".file-upload").removeAttr('disabled');
+	$(".first-row button,.first-row a").attr("disabled", "disabled");
+	 $(".file-upload").removeAttr('disabled');
 }
 
 /**
