@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="col-sm-12">
                 <div class="btn-group">
                     <button
-                            class="btn btn-sm btn-primary dropdown-toggle"
+                            class="btn btn-sm btn-primary dropdown-toggle file-upload"
                             title="<?= Yii::t('roxy', 'Upload files') ?>"
                             data-toggle="dropdown"
                             aria-haspopup="true"
