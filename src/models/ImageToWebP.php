@@ -65,6 +65,7 @@ class ImageToWebP extends Model
                 switch ($file->extension) {
                     case 'png':
                         $imageToConvert = imagecreatefrompng($filePath);
+                        imagepalettetotruecolor($imageToConvert);
                         break;
                     default:
                         $imageToConvert = imagecreatefromjpeg($filePath);
