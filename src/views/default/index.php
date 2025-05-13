@@ -18,7 +18,7 @@ use phuongdev89\roxymce\assets\RoxyMceAsset;
 use phuongdev89\roxymce\helpers\FolderHelper;
 use phuongdev89\roxymce\models\UploadForm;
 use phuongdev89\roxymce\Module;
-use yii\bootstrap\Html;
+use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
 
